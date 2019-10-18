@@ -5,9 +5,67 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #d5ecff6b!important;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.homepage {
+  flex-direction: column;
+  margin-top: 50px;
+}
+
+.homepage .container {
+  min-height: 400px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 0 5px 13px #d5ecff6b;
+  border-radius: 25% 10%;
+  padding: 30px;
+}
+
+.homepage h1 {
+  color: #989898b5!important;
+}
+
+.homepage button:not(:last-child) {
+  margin-right: 5px;
+}
+
+.homepage .buttons {
+  margin-top: 20px;
+}
+
+.room-list {
+  width: 80%;
+}
+
+.room-list ul{
+  list-style: none;
+  padding: 0;
+}
+
+.room-list ul li {
+  padding: 5px;
+  transition: .1s;
+  cursor: pointer;
+}
+
+.room-list ul li:hover {
+  font-weight: bold;
+}
+
+.room-list ul li:hover a {
+  text-decoration: none;
+}
+
+.create-room {
+  display: flex;
+  align-items: center;
 }
