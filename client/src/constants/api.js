@@ -1,4 +1,4 @@
 export const API = {
-    GET_ROOMS: "/api/get/rooms",
-    POST_ROOM: "/api/post/room"
+    GET_ROOMS: "/api/rooms",
+    POST_ROOM: "/api/rooms"
 };

@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { getRooms, createRoom } from "../../actions"
 import { Link } from "react-router-dom";
 import {Button, Form, FormControl, FormGroup} from "react-bootstrap";
+import Feedback from "react-bootstrap/Feedback";
+import {ROUTES} from "../../constants";
 
 const RoomsList = (props) => {
     useEffect(() => props.getRooms(), []);
@@ -12,22 +14,30 @@ const RoomsList = (props) => {
 
     const onChange = event => setValue(event.target.value);
     const onSubmit = (event) => {
+        const player = props.player;
         const newRoom = {
-            name: value
+            name: value,
+            player
         };
         event.preventDefault();
-        props.createRoom(newRoom);
-        setValue("");
+        if (!player.name) {
+            props.history.push(ROUTES.PLAYER)
+        } else {
+            props.createRoom(newRoom);
+            setValue("");
+        }
     };
 
     return (
       <CentralBlock title="Choose the room">
           <div className="room-list">
               <ul>
-                  {props.rooms.map((room) => (
-                    <li key={room.id}>
-                        <Link to={`/${room.id}[<${props.player.name}>]`}>{room.name}</Link>
-                    </li>))}
+                  {props.rooms.map((room) => {
+                      return(
+                        <li key={room.id}>
+                            <Link to={`/${room.id}[<${room.player.name}>]`}>{room.name}</Link>
+                        </li>)
+                  })}
               </ul>
               <Title title="or create a new one" />
               <div className="buttons">

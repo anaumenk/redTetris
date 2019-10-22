@@ -69,3 +69,39 @@ code {
   display: flex;
   align-items: center;
 }
+
+.room-name {
+  padding: 15px 0;
+}
+
+.field {
+  /*border: 1px solid #989898b5;*/
+  border: 1px solid transparent;
+}
+
+.field > div{
+  display: flex;
+  flex-direction: row;
+}
+
+.piece {
+  /*background-color: #d5ecff6b;*/
+  border: 1px solid transparent;
+}
+
+.aside-heading {
+  font-weight: bold;
+  color: #989898b5;
+  justify-content: center;
+  border-bottom: 2px solid;
+}
+
+.aside-content {
+  text-align: center;
+  min-height: 50px;
+  align-items: center;
+}
+
+.aside-content > div:last-child:not(:first-child) {
+  border-left: 1px solid #989898b5;
+}

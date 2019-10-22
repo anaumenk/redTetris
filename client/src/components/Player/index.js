@@ -22,7 +22,7 @@ const Player = (props) => {
           </div>
       </CentralBlock>
     );
-}
+};
 
 const mapStateToProps = state => ({
     player: state.player.player,
