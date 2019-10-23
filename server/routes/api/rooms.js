@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const Room = require("../../classes/Room");
-const rooms = require("../../index");
+const index = require("../../index");
 
 router.post('/', (req, res) => {
     const newRoom = new Room(req.body.name, req.body.player);
-    rooms.addNewRoom(newRoom);
+    index.addNewRoom(newRoom);
     res.send(newRoom);
 });
 

@@ -16,6 +16,7 @@ app.use(require("./routes"));
 const server = http.createServer(app);
 const io = socketIo(server);
 const rooms = [];
+const players = [];
 
 const getRooms = async socket => {
     socket.emit("/api/rooms", rooms);
@@ -36,4 +37,14 @@ const addNewRoom = (newRoom) => {
     rooms.push(newRoom);
 };
 
+const checkToken = (token) => {
+    players.forEach((player) => {
+        if (player.token === token) {
+            return true
+        }
+    });
+    return true;
+};
+
 module.exports.addNewRoom = addNewRoom;
+module.exports.checkToken = checkToken;

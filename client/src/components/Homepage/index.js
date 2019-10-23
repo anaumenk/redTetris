@@ -1,10 +1,12 @@
 import React from "react";
 import { CentralBlock, ButtonRef } from "../";
-import {ROUTES} from "../../constants";
+import { ROUTES } from "../../constants";
 
 const Homepage = () => (
   <CentralBlock title="Red tetris">
-      <ButtonRef to={ROUTES.PLAYER}>Start the game</ButtonRef>
+      <div className="buttons">
+      <ButtonRef to={ROUTES.MENU}>Start the game</ButtonRef>
+    </div>
   </CentralBlock>
 );
 

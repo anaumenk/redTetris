@@ -2,7 +2,7 @@ import { GET_ROOMS, CREATE_ROOM } from "./";
 import { configAxios } from "../axios";
 import { API, METHODS } from "../constants";
 import socketIOClient from "socket.io-client";
-import store from "../store";
+import { store } from "../store";
 
 export const getRooms = () => dispatch => {
     const socket = socketIOClient(`${process.env.HOST || "http://localhost"}:${process.env.PORT || 8000}`);

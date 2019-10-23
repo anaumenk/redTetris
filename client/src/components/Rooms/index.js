@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { CentralBlock, Title } from "../common";
+import {ButtonRef, CentralBlock, Title} from "../common";
 import { connect } from "react-redux";
 import { getRooms, createRoom } from "../../actions"
 import { Link } from "react-router-dom";
 import { Button, Form, FormControl } from "react-bootstrap";
 import { ROUTES } from "../../constants";
+import {localStorageKeys, localStorageService} from "../../store";
 
 const RoomsList = (props) => {
     useEffect(() => props.getRooms(), []);
@@ -13,18 +14,14 @@ const RoomsList = (props) => {
 
     const onChange = event => setValue(event.target.value);
     const onSubmit = (event) => {
-        const player = props.player;
+        const player = localStorageService.readItem(localStorageKeys.PLAYER);
         const newRoom = {
             name: value,
             player
         };
         event.preventDefault();
-        if (!player.name) {
-            props.history.push(ROUTES.PLAYER)
-        } else {
-            props.createRoom(newRoom);
-            setValue("");
-        }
+        props.createRoom(newRoom);
+        setValue("");
     };
 
     return (
@@ -45,6 +42,9 @@ const RoomsList = (props) => {
                     <Button disabled={!value} type="submit">Create</Button>
                   </Form>
               </div>
+            <div className="buttons">
+              <ButtonRef to={ROUTES.ROOT} variant="secondary">Homepage</ButtonRef>
+            </div>
           </div>
       </CentralBlock>
     );
@@ -52,7 +52,7 @@ const RoomsList = (props) => {
 
 const mapStateToProps = (state) => ({
     rooms: state.rooms.rooms,
-    player: state.player.player
+    // player: state.player.player
 });
 
 export default connect(mapStateToProps, { getRooms, createRoom })(RoomsList);

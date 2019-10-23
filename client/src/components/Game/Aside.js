@@ -1,6 +1,5 @@
 import React from "react";
-import AsideInfo from "../common/AsideInfo";
-import {Field} from "../common";
+import { Field, AsideInfo } from "../common";
 
 const Aside = () => {
     const playersName = [{info: "first"}, {info: "second"}];

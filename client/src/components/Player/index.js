@@ -1,27 +1,46 @@
 import React, { useEffect, useState } from "react";
-import {ButtonRef, CentralBlock} from "../common";
-import { FormControl } from "react-bootstrap";
-import {connect} from "react-redux";
+import { ButtonRef, CentralBlock } from "../common";
+import { Button, FormControl } from "react-bootstrap";
+import { connect } from "react-redux";
 import { setPlayer } from "../../actions"
-import {ROUTES} from "../../constants";
+import { ROUTES } from "../../constants";
+import { IsLogin } from "../../utility";
+import {localStorageKeys, localStorageService} from "../../store";
 
 const Player = (props) => {
-    const [value, setValue] = useState(props.player.name);
+    const [player, setPlayer] = useState(IsLogin());
+    const [value, setValue] = useState(localStorageService.readItem(localStorageKeys.PLAYER));
 
     useEffect(() => {
       props.setPlayer(value);
     }, [value]);
 
     const onChange = event => setValue(event.target.value);
+    const onSubmit = () => {
+      localStorageService.createOrUpdateItem(localStorageKeys.PLAYER, props.player.name);
+      // setPlayer(isPlayer());
+    }
 
-    return (
-      <CentralBlock title="Create a player">
+    return player
+      ? (
+        <CentralBlock title="Player">
           <FormControl value={value} type="text" onChange={onChange}/>
           <div className="buttons">
-            <ButtonRef disabled={!value} to={ROUTES.ROOMS}>Create</ButtonRef>
+            <Button disabled={!value} onClick={onSubmit}>Change</Button>
+            {/*<ButtonRef to={ROUTES.ROOMS}>Game rooms</ButtonRef>*/}
+            <ButtonRef to={ROUTES.ROOT} variant="secondary">Homepage</ButtonRef>
           </div>
-      </CentralBlock>
-    );
+        </CentralBlock>
+      )
+      : (
+        <CentralBlock title="Create a player">
+          <FormControl value={value} type="text" onChange={onChange}/>
+          <div className="buttons">
+            <Button disabled={!value} onClick={onSubmit}>Create</Button>
+            <ButtonRef to={ROUTES.ROOT} variant="secondary">Homepage</ButtonRef>
+          </div>
+        </CentralBlock>
+      );
 };
 
 const mapStateToProps = state => ({
