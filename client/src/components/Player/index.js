@@ -9,7 +9,7 @@ const Player = (props) => {
     const [value, setValue] = useState(props.player.name);
 
     useEffect(() => {
-        props.setPlayer(value);
+      props.setPlayer(value);
     }, [value]);
 
     const onChange = event => setValue(event.target.value);

@@ -75,18 +75,19 @@ code {
 }
 
 .field {
-  /*border: 1px solid #989898b5;*/
+  background-color: #d5ecff6b;
   border: 1px solid transparent;
 }
 
-.field > div{
+.field > div {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .piece {
   /*background-color: #d5ecff6b;*/
-  border: 1px solid transparent;
+  border: 1px solid #989898b5;
 }
 
 .aside-heading {

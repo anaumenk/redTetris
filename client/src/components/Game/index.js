@@ -21,11 +21,12 @@ const Game = (props) => {
           <Row>
               <Col>
                   <Field
-                    width={10}
-                    height={20}
+                    fieldWidth={10}
+                    fieldHeight={20}
                     size={70}
                     color="#d5ecff6b"
                     border="#989898b5"
+                    fill={[]}
                   />
               </Col>
               <Col><Aside /></Col>

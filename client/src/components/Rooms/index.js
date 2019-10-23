@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {CentralBlock, Title} from "../common";
+import React, { useEffect, useState } from "react";
+import { CentralBlock, Title } from "../common";
 import { connect } from "react-redux";
 import { getRooms, createRoom } from "../../actions"
 import { Link } from "react-router-dom";
-import {Button, Form, FormControl, FormGroup} from "react-bootstrap";
-import Feedback from "react-bootstrap/Feedback";
-import {ROUTES} from "../../constants";
+import { Button, Form, FormControl } from "react-bootstrap";
+import { ROUTES } from "../../constants";
 
 const RoomsList = (props) => {
     useEffect(() => props.getRooms(), []);

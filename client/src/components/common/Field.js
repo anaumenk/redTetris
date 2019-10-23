@@ -1,24 +1,42 @@
 import React from "react";
 
 const Field = (props) => {
-    const width = Array(props.width).fill(null).map((x, i) => i + 1);
-    const height = new Array(props.height).fill(null).map((x, i) => i + 1);
+    let field = Array(props.fieldHeight)
+      .fill(Array(props.fieldWidth).fill({color: "transparent"}));
+
+    props.fill.forEach((item) => {
+      item.place.forEach((place) => {
+        const x = place[0];
+        const y = place[1];
+        field = field.map((row, i) => i === y
+          ? row.map((square, j) => j === x ? {color: item.color} : square)
+          : row
+        );
+      })
+    });
+
     return (
-      <div className="field" style={{backgroundColor: props.color || "transparent"}}>
-          {height.map((item, index) => {
+      <div
+        className="field"
+        style={{
+            backgroundColor: props.color || "transparent",
+            borderColor: props.border || "transparent"
+        }}
+      >
+          {field.map((row, y) => {
               return (
-                <div key={index}>
-                    {width.map((item, index) => {
+                <div key={y}>
+                    {row.map((square, x) => {
                         return (
                           <div
                             className="piece"
                             style={{
-                                width: props.size,
-                                height: props.size,
-                                borderColor: props.border || "transparent"
+                              width: props.size,
+                              height: props.size,
+                              backgroundColor: square.color
                             }}
-                            key={index}
-                          ></div>
+                            key={x}
+                          />
                         )
                     })}
                 </div>
@@ -26,6 +44,6 @@ const Field = (props) => {
           })}
       </div>
     );
-}
+};
 
 export default Field;
