@@ -1,4 +1,4 @@
 export * from "./route";
-export * from "./method";
+export * from "./actions";
 export * from "./api";
 export * from "./pieces";

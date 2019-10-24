@@ -1,8 +1,10 @@
+const index = require("../index");
+
 class Room {
-    constructor(name, player) {
+    constructor(name, token) {
         this.id = Room.incrementId();
         this.name = name;
-        this.player = player;
+        this.player = index.getPlayerInfo(token);
     }
 
     static incrementId() {
@@ -13,13 +15,6 @@ class Room {
         }
         return this.latestId;
     }
-
-    // get info() {
-    //     return {
-    //         id: this.id,
-    //         name: this.name
-    //     };
-    // }
 }
 
 module.exports = Room;

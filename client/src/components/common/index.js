@@ -5,3 +5,4 @@ export {default as Piece} from "./Piece";
 export {default as Field} from "./Field";
 export {default as AsideInfo} from "./AsideInfo";
 export {default as Input} from "./Input";
+export {default as EnterForm} from "./EnterForm";

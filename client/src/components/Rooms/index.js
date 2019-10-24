@@ -14,10 +14,10 @@ const RoomsList = (props) => {
 
     const onChange = event => setValue(event.target.value);
     const onSubmit = (event) => {
-        const player = localStorageService.readItem(localStorageKeys.PLAYER);
+        const token = localStorageService.readItem(localStorageKeys.TOKEN);
         const newRoom = {
             name: value,
-            player
+            token
         };
         event.preventDefault();
         props.createRoom(newRoom);
@@ -52,7 +52,6 @@ const RoomsList = (props) => {
 
 const mapStateToProps = (state) => ({
     rooms: state.rooms.rooms,
-    // player: state.player.player
 });
 
 export default connect(mapStateToProps, { getRooms, createRoom })(RoomsList);

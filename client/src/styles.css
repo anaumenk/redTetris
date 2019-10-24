@@ -88,6 +88,7 @@ code {
 .create-room {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .room-name {
@@ -126,7 +127,12 @@ code {
   border-left: 1px solid #989898b5;
 }
 
-form.register {
+form.enter {
   width: 100%;
   padding: 0 30px;
+}
+
+
+.error {
+  color: red;
 }
