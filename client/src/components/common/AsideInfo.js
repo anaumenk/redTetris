@@ -4,15 +4,15 @@ import { Title } from "./index";
 
 const AsideInfo = (props) => (
   <>
-      <Title title={props.title} className="aside-heading" />
+    <div className="aside-heading">
+      {props.title.map((title, index) => <Title key={index} title={title}/>)}
+    </div>
       <Row className="aside-content">
-          {props.players.map((player, index) => {
-              return (
-                <Col key={index}>
-                    {player.info}
-                </Col>
-              )
-          })}
+          {props.info.map((item, index) => (
+              <Col key={index} sm="6">
+                  {Object.values(item).map((element, i) => <div key={i}>{element.info}</div>)}
+              </Col>
+          ))}
       </Row>
   </>
 );

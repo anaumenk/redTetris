@@ -1,16 +1,18 @@
-import React, {useEffect} from "react";
-import {connect} from "react-redux";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import { getRooms } from "../../actions"
 import Field from "../common/Field";
-import {Col, Row} from "react-bootstrap";
+import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
+import { withRouter } from "react-router-dom";
 
 const Game = (props) => {
     const roomId = parseInt(props.match.params.room);
 
     useEffect(() => {
-        props.getRooms()
+       props.getRooms();
     }, []);
+
     const room = props.rooms.filter((room) => room.id === roomId)[0];
 
     return room ? (
@@ -32,11 +34,11 @@ const Game = (props) => {
               <Col><Aside /></Col>
           </Row>
       </>
-    ) : null;
+    ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;
 };
 
 const mapStateToProps = (state) => ({
     rooms: state.rooms.rooms
 });
 
-export default connect(mapStateToProps, { getRooms })(Game);
+export default withRouter(connect(mapStateToProps, { getRooms })(Game));

@@ -38,11 +38,12 @@ const EnterForm = (props) => {
         break;
     }
     configAxios(METHODS.POST, api, { name, password }).then((response) => {
-      if (response.data.token) {
-        auth.authenticate(response.data.token);
+      const data = response.data;
+      if (!data.error) {
+        auth.authenticate(data.data.token);
         props.history.push(ROUTES.MENU);
       } else {
-        setError(response.data.error);
+        setError(data.error)
       }
     });
   };

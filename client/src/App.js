@@ -26,7 +26,7 @@ const App = () => (
                       <IsLogin path={ROUTES.MENU}><Menu /></IsLogin>
                       <IsLogin path={ROUTES.ROOMS}><RoomsList /></IsLogin>
                       <IsLogin path={ROUTES.PLAYER}><Player /></IsLogin>
-                      {/*<Route path={ROUTES.ROOM} component={Game} />*/}
+                      <IsLogin path={ROUTES.ROOM}><Game /></IsLogin>
                       <Redirect to={ROUTES.ROOT} />
                   </Switch>
               </Container>

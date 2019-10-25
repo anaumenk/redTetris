@@ -13,6 +13,7 @@ class Player {
     //uncommit ehen del
     // this.token = jwt.sign({id: this.id}, "SECRET");
 
+    this.score = 0;
   }
 
   static incrementId() {
@@ -28,7 +29,11 @@ class Player {
       return this.token;
   }
   get getInfo() {
-      return { id: this.id, name: this.name };
+      return {
+        id: this.id,
+        name: this.name,
+        score: this.score,
+      };
   }
 
   checkLogin(name, password) {

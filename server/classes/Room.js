@@ -1,10 +1,11 @@
 const index = require("../index");
 
 class Room {
-    constructor(name, token) {
+    constructor(name, token, multi) {
         this.id = Room.incrementId();
         this.name = name;
         this.player = index.getPlayerInfo(token);
+        this.multi = multi;
     }
 
     static incrementId() {

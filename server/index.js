@@ -53,12 +53,8 @@ const addNewPlayer = (player) => {
 };
 
 const checkToken = (token) => {
-    players.forEach((player) => {
-        if (player.getToken === token) {
-            return true
-        }
-    });
-    return false;
+    const player = players.filter((player) => player.getToken === token);
+    return player.length > 0;
 };
 
 const login = (name, password) => {

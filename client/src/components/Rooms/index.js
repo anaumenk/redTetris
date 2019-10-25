@@ -3,29 +3,32 @@ import {ButtonRef, CentralBlock, Title} from "../common";
 import { connect } from "react-redux";
 import { getRooms, createRoom } from "../../actions"
 import { Link } from "react-router-dom";
-import { Button, Form, FormControl } from "react-bootstrap";
+import {Button, Form, FormControl, Modal} from "react-bootstrap";
 import { ROUTES } from "../../constants";
 import {localStorageKeys, localStorageService} from "../../store";
 
 const RoomsList = (props) => {
     useEffect(() => props.getRooms(), []);
 
+    const [show, setShow] = useState(false);
     const [value, setValue] = useState("");
 
     const onChange = event => setValue(event.target.value);
     const onSubmit = (event) => {
-        const token = localStorageService.readItem(localStorageKeys.TOKEN);
-        const newRoom = {
-            name: value,
-            token
-        };
+        // const token = localStorageService.readItem(localStorageKeys.TOKEN);
+        // const newRoom = {
+        //     name: value,
+        //     token
+        // };
         event.preventDefault();
-        props.createRoom(newRoom);
-        setValue("");
+        // props.createRoom(newRoom);
+        // setValue("");
     };
 
+    const onClick = () => setShow(true)
+
     return (
-      <CentralBlock title="Choose the room">
+      <CentralBlock title="Choose the room or create a new one" close={true}>
           <div className="room-list">
               <ul>
                   {props.rooms.map((room) => {
@@ -35,16 +38,20 @@ const RoomsList = (props) => {
                         </li>)
                   })}
               </ul>
-              <Title title="or create a new one" />
-              <div className="buttons">
-                  <Form onSubmit={onSubmit} className="create-room">
-                    <FormControl value={value} type="text" onChange={onChange}/>
-                    <Button disabled={!value} type="submit">Create</Button>
-                  </Form>
+              <div className="buttons justify-content-center">
+                  <Button type="submit" onClick={onClick}>Create</Button>
+                  <Modal show={show} onHide={() => setShow(false)} >
+                      <Modal.Header closeButton={true}>Create new room</Modal.Header>
+                      <Modal.Body>
+                          <Form onSubmit={onSubmit} className="create-room align-items-center">
+                            <FormControl value={value} type="text" onChange={onChange}/>
+                            <div className="buttons justify-content-center">
+                                <Button disabled={!value} type="submit">Create</Button>
+                            </div>
+                          </Form>
+                      </Modal.Body>
+                  </Modal>
               </div>
-            <div className="buttons">
-              <ButtonRef to={ROUTES.ROOT} variant="secondary">Homepage</ButtonRef>
-            </div>
           </div>
       </CentralBlock>
     );

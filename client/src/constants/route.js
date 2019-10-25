@@ -1,7 +1,7 @@
 export const ROUTES = {
     ROOT: "/",
     ROOMS: "/rooms",
-    // ROOM: "/:room[<:player>]",
+    ROOM: "/:room[<:player>]",
     PLAYER: "/player",
     MENU: "/menu",
     ENTER: "/enter",

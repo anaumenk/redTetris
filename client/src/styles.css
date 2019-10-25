@@ -86,9 +86,9 @@ code {
 }
 
 .create-room {
+  padding: 30px;
   display: flex;
-  align-items: center;
-  width: 100%;
+  flex-direction: column;
 }
 
 .room-name {
@@ -113,14 +113,20 @@ code {
 .aside-heading {
   font-weight: bold;
   color: #989898b5;
-  justify-content: center;
   border-bottom: 2px solid;
+  display: flex;
+  justify-content: space-around;
 }
 
 .aside-content {
   text-align: center;
   min-height: 50px;
   align-items: center;
+  justify-content: center;
+}
+
+.aside-content > div > div {
+  margin-top: 10px;
 }
 
 .aside-content > div:last-child:not(:first-child) {
@@ -132,7 +138,46 @@ form.enter {
   padding: 0 30px;
 }
 
-
 .error {
   color: red;
+}
+
+.player-info {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.player-info div {
+  margin: 5px 0;
+}
+
+.spinner {
+  color: #989898b5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.aside-container .buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.aside-container .buttons button {
+  min-width: 100px;
+}
+.aside-container .buttons button:not(:last-child){
+  margin-right: 10px;
+}
+
+.title-center {
+ text-align: center;
 }

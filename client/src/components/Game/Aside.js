@@ -1,9 +1,51 @@
 import React from "react";
-import { Field, AsideInfo } from "../common";
+import {Field, AsideInfo, ButtonRef} from "../common";
+import {ROUTES} from "../../constants";
+import {Button} from "react-bootstrap";
 
 const Aside = () => {
-    const playersName = [{info: "first"}, {info: "second"}];
-    const playersScore = [{info: 10}, {info: 300}];
+    const players = [
+      {
+        id : 0,
+        name: "first",
+        score: 10
+      },
+      {
+        id : 1,
+        name: "second",
+        score: 40
+      },
+      {
+        id : 2,
+        name: "3",
+        score: 0
+      },
+    ];
+
+    const playersName = [
+      {
+        info: "first"
+      },
+      {
+        info: "second"
+      },
+      {
+        info: "3"
+      }
+    ];
+
+    const playersScore = [
+      {
+        info: 10
+      },
+      {
+        info: 40
+      },
+      {
+        info: 0
+      }
+    ];
+
     const filledFirst = [
       {
         color: "black",
@@ -15,18 +57,8 @@ const Aside = () => {
         ]
       },
     ];
-    const filledSecond = [
-      {
-        color: "red",
-        place: [
-          [3, 0],
-          [3, 1],
-          [3, 2],
-          [3, 3]
-        ]
-      },
-    ];
-    const playersNextPiece = [
+
+    const nextPiece = [
         {
           info: <Field
             fieldWidth={4}
@@ -34,31 +66,25 @@ const Aside = () => {
             size={10}
             fill={filledFirst}
           />
-        },
-        {
-          info: <Field
-            fieldWidth={4}
-            fieldHeight={4}
-            size={10}
-            fill={filledSecond}
-          />
         }
     ];
+
     return (
-      <>
-          <AsideInfo
-            title="Players"
-            players={playersName}
-          />
-          <AsideInfo
-            title="Score"
-            players={playersScore}
-          />
-          <AsideInfo
-            title="Next piece"
-            players={playersNextPiece}
-          />
-      </>
+      <div className="aside-container">
+        <div className="buttons">
+          <Button variant="secondary">Start/Pause</Button>
+          <Button variant="secondary">Stop</Button>
+          <Button variant="secondary">Restart</Button>
+        </div>
+        <AsideInfo
+          title={["Next piece"]}
+          info={[nextPiece]}
+        />
+        <AsideInfo
+          title={["Players", "Score"]}
+          info={[playersName, playersScore]}
+        />
+      </div>
     );
 };
 

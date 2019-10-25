@@ -22,7 +22,7 @@ export const getRooms = () => dispatch => {
 export const createRoom = (newRoom) => dispatch => {
     configAxios(METHODS.POST, API.POST_ROOM, newRoom)
       .then((response) => {
-          const room = response.data;
+          const room = response.data.data;
           dispatch({
               type: CREATE_ROOM,
               payload: {
