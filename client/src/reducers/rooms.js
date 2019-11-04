@@ -1,7 +1,10 @@
-import { CREATE_ROOM, GET_ROOMS } from '../actions';
+import {CREATE_ROOM, GET_GAME_ROOM, GET_ROOMS} from '../actions';
 
 const initialState = {
     rooms: [],
+    createdRoom: null,
+    room: null,
+    lid: false,
 };
 
 export default function (state = initialState, action) {
@@ -14,7 +17,13 @@ export default function (state = initialState, action) {
         case CREATE_ROOM:
             return {
                 ...state,
-                rooms: [...state.rooms, action.payload.room]
+                createdRoom: action.payload.room
+            };
+        case GET_GAME_ROOM:
+            return {
+                ...state,
+                room: action.payload.room,
+                lid: action.payload.lid,
             };
         default:
             return state;

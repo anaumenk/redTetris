@@ -13,7 +13,7 @@ const Player = () => {
     const [error, setError] = useState("");
 
     useEffect(() => {
-      configAxios(METHODS.POST, API.GET_PLAYER, { token: localStorageService.readItem(localStorageKeys.TOKEN) })
+      configAxios(METHODS.POST, API.GET_PLAYER)
         .then((response) => {
           const data = response.data;
           if (!data.error) {

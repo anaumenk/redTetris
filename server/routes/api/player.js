@@ -39,7 +39,7 @@ router.post('/login', (req, res) => {
   if (player) {
     response.data = { token: player.getToken }
   } else {
-    response.error = "No such user."
+    response.error = "No such user or wrong password."
   }
   res.send(response);
 });

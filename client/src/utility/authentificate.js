@@ -13,8 +13,9 @@ export const auth = {
     localStorageService.createOrUpdateItem(localStorageKeys.TOKEN, token);
     auth.isAuthenticated = !!token;
   },
-  signout() {
-    localStorageService.deleteItem(localStorageKeys.TOKEN);
+  logout() {
+    window.location.reload();
+    localStorageService.clear();
     auth.isAuthenticated = false;
   }
 };

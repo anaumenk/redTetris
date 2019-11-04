@@ -6,7 +6,7 @@ export const localStorageService = {
     return localStorage.getItem(key);
   },
   deleteItem(key) {
-    localStorage.delItem(key);
+    localStorage.setItem(key, "");
   },
   clear() {
     localStorage.clear();

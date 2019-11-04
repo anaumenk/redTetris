@@ -1,24 +1,28 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { getRooms } from "../../actions"
+import { isRoom } from "../../actions"
 import Field from "../common/Field";
-import { Col, Row, Spinner } from "react-bootstrap";
+import {Button, Col, Row, Spinner} from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
+import {ButtonRef} from "../common";
+import {ROUTES} from "../../constants";
 
 const Game = (props) => {
     const roomId = parseInt(props.match.params.room);
+    const playerName = props.match.params.player;
 
     useEffect(() => {
-       props.getRooms();
+       props.isRoom(roomId, playerName);
     }, []);
 
-    const room = props.rooms.filter((room) => room.id === roomId)[0];
+    console.log(props.lid)
 
-    return room ? (
+    return props.room ? (
       <>
         <div className="room-name">
-            <h1>Room {room.name}</h1>
+            <h1>Room {props.room.name}</h1>
+            {/*<ButtonRef variant="secondary" to={ROUTES.ROOT}>Homepage</ButtonRef>*/}
         </div>
           <Row>
               <Col>
@@ -31,14 +35,15 @@ const Game = (props) => {
                     fill={[]}
                   />
               </Col>
-              <Col><Aside /></Col>
+              <Col><Aside lid={props.lid}/></Col>
           </Row>
       </>
     ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;
 };
 
 const mapStateToProps = (state) => ({
-    rooms: state.rooms.rooms
+  room: state.rooms.room,
+  lid: state.rooms.lid,
 });
 
-export default withRouter(connect(mapStateToProps, { getRooms })(Game));
+export default withRouter(connect(mapStateToProps, { isRoom })(Game));

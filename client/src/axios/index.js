@@ -1,7 +1,8 @@
 import axios from "axios";
 import { METHODS } from "../constants";
+import {localStorageKeys, localStorageService} from "../store";
 
-export const configAxios = (method, url, data) => {
+export const configAxios = (method, url, data = {}) => {
     let response;
     const config = {
         proxy: {
@@ -9,6 +10,7 @@ export const configAxios = (method, url, data) => {
             port: process.env.PORT || 8000,
         }
     };
+    data.token = localStorageService.readItem(localStorageKeys.TOKEN);
     switch (method) {
         case METHODS.GET:
             response = axios.get(url, config).catch(err => console.log(err));

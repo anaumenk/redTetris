@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 class Player {
   constructor(name, password) {
     this.id = Player.incrementId();
     this.name = name;
-    this.password = password;
+    this.password = bcrypt.hashSync(password, 10);
 
     //del
     this.token = "1";
@@ -37,7 +38,7 @@ class Player {
   }
 
   checkLogin(name, password) {
-    return this.name === name && this.password === password;
+    return this.name === name && bcrypt.compareSync(password, this.password);
   }
 }
 

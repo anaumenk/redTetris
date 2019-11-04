@@ -18,4 +18,26 @@ router.post('/', (req, res) => {
     res.send(response);
 });
 
+router.post('/room', (req, res) => {
+    const token = req.body.token;
+    const response = {
+        data: null,
+        error: null
+    };
+    if (index.checkToken(token)) {
+        response.data = {};
+        const room = index.getRoom(req.body.id, req.body.name);
+        if (room) {
+            response.data.room = room;
+            response.data.lid = index.checkLid(room.player.id, token)
+            console.log(index.checkLid(room.player.id, token))
+        } else {
+            response.error = "No such room."
+        }
+    } else {
+        response.error = "No such user."
+    }
+    res.send(response);
+});
+
 module.exports = router;

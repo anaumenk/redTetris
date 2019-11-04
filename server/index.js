@@ -29,8 +29,16 @@ const players = [player1];
 // uncommit when del
 // const players = []
 
+const getMultiRooms = () => {
+    return rooms.filter((room) => {
+        if (room.multi) {
+            return room;
+        }
+    });
+};
+
 const getRooms = async socket => {
-    socket.emit("/api/rooms", rooms);
+    socket.emit("/api/rooms", getMultiRooms());
 };
 
 io.on("connection", socket => {
@@ -38,7 +46,7 @@ io.on("connection", socket => {
           () => getRooms(socket),
           1000
         );
-    socket.emit("/api/rooms", rooms);
+    socket.emit("/api/rooms", getMultiRooms());
     socket.on("disconnect", () => console.log("Client disconnected"));
 });
 
@@ -70,10 +78,17 @@ const getPlayerInfo = (token) => {
             return player.getInfo;
         }
     })[0];
-}
+};
+
+const getRoom = (id, name) => rooms.find((room) => room.id === id && room.player.name === name);
+
+const checkLid = (playerId, token) => !!players
+  .find((player) => player.token === token && player.id === playerId);
 
 module.exports.addNewRoom = addNewRoom;
 module.exports.checkToken = checkToken;
 module.exports.addNewPlayer = addNewPlayer;
 module.exports.login = login;
 module.exports.getPlayerInfo = getPlayerInfo;
+module.exports.getRoom = getRoom;
+module.exports.checkLid = checkLid;

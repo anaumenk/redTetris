@@ -57,7 +57,7 @@ code {
   margin-right: 5px;
 }
 
-.homepage .buttons {
+.buttons {
   margin-top: 20px;
   display: flex;
 }
@@ -93,7 +93,13 @@ code {
 
 .room-name {
   padding: 15px 0;
+  /*display: flex;*/
+  /*align-items: center;*/
 }
+
+/*.room-name button {*/
+/*  margin-left: 10px;*/
+/*}*/
 
 .field {
   background-color: #d5ecff6b;
@@ -125,11 +131,22 @@ code {
   justify-content: center;
 }
 
-.aside-content > div > div {
-  margin-top: 10px;
+.aside-content {
+  margin-top: 5px;
+  margin-bottom: 15px;
+  flex-direction: column;
 }
 
-.aside-content > div:last-child:not(:first-child) {
+.aside-content .player-game-info {
+  display: flex;
+  width: 100%;
+}
+
+.aside-content .player-game-info > div {
+  padding-top: 10px;
+}
+
+.aside-content .player-game-info > div:last-child:not(:first-child) {
   border-left: 1px solid #989898b5;
 }
 
@@ -180,4 +197,24 @@ form.enter {
 
 .title-center {
  text-align: center;
+}
+
+.form-control {
+  outline: none!important;
+  border-color: #ced4da!important;
+  box-shadow: inherit!important;
+}
+
+.create-room .form-check{
+  margin-top: 10px;
+}
+
+.logout {
+  font-size: 25px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #989898b5;
+  cursor: pointer;
+  display: flex;
 }

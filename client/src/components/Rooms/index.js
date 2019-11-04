@@ -1,34 +1,36 @@
 import React, { useEffect, useState } from "react";
-import {ButtonRef, CentralBlock, Title} from "../common";
+import { CentralBlock } from "../common";
 import { connect } from "react-redux";
 import { getRooms, createRoom } from "../../actions"
-import { Link } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import {Button, Form, FormControl, Modal} from "react-bootstrap";
-import { ROUTES } from "../../constants";
-import {localStorageKeys, localStorageService} from "../../store";
 
 const RoomsList = (props) => {
     useEffect(() => props.getRooms(), []);
 
     const [show, setShow] = useState(false);
-    const [value, setValue] = useState("");
+    const [name, setName] = useState("");
+    const [multi, setMulti] = useState(false);
 
-    const onChange = event => setValue(event.target.value);
+    const onChange = event => setName(event.target.value);
+    const onCheck = () => setMulti(!multi);
     const onSubmit = (event) => {
-        // const token = localStorageService.readItem(localStorageKeys.TOKEN);
-        // const newRoom = {
-        //     name: value,
-        //     token
-        // };
+        const newRoom = {
+            name,
+            multi
+        };
         event.preventDefault();
-        // props.createRoom(newRoom);
-        // setValue("");
+        props.createRoom(newRoom);
+        setName("");
+        setMulti(false);
+        setShow(false);
     };
 
-    const onClick = () => setShow(true)
+    const onClick = () => setShow(true);
 
-    return (
-      <CentralBlock title="Choose the room or create a new one" close={true}>
+  return props.createdRoom
+    ? (<Redirect to={`/${props.createdRoom.id}[<${props.createdRoom.player.name}>]`} />)
+    : (<CentralBlock title="Choose the room or create a new one" close={true}>
           <div className="room-list">
               <ul>
                   {props.rooms.map((room) => {
@@ -43,10 +45,17 @@ const RoomsList = (props) => {
                   <Modal show={show} onHide={() => setShow(false)} >
                       <Modal.Header closeButton={true}>Create new room</Modal.Header>
                       <Modal.Body>
-                          <Form onSubmit={onSubmit} className="create-room align-items-center">
-                            <FormControl value={value} type="text" onChange={onChange}/>
+                          <Form onSubmit={onSubmit} className="create-room">
+                            <Form.Label>Room name</Form.Label>
+                            <FormControl value={name} type="text" onChange={onChange}/>
+                            <Form.Check
+                              type="checkbox"
+                              label="Multi player mode"
+                              value={multi}
+                              onChange={onCheck}
+                            />
                             <div className="buttons justify-content-center">
-                                <Button disabled={!value} type="submit">Create</Button>
+                                <Button disabled={!name} type="submit">Create</Button>
                             </div>
                           </Form>
                       </Modal.Body>
@@ -59,6 +68,7 @@ const RoomsList = (props) => {
 
 const mapStateToProps = (state) => ({
     rooms: state.rooms.rooms,
+    createdRoom: state.rooms.createdRoom,
 });
 
-export default connect(mapStateToProps, { getRooms, createRoom })(RoomsList);
+export default withRouter(connect(mapStateToProps, { getRooms, createRoom })(RoomsList));

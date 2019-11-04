@@ -1,9 +1,9 @@
 import React from "react";
 import {Field, AsideInfo, ButtonRef} from "../common";
 import {ROUTES} from "../../constants";
-import {Button} from "react-bootstrap";
+import {Button, Col, Row} from "react-bootstrap";
 
-const Aside = () => {
+const Aside = (props) => {
     const players = [
       {
         id : 0,
@@ -22,29 +22,20 @@ const Aside = () => {
       },
     ];
 
-    const playersName = [
-      {
-        info: "first"
-      },
-      {
-        info: "second"
-      },
-      {
-        info: "3"
-      }
-    ];
-
-    const playersScore = [
-      {
-        info: 10
-      },
-      {
-        info: 40
-      },
-      {
-        info: 0
-      }
-    ];
+  const playersInfo = Object.values(players).sort((a, b) => {
+    if (a.score < b.score) {
+      return 1;
+    }
+    if (a.score > b.score) {
+      return -1;
+    }
+    return 0;
+  }).map((player, index) => (
+    <Row key={index} className="player-game-info">
+      <Col sm={6}>{player.name}</Col>
+      <Col sm={6}>{player.score}</Col>
+    </Row>
+  ));
 
     const filledFirst = [
       {
@@ -58,31 +49,27 @@ const Aside = () => {
       },
     ];
 
-    const nextPiece = [
-        {
-          info: <Field
-            fieldWidth={4}
-            fieldHeight={4}
-            size={10}
-            fill={filledFirst}
-          />
-        }
-    ];
+    const nextPiece = <Field
+      fieldWidth={4}
+      fieldHeight={4}
+      size={10}
+      fill={filledFirst}
+    />;
 
     return (
       <div className="aside-container">
-        <div className="buttons">
+        {props.lid && <div className="buttons">
           <Button variant="secondary">Start/Pause</Button>
           <Button variant="secondary">Stop</Button>
           <Button variant="secondary">Restart</Button>
-        </div>
+        </div>}
         <AsideInfo
           title={["Next piece"]}
-          info={[nextPiece]}
+          info={nextPiece}
         />
         <AsideInfo
           title={["Players", "Score"]}
-          info={[playersName, playersScore]}
+          info={playersInfo}
         />
       </div>
     );
