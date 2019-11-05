@@ -1,26 +1,11 @@
 import React from "react";
-import {Field, AsideInfo, ButtonRef} from "../common";
-import {ROUTES} from "../../constants";
-import {Button, Col, Row} from "react-bootstrap";
+import { Field, AsideInfo } from "../common";
+import { Button, Col, Row } from "react-bootstrap";
+import {PIECES} from "../../constants";
+import {connect} from "react-redux";
 
 const Aside = (props) => {
-    const players = [
-      {
-        id : 0,
-        name: "first",
-        score: 10
-      },
-      {
-        id : 1,
-        name: "second",
-        score: 40
-      },
-      {
-        id : 2,
-        name: "3",
-        score: 0
-      },
-    ];
+  const players = props.room.players;
 
   const playersInfo = Object.values(players).sort((a, b) => {
     if (a.score < b.score) {
@@ -37,42 +22,40 @@ const Aside = (props) => {
     </Row>
   ));
 
-    const filledFirst = [
+  const nextPiece = <Field
+    fieldWidth={4}
+    fieldHeight={4}
+    size={10}
+    fill={[
       {
         color: "black",
-        place: [
-          [0, 0],
-          [0, 1],
-          [0, 2],
-          [1, 2]
-        ]
+        place: PIECES.T[0]
       },
-    ];
+    ]}
+  />;
 
-    const nextPiece = <Field
-      fieldWidth={4}
-      fieldHeight={4}
-      size={10}
-      fill={filledFirst}
-    />;
-
-    return (
-      <div className="aside-container">
-        {props.lid && <div className="buttons">
-          <Button variant="secondary">Start/Pause</Button>
-          <Button variant="secondary">Stop</Button>
-          <Button variant="secondary">Restart</Button>
-        </div>}
-        <AsideInfo
-          title={["Next piece"]}
-          info={nextPiece}
-        />
-        <AsideInfo
-          title={["Players", "Score"]}
-          info={playersInfo}
-        />
-      </div>
-    );
+  return (
+    <div className="aside-container">
+      {props.lid && <div className="buttons">
+        <Button variant="secondary">Start/Pause</Button>
+        <Button variant="secondary">Stop</Button>
+        <Button variant="secondary">Restart</Button>
+      </div>}
+      <AsideInfo
+        title={["Next piece"]}
+        info={nextPiece}
+      />
+      <AsideInfo
+        title={["Players", "Score"]}
+        info={playersInfo}
+      />
+    </div>
+  );
 };
 
-export default Aside;
+const mapStateToProps = (state) => ({
+  room: state.rooms.room,
+  lid: state.rooms.lid,
+});
+
+export default connect(mapStateToProps)(Aside);

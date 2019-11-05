@@ -1,5 +1,6 @@
 export const API = {
-    GET_ROOMS: "/api/rooms",
+    GET_ROOMS: "/api/rooms/get/multi",
+    GET_All_ROOMS: "/api/rooms/get/all",
     POST_ROOM: "/api/rooms",
     GET_GAME_ROOM: "/api/rooms/room",
     CHECK_TOKEN: "/api/player/token",

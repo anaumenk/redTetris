@@ -4,10 +4,6 @@ const socketIo = require("socket.io");
 const http = require("http");
 const errorHandler = require("errorhandler");
 
-//del
-const Player = require("./classes/Player");
-//del
-
 const app = express();
 const port = process.env.PORT || 8000;
 
@@ -20,67 +16,65 @@ app.use(require("./routes"));
 const server = http.createServer(app);
 const io = socketIo(server);
 const rooms = [];
-
-//del
-const player1 = new Player("1", "1");
-const players = [player1];
-//del
-
-// uncommit when del
-// const players = []
+const players = [];
 
 const getMultiRooms = () => {
-    return rooms.filter((room) => {
-        if (room.multi) {
-            return room;
-        }
-    });
+  return rooms.filter((room) => {
+    if (room.multi) {
+      return room;
+    }
+  });
 };
 
 const getRooms = async socket => {
-    socket.emit("/api/rooms", getMultiRooms());
+  socket.emit("/api/rooms/get/multi", getMultiRooms());
 };
 
 io.on("connection", socket => {
-    console.log("New client connected"), setInterval(
-          () => getRooms(socket),
-          1000
-        );
-    socket.emit("/api/rooms", getMultiRooms());
-    socket.on("disconnect", () => console.log("Client disconnected"));
+  console.log("New client connected"), setInterval(
+    () => {
+      getRooms(socket);
+      socket.emit("/api/rooms/get/all", rooms);
+    },
+    1000
+  );
+  getRooms(socket);
+  socket.on("disconnect", () => console.log("Client disconnected"));
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
 
 const addNewRoom = (newRoom) => {
-    rooms.push(newRoom);
+  rooms.push(newRoom);
 };
 
 const addNewPlayer = (player) => {
-    players.push(player);
+  players.push(player);
 };
 
 const checkToken = (token) => {
-    const player = players.filter((player) => player.getToken === token);
-    return player.length > 0;
+  return players.filter((player) => player.getToken === token).length > 0;
 };
 
 const login = (name, password) => {
-    return players.filter((player) => {
-        if (player.checkLogin(name, password))
-            return player
-    })[0];
+  return players.filter((player) => {
+    if (player.checkLogin(name, password))
+      return player
+  })[0];
 };
 
 const getPlayerInfo = (token) => {
-    return players.map((player) => {
-        if (player.getToken === token) {
-            return player.getInfo;
-        }
-    })[0];
+  return players.find((player) => player.getToken === token).getInfo;
 };
 
-const getRoom = (id, name) => rooms.find((room) => room.id === id && room.player.name === name);
+const getPlayerByToken = (token) => players.find((player) => player.getToken === token);
+
+const getRoom = (id, name, token) => {
+  const room = rooms.find((room) => room.id === id && room.lid.name === name);
+  const player = getPlayerByToken(token);
+  room.addPlayer(player);
+  return room;
+};
 
 const checkLid = (playerId, token) => !!players
   .find((player) => player.token === token && player.id === playerId);

@@ -5,7 +5,6 @@ import { configAxios } from "../../axios";
 import { API, ENTER_ACTIONS, METHODS, ROUTES } from "../../constants";
 import { auth } from "../../utility";
 import { withRouter } from "react-router-dom"
-import Feedback from "react-bootstrap/Feedback";
 
 const EnterForm = (props) => {
   const [name, setName] = useState("");
@@ -45,7 +44,7 @@ const EnterForm = (props) => {
       } else {
         setError(data.error)
       }
-    });
+    }).catch((err) => console.log(err));
   };
 
   return (

@@ -217,4 +217,5 @@ form.enter {
   color: #989898b5;
   cursor: pointer;
   display: flex;
+  z-index: 1;
 }
