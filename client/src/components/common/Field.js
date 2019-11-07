@@ -31,8 +31,8 @@ const Field = (props) => {
                           <div
                             className="piece"
                             style={{
-                              width: props.size,
-                              height: props.size,
+                              width: props.width,
+                              height: props.height,
                               backgroundColor: square.color
                             }}
                             key={x}

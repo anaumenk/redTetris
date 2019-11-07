@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ButtonRef, CentralBlock } from "../common";
-import {Button, Col, FormControl, Row} from "react-bootstrap";
-import { connect } from "react-redux";
-import { setPlayer } from "../../actions"
-import {API, METHODS, ROUTES} from "../../constants";
-import {auth, IsLogin} from "../../utility";
-import {localStorageKeys, localStorageService} from "../../store";
-import {configAxios} from "../../axios";
+import { CentralBlock } from "../common";
+import { Col, Row} from "react-bootstrap";
+import { API, METHODS } from "../../constants";
+import { configAxios } from "../../axios";
 
 const Player = () => {
     const [player, setPlayer] = useState("");

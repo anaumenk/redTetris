@@ -1,6 +1,4 @@
 import { localStorageKeys, localStorageService } from "../store";
-import { configAxios } from "../axios";
-import { API, METHODS } from "../constants";
 
 export const auth = {
   isAuthenticated: !!localStorageService.readItem(localStorageKeys.TOKEN),

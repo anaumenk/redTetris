@@ -15,7 +15,7 @@ app.use(require("./routes"));
 
 const server = http.createServer(app);
 const io = socketIo(server);
-const rooms = [];
+let rooms = [];
 const players = [];
 
 const getMultiRooms = () => {
@@ -64,7 +64,8 @@ const login = (name, password) => {
 };
 
 const getPlayerInfo = (token) => {
-  return players.find((player) => player.getToken === token).getInfo;
+  const player = players.find((player) => player.getToken === token);
+  return player ? player.getInfo : null;
 };
 
 const getPlayerByToken = (token) => players.find((player) => player.getToken === token);
@@ -79,6 +80,10 @@ const getRoom = (id, name, token) => {
 const checkLid = (playerId, token) => !!players
   .find((player) => player.token === token && player.id === playerId);
 
+const deleteRoom = (id) => {
+  rooms = rooms.filter((room) => room.id !== id);
+};
+
 module.exports.addNewRoom = addNewRoom;
 module.exports.checkToken = checkToken;
 module.exports.addNewPlayer = addNewPlayer;
@@ -86,3 +91,4 @@ module.exports.login = login;
 module.exports.getPlayerInfo = getPlayerInfo;
 module.exports.getRoom = getRoom;
 module.exports.checkLid = checkLid;
+module.exports.deleteRoom = deleteRoom;

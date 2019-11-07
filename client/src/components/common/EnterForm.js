@@ -35,6 +35,8 @@ const EnterForm = (props) => {
       case ENTER_ACTIONS.LOGIN:
         api = API.LOGIN;
         break;
+      default:
+        api = "";
     }
     configAxios(METHODS.POST, api, { name, password }).then((response) => {
       const data = response.data;

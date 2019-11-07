@@ -39,4 +39,14 @@ router.post('/room', (req, res) => {
   res.send(response);
 });
 
+router.post('/delete', (req) => {
+  const token = req.body.token;
+  if (index.checkToken(token)) {
+    const room = index.getRoom(req.body.id, req.body.name, token);
+    if (room) {
+      index.deleteRoom(req.body.id);
+    }
+  }
+});
+
 module.exports = router;

@@ -5,7 +5,6 @@ class Room {
     this.id = Room.incrementId();
     this.name = name;
     const lid = index.getPlayerInfo(token);
-    console.log(lid)
     this.lid = lid;
     this.players = [
       {

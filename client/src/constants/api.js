@@ -7,9 +7,10 @@ export const API = {
     REGISTER: "/api/player/register",
     LOGIN: "/api/player/login",
     GET_PLAYER: "/api/player/info",
+    DELETE_ROOM: "/api/rooms/delete"
 };
 
 export const METHODS = {
     GET: "GET",
-    POST: "POST"
+    POST: "POST",
 };

@@ -22,7 +22,7 @@ export default function (state = initialState, action) {
     case CREATE_ROOM:
       return {
         ...state,
-        createdRoom: action.payload.room
+        createdRoom: action.payload.createdRoom
       };
     case GET_GAME_ROOM:
       return {

@@ -6,7 +6,10 @@ import { Link, withRouter, Redirect } from "react-router-dom";
 import {Button, Form, FormControl, Modal} from "react-bootstrap";
 
 const RoomsList = (props) => {
-    useEffect(() => props.getRooms(), []);
+    useEffect(() => {
+      props.getRooms();
+      // return () => console.log(props.createdRoom)
+    }, []);
 
     const [show, setShow] = useState(false);
     const [name, setName] = useState("");

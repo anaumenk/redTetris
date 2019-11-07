@@ -23,27 +23,27 @@ export const getRooms = () => dispatch => {
 export const getAllRooms = (roomId) => dispatch => {
   socket.on(API.GET_All_ROOMS, data => {
     const prevState = store.getState().rooms.room;
-    console.log(data)
-    // if (data.length !== prevState.length) {
-    //   dispatch({
-    //     type: GET_ROOM,
-    //     payload: {
-    //       room
-    //     }
-    //   })
-    // }
+    const room = data.find((room) => room.id === roomId);
+    if (room && room.players && room.players.length !== prevState.players.length) {
+      dispatch({
+        type: GET_ROOM,
+        payload: {
+          room
+        }
+      })
+    }
   });
 };
 
 export const createRoom = (newRoom) => dispatch => {
   configAxios(METHODS.POST, API.POST_ROOM, newRoom)
     .then((response) => {
-      const room = response.data.data;
+      const createdRoom = response.data.data;
         dispatch({
-            type: CREATE_ROOM,
-            payload: {
-                room
-            }
+          type: CREATE_ROOM,
+          payload: {
+            createdRoom
+          }
         })
     })
     .catch((err) => console.log(err))
@@ -64,3 +64,14 @@ export const isRoom = (roomId, playerName) => dispatch => {
     })
     .catch((err) => console.log(err))
 };
+
+export const nullifyCreatedRoom = () => dispatch => {
+  dispatch({
+    type: CREATE_ROOM,
+    payload: {
+      createdRoom: null
+    }
+  })
+};
+
+
