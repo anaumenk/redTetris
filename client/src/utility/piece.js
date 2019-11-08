@@ -16,8 +16,10 @@ export function getNextPiece(figure, turn) {
 }
 
 export function movePieceDown(piece, movePiece) {
+  console.log(piece)
   if (piece.find((line) => line[1] === fieldHeight - 1)) {
     clearInterval(movePieceDown);
+    // add new piece to the field
     return ;
   }
   const place = piece.map((line) => {
