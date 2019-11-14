@@ -24,7 +24,10 @@ export const getAllRooms = (roomId) => dispatch => {
   socket.on(API.GET_All_ROOMS, data => {
     const prevState = store.getState().rooms.room;
     const room = data.find((room) => room.id === roomId);
-    if (room && room.players && room.players.length !== prevState.players.length) {
+    if (room && room.players && (prevState && prevState.players
+      ? room.players.length !== prevState.players.length
+      : true)
+    ) {
       dispatch({
         type: GET_ROOM,
         payload: {
@@ -52,15 +55,18 @@ export const createRoom = (newRoom) => dispatch => {
 export const isRoom = (roomId, playerName) => dispatch => {
   configAxios(METHODS.POST, API.GET_GAME_ROOM, {id: roomId, name: playerName})
     .then((response) => {
-      const room = response.data.data.room;
-      const lid = response.data.data.lid;
-      dispatch({
-        type: GET_GAME_ROOM,
-        payload: {
-          room,
-          lid
-        }
-      })
+      const data = response.data.data;
+      if (data) {
+        const room = data.room;
+        const lid = data.lid;
+        dispatch({
+          type: GET_GAME_ROOM,
+          payload: {
+            room,
+            lid
+          }
+        })
+      }
     })
     .catch((err) => console.log(err))
 };

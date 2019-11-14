@@ -1,4 +1,4 @@
-import { fieldHeight, PIECES } from "../constants";
+import {COLORS, PIECES} from "../constants";
 
 export function getNextPieceFigure() {
   const keys = Object.keys(PIECES);
@@ -11,20 +11,8 @@ export function getPieceTurn(random = true, i) {
     : i === 3 ? 0 : i;
 }
 
-export function getNextPiece(figure, turn) {
-  return PIECES[figure][turn];
-}
-
-export function movePieceDown(piece, movePiece) {
-  console.log(piece)
-  if (piece.find((line) => line[1] === fieldHeight - 1)) {
-    clearInterval(movePieceDown);
-    // add new piece to the field
-    return ;
-  }
-  const place = piece.map((line) => {
-    line[1]++;
-    return line;
-  });
-  movePiece(place)
+export function getColor() {
+  const max = Object.keys(COLORS).length;
+  const colorIndex = Math.floor(Math.random() * Math.floor(max - 1));
+  return COLORS[colorIndex];
 }

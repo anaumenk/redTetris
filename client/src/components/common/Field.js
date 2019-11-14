@@ -8,10 +8,7 @@ const Field = (props) => {
       item.place.forEach((place) => {
         const x = place[0];
         const y = place[1];
-        field = field.map((row, i) => i === y
-          ? row.map((square, j) => j === x ? {color: item.color} : square)
-          : row
-        );
+        field = field.map((row, i) => row.map((square, j) => j === x && i === y ? {color: item.color} : square));
       })
     });
 

@@ -1,9 +1,10 @@
 import { SET_NEXT_PIECE } from '../actions';
-import { getNextPieceFigure, getPieceTurn } from "../utility/piece";
+import { getColor, getNextPieceFigure, getPieceTurn } from "../utility/piece";
 
 const initialState = {
   nextPieceTurn: getPieceTurn(true),
   nextPieceFigure: getNextPieceFigure(),
+  nextPieceColor: getColor(),
 };
 
 export default function (state = initialState, action) {
@@ -11,8 +12,9 @@ export default function (state = initialState, action) {
     case SET_NEXT_PIECE:
       return {
         ...state,
-        nextPieceTurn: action.payload.nextPieceTurn,
-        nextPieceFigure: action.payload.nextPieceFigure,
+        nextPieceTurn: getPieceTurn(true),
+        nextPieceFigure: getNextPieceFigure(),
+        nextPieceColor: getColor(),
       };
     default:
       return state;

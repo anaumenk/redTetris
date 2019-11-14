@@ -3,7 +3,6 @@ import { Field, AsideInfo } from "../common";
 import { Button, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { PIECES } from "../../constants";
-import { setNextPiece } from "../../actions/game";
 
 const Aside = (props) => {
   const players = props.room.players;
@@ -24,12 +23,11 @@ const Aside = (props) => {
     height={10}
     fill={[
       {
-        color: "black",
+        color: props.nextPieceColor,
         place: PIECES[props.nextPieceFigure][props.nextPieceTurn]
-    },
+      },
     ]}
   />;
-
 
   return (
     <div className="aside-container">
@@ -56,6 +54,7 @@ const mapStateToProps = (state) => ({
   lid: state.rooms.lid,
   nextPieceFigure: state.game.nextPieceFigure,
   nextPieceTurn: state.game.nextPieceTurn,
+  nextPieceColor: state.game.nextPieceColor,
 });
 
-export default connect(mapStateToProps, { setNextPiece })(Aside);
+export default connect(mapStateToProps)(Aside);
