@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { isRoom, getAllRooms, nullifyCreatedRoom, setNextPiece } from "../../actions"
 import Field from "../common/Field";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
-import { fieldHeight, fieldWidth, PIECES, UNSENT_INT } from "../../constants";
+import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, PIECES, UNSENT_INT } from "../../constants";
+import { noMoreSpace } from "../../utility/piece";
 
 const Game = (props) => {
   const roomId = parseInt(props.match.params.room);
@@ -30,7 +31,7 @@ const Game = (props) => {
   const movePieceDown = (intervalId) => {
     const fieldIndex = field.findIndex((obj => obj.id === pieceId));
     let fieldPiecePlace = [...field[fieldIndex].place];
-    if (fieldPiecePlace.find((line) => line[1] === 19)) {
+    if (noMoreSpace([...field], DIRECTION.DOWN)) {
       clearInterval(intervalId);
       getPieceAndStartMoving();
     } else {
@@ -76,8 +77,8 @@ const Game = (props) => {
         <Row>
           <Col>
             <Field
-              fieldWidth={fieldWidth}
-              fieldHeight={fieldHeight}
+              fieldWidth={FIELD_WIDTH}
+              fieldHeight={FIELD_HEIGHT}
               width={55}
               height={45}
               color="#d5ecff6b"

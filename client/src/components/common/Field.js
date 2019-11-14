@@ -1,23 +1,16 @@
 import React from "react";
+import { createField } from "../../utility/field";
+import { NO_COLOR } from "../../constants";
 
 const Field = (props) => {
-    let field = Array(props.fieldHeight)
-      .fill(Array(props.fieldWidth).fill({color: "transparent"}));
-
-    props.fill.forEach((item) => {
-      item.place.forEach((place) => {
-        const x = place[0];
-        const y = place[1];
-        field = field.map((row, i) => row.map((square, j) => j === x && i === y ? {color: item.color} : square));
-      })
-    });
+    const field = createField(props.fieldHeight, props.fieldWidth, props.fill);
 
     return (
       <div
         className="field"
         style={{
-            backgroundColor: props.color || "transparent",
-            borderColor: props.border || "transparent"
+            backgroundColor: props.color || NO_COLOR,
+            borderColor: props.border || NO_COLOR
         }}
       >
           {field.map((row, y) => {
