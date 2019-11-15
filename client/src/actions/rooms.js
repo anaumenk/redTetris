@@ -1,4 +1,4 @@
-import { GET_ROOMS, CREATE_ROOM, GET_GAME_ROOM, GET_ROOM } from "./";
+import { GET_ROOMS, CREATE_ROOM, GET_GAME_ROOM, GET_ROOM, UPDATE_ROOM_SCORE } from "./";
 import { configAxios } from "../axios";
 import { API, METHODS } from "../constants";
 import socketIOClient from "socket.io-client";
@@ -79,5 +79,25 @@ export const nullifyCreatedRoom = () => dispatch => {
     }
   })
 };
+
+export const scoreUpdate = (score, roomId) => dispatch => {
+  configAxios(METHODS.POST, API.UPDATE_ROOM_SCORE, {
+    score,
+    roomId,
+  })
+    .then((response) => {
+      const data = response.data.data;
+      if (data) {
+        const room = data.room;
+        dispatch({
+          type: UPDATE_ROOM_SCORE,
+          payload: {
+            room,
+          }
+        })
+      }
+    })
+    .catch((err) => console.log(err))
+}
 
 

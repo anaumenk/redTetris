@@ -84,6 +84,18 @@ const deleteRoom = (id) => {
   rooms = rooms.filter((room) => room.id !== id);
 };
 
+const updateRoomScore = (roomId, playerId, score) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  rooms[room].players.forEach((player) => {
+    if (player.id === playerId) {
+      player.score += score;
+    } else {
+      player.score -= score;
+    }
+  });
+  return rooms[room];
+};
+
 module.exports.addNewRoom = addNewRoom;
 module.exports.checkToken = checkToken;
 module.exports.addNewPlayer = addNewPlayer;
@@ -92,3 +104,4 @@ module.exports.getPlayerInfo = getPlayerInfo;
 module.exports.getRoom = getRoom;
 module.exports.checkLid = checkLid;
 module.exports.deleteRoom = deleteRoom;
+module.exports.updateRoomScore = updateRoomScore;

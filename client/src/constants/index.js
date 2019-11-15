@@ -12,4 +12,5 @@ export const DIRECTION = {
   DOWN: "DOWN",
   RIGHT: "RIGHT",
   LEFT: "LEFT",
+  CURRENT: "CURRENT",
 };

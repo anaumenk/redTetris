@@ -1,6 +1,6 @@
 import { localStorageKeys, localStorageService } from "../store";
 
-export const auth = {
+const auth = {
   isAuthenticated: !!localStorageService.readItem(localStorageKeys.TOKEN),
   // async checkToken() {
   //   const token = localStorageService.readItem(localStorageKeys.TOKEN);
@@ -17,3 +17,5 @@ export const auth = {
     auth.isAuthenticated = false;
   }
 };
+
+export default auth;

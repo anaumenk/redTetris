@@ -1,2 +1,4 @@
 export { default as IsLogin } from "./IsLogin";
-export { auth } from "./authentificate";
+export { default as auth } from "./authentificate";
+export * from "./field";
+export * from "./piece";

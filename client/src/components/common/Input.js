@@ -1,4 +1,4 @@
-import {Col, Form, Row} from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import React from "react";
 
 const Input = (props) => (

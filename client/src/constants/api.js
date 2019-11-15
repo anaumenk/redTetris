@@ -7,6 +7,7 @@ export const API = {
     REGISTER: "/api/player/register",
     LOGIN: "/api/player/login",
     GET_PLAYER: "/api/player/info",
+    UPDATE_ROOM_SCORE: "/api/rooms/score",
     DELETE_ROOM: "/api/rooms/delete"
 };
 

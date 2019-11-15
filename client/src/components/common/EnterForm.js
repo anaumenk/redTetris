@@ -4,7 +4,7 @@ import { Button, Form } from "react-bootstrap";
 import { configAxios } from "../../axios";
 import { API, ENTER_ACTIONS, METHODS, ROUTES } from "../../constants";
 import { auth } from "../../utility";
-import { withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom";
 
 const EnterForm = (props) => {
   const [name, setName] = useState("");

@@ -1,5 +1,5 @@
 import React from "react";
-import { createField } from "../../utility/field";
+import { createField } from "../../utility";
 import { NO_COLOR } from "../../constants";
 
 const Field = (props) => {

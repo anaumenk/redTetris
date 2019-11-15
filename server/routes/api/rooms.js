@@ -49,4 +49,27 @@ router.post('/delete', (req) => {
   }
 });
 
+router.post('/score', (req, res) => {
+  const token = req.body.token;
+  const score = req.body.score;
+  const roomId = req.body.roomId;
+  const response = {
+    data: null,
+    error: null
+  };
+  if (index.checkToken(token)) {
+    response.data = {};
+    const player = index.getPlayerInfo(token);
+    const newRoom = index.updateRoomScore(roomId, player.id, score);
+    if (newRoom) {
+      response.data.room = newRoom;
+    } else {
+      response.error = "Update score error."
+    }
+  } else {
+    response.error = "No such user."
+  }
+  res.send(response);
+});
+
 module.exports = router;

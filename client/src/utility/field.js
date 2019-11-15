@@ -1,4 +1,5 @@
-import { NO_COLOR } from "../constants";
+import { FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR } from "../constants";
+import { pieceMoving } from "./piece";
 
 export function createField(height, width, fill) {
   let field = Array(height).fill(Array(width).fill({color: NO_COLOR}));
@@ -11,5 +12,14 @@ export function createField(height, width, fill) {
     })
   });
 
-  return field
+  return field;
+}
+
+export function checkFieldFill(allPieces, setField) {
+  const field = createField(FIELD_HEIGHT, FIELD_WIDTH, allPieces);
+  if (field[FIELD_HEIGHT - 1].every((square) => square.color !== NO_COLOR)) {
+    pieceMoving.moveAll(allPieces, setField);
+    return true;
+  }
+  return false;
 }

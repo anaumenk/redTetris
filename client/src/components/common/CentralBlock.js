@@ -1,7 +1,7 @@
 import React from "react";
-import {Col, Row} from "react-bootstrap";
-import {ButtonRef, Title} from "./";
-import {ROUTES} from "../../constants";
+import { Col, Row } from "react-bootstrap";
+import { ButtonRef, Title } from "./";
+import { ROUTES } from "../../constants";
 import { FaTimes } from "react-icons/fa";
 
 const CentralBlock = (props) => (

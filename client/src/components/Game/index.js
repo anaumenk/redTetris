@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { isRoom, getAllRooms, nullifyCreatedRoom, setNextPiece } from "../../actions"
-import Field from "../common/Field";
+import { isRoom, getAllRooms, nullifyCreatedRoom, setNextPiece, scoreUpdate } from "../../actions"
+import { Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
 import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, PIECES, UNSENT_INT } from "../../constants";
-import { noMoreSpace } from "../../utility/piece";
+import { checkFieldFill, noMoreSpace, pieceMoving } from "../../utility";
 
 const Game = (props) => {
   const roomId = parseInt(props.match.params.room);
@@ -15,46 +15,69 @@ const Game = (props) => {
   const [game, setGame] = useState(false);
   const [field, setField] = useState([]);
 
+  const [key, setKey] = useState(UNSENT_INT);
+
+  useEffect(() => {
+    if (game) {
+      switch (key) {
+        case 37: {
+          pieceMoving.left(field, pieceId, setField);
+          break;
+        }
+        case 39: {
+          pieceMoving.right(field, pieceId, setField);
+          break;
+        }
+        case 38: {
+          // up arrow - Rotation (only one direction is enough)
+          break;
+        }
+        case 40: {
+          pieceMoving.down(field, pieceId, setField);
+          break;
+        }
+        case 32: {
+          pieceMoving.downBottom(field, pieceId, setField);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+      setKey(UNSENT_INT);
+    }
+  }, [key]);
+
   useEffect(() => props.nullifyCreatedRoom());
 
   useEffect(() => {
      props.isRoom(roomId, playerName);
      props.getAllRooms(roomId);
+     window.addEventListener("keydown", (e) => setKey(e.keyCode));
   }, []);
 
   useEffect(() => {
     if (pieceId !== UNSENT_INT) {
-      const intervalId = setInterval(() => movePieceDown(intervalId), 100);
+      const intervalId = setInterval(() => {
+            return pieceMoving.downInterval(field, pieceId, intervalId, getPieceAndStartMoving, setField);
+      }, 1000);
     }
   }, [pieceId]);
 
-  const movePieceDown = (intervalId) => {
-    const fieldIndex = field.findIndex((obj => obj.id === pieceId));
-    let fieldPiecePlace = [...field[fieldIndex].place];
-    if (noMoreSpace([...field], DIRECTION.DOWN)) {
-      clearInterval(intervalId);
-      getPieceAndStartMoving();
+  const addPieceToField = (piece) => {
+    if (!noMoreSpace([...field], DIRECTION.CURRENT, piece)) {
+      setField([...field, piece]);
+      setPieceId(piece.id);
     } else {
-      fieldPiecePlace = fieldPiecePlace.map((line) => {
-        let newLine = [...line];
-        newLine[1]++;
-        return newLine;
-      });
-      setField(field.map((piece) => {
-        if (piece.id === pieceId) {
-          piece.place = fieldPiecePlace;
-        }
-        return piece;
-      }));
+      setGame(!game);
+      setField([]);
     }
   };
 
-  const addPieceToField = (piece) => {
-    setField([...field, piece]);
-    setPieceId(piece.id);
-  };
-
   const getPieceAndStartMoving = () => {
+    while (checkFieldFill(field, setField)) {
+      props.scoreUpdate(10, roomId);
+    }
     const piece = {
       id: field.length,
       color: props.nextPieceColor,
@@ -68,6 +91,8 @@ const Game = (props) => {
     setGame(!game);
     getPieceAndStartMoving();
   };
+
+  console.log(props.room)
 
   return props.room ? (
     <>
@@ -108,6 +133,7 @@ const mapDispatchToProps = {
   getAllRooms,
   nullifyCreatedRoom,
   setNextPiece,
+  scoreUpdate
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

@@ -1,6 +1,6 @@
 import React from "react";
-import {ButtonRef, CentralBlock} from "../common";
-import {ROUTES} from "../../constants";
+import { ButtonRef, CentralBlock } from "../common";
+import { ROUTES } from "../../constants";
 
 const Enter = () => {
   return (
