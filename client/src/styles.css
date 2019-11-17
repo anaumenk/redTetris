@@ -53,7 +53,7 @@ code {
   color: #989898b5!important;
 }
 
-.homepage button:not(:last-child) {
+button:not(:last-child) {
   margin-right: 5px;
 }
 

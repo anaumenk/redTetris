@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { isRoom, getAllRooms, nullifyCreatedRoom, setNextPiece, scoreUpdate, setNextTurn } from "../../actions"
-import { Field } from "../common";
-import { Col, Row, Spinner } from "react-bootstrap";
+import { Field, Title } from "../common";
+import {Button, Col, Modal, Row, Spinner} from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
 import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, PIECES, UNSENT_INT } from "../../constants";
@@ -15,6 +15,7 @@ const Game = (props) => {
   const [game, setGame] = useState(false);
   const [field, setField] = useState([]);
   const [intervalId, setIntervalId] = useState(UNSENT_INT);
+  const [restart, setRestart] = useState(false);
 
   const [key, setKey] = useState(UNSENT_INT);
 
@@ -94,7 +95,27 @@ const Game = (props) => {
 
   const startGame = () => {
     setGame(!game);
-    getPieceAndStartMoving();
+    if (game) {
+      clearInterval(intervalId)
+    } else {
+      if (pieceId === UNSENT_INT) {
+        getPieceAndStartMoving();
+      } else {
+        const newIntervalId = setInterval(() => {
+          return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
+        }, 1000);
+        setIntervalId(newIntervalId)
+      }
+    }
+  };
+
+  const stopGame = () => {
+    setGame(!game);
+    setPieceId(UNSENT_INT);
+    setField([]);
+    clearInterval(intervalId);
+    setIntervalId(UNSENT_INT);
+    setRestart(true)
   };
 
   return props.room ? (
@@ -118,8 +139,29 @@ const Game = (props) => {
             <Aside
               game={game}
               startGame={startGame}
+              stopGame={stopGame}
             /></Col>
         </Row>
+        <Modal show={restart} onHide={() => setRestart(false)} >
+          <Modal.Header>The game is finished</Modal.Header>
+          <Modal.Body>
+            <Title title="Winner" />
+            <div className="aside-heading">
+              <Title title="Player"/>
+              <Title title="Score"/>
+            </div>
+            <Row className="aside-content">
+              <Row className="player-game-info">
+                <Col sm={6}>1</Col>
+                <Col sm={6}>0</Col>
+              </Row>
+            </Row>
+            <div className="buttons justify-content-center">
+              <Button>Restart</Button>
+              <Button variant="secondary">Exit</Button>
+            </div>
+          </Modal.Body>
+        </Modal>
     </>
     ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;
 };

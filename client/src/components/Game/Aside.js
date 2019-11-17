@@ -33,9 +33,8 @@ const Aside = (props) => {
     <div className="aside-container">
       {props.lid && <div className="buttons">
         {!props.game && <Button variant="secondary" onClick={props.startGame}>Start</Button>}
-        {props.game && <Button variant="secondary">Pause</Button>}
-        <Button variant="secondary">Stop</Button>
-        <Button variant="secondary">Restart</Button>
+        {props.game && <Button variant="secondary" onClick={props.startGame}>Pause</Button>}
+        {props.game && <Button variant="secondary" onClick={props.stopGame}>Stop</Button>}
       </div>}
       <AsideInfo
         title={["Next piece"]}
