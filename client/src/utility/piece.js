@@ -9,7 +9,7 @@ export function getNextPieceFigure() {
 export function getPieceTurn(random = true, i) {
   return random
     ? Math.floor(Math.random() * Math.floor(PIECES[getNextPieceFigure()].length))
-    : i === 3 ? 0 : i;
+    : i === 3 ? 0 : i + 1;
 }
 
 export function getColor() {
@@ -121,6 +121,23 @@ export const pieceMoving = {
         return newLine;
       });
       return piece;
+    }))
+  },
+  rotation(field, pieceId, setField, newPiecePlace, setNextTurn) {
+    setField(field.map((piece) => {
+      if (piece.id === pieceId) {
+        newPiecePlace = newPiecePlace.map((line) => {
+          let newLine = [...line];
+          newLine[0] += piece.place[0][0];
+          newLine[1] += piece.place[0][1];
+          return newLine;
+        });
+        if (newPiecePlace.every((line) => line[0] < FIELD_WIDTH && line[1] < FIELD_HEIGHT)) {
+          setNextTurn();
+          piece.place = newPiecePlace;
+        }
+      }
+      return piece
     }))
   }
 };

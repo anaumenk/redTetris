@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { isRoom, getAllRooms, nullifyCreatedRoom, setNextPiece, scoreUpdate } from "../../actions"
+import { isRoom, getAllRooms, nullifyCreatedRoom, setNextPiece, scoreUpdate, setNextTurn } from "../../actions"
 import { Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
 import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, PIECES, UNSENT_INT } from "../../constants";
-import { checkFieldFill, noMoreSpace, pieceMoving } from "../../utility";
+import { checkFieldFill, noMoreSpace, pieceMoving, getPieceTurn } from "../../utility";
 
 const Game = (props) => {
   const roomId = parseInt(props.match.params.room);
@@ -30,7 +30,8 @@ const Game = (props) => {
           break;
         }
         case 38: {
-          // up arrow - Rotation (only one direction is enough)
+          const newPiecePlace = PIECES[props.currentPieceFigure][getPieceTurn(false, props.currentPieceTurn)];
+          pieceMoving.rotation(field, pieceId, setField, newPiecePlace, props.setNextTurn);
           break;
         }
         case 40: {
@@ -128,6 +129,8 @@ const mapStateToProps = (state) => ({
   nextPieceFigure: state.game.nextPieceFigure,
   nextPieceTurn: state.game.nextPieceTurn,
   nextPieceColor: state.game.nextPieceColor,
+  currentPieceTurn: state.game.currentPieceTurn,
+  currentPieceFigure: state.game.currentPieceFigure
 });
 
 const mapDispatchToProps = {
@@ -135,7 +138,8 @@ const mapDispatchToProps = {
   getAllRooms,
   nullifyCreatedRoom,
   setNextPiece,
-  scoreUpdate
+  scoreUpdate,
+  setNextTurn
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));
