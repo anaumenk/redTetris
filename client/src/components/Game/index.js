@@ -14,6 +14,7 @@ const Game = (props) => {
   const [pieceId, setPieceId] = useState(UNSENT_INT);
   const [game, setGame] = useState(false);
   const [field, setField] = useState([]);
+  const [intervalId, setIntervalId] = useState(UNSENT_INT);
 
   const [key, setKey] = useState(UNSENT_INT);
 
@@ -38,6 +39,8 @@ const Game = (props) => {
         }
         case 32: {
           pieceMoving.downBottom(field, pieceId, setField);
+          clearInterval(intervalId);
+          getPieceAndStartMoving();
           break;
         }
         default: {
@@ -58,9 +61,10 @@ const Game = (props) => {
 
   useEffect(() => {
     if (pieceId !== UNSENT_INT) {
-      const intervalId = setInterval(() => {
-            return pieceMoving.downInterval(field, pieceId, intervalId, getPieceAndStartMoving, setField);
+      const newIntervalId = setInterval(() => {
+            return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
       }, 1000);
+      setIntervalId(newIntervalId)
     }
   }, [pieceId]);
 
@@ -92,8 +96,6 @@ const Game = (props) => {
     getPieceAndStartMoving();
   };
 
-  console.log(props.room)
-
   return props.room ? (
     <>
       <div className="room-name">
@@ -104,7 +106,7 @@ const Game = (props) => {
             <Field
               fieldWidth={FIELD_WIDTH}
               fieldHeight={FIELD_HEIGHT}
-              width={55}
+              width={45}
               height={45}
               color="#d5ecff6b"
               border="#989898b5"

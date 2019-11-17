@@ -37,10 +37,11 @@ const RoomsList = (props) => {
           <div className="room-list">
               <ul>
                   {props.rooms.map((room) => {
-                      return(
-                        <li key={room.id}>
-                            <Link to={`/${room.id}[<${room.lid.name}>]`}>{room.name}</Link>
-                        </li>)
+                      return (
+                        <Link key={room.id} to={`/${room.id}[<${room.lid.name}>]`}>
+                            <li>{room.name}</li>
+                        </Link>
+                      )
                   })}
               </ul>
               <div className="buttons justify-content-center">

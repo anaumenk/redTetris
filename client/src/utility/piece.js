@@ -112,12 +112,12 @@ export const pieceMoving = {
       setField(newField);
     }
   },
-  moveAll(field, setField) {
+  moveAll(field, setField, lineId) {
     setField(field.map((piece) => {
-      piece.place = piece.place.filter((line) => line[1] !== FIELD_HEIGHT)
+      piece.place = piece.place.filter((line) => line[1] !== lineId)
       piece.place = piece.place.map((line) => {
         let newLine = [...line];
-        newLine[1]++;
+        if (line[1] < lineId) { newLine[1]++; }
         return newLine;
       });
       return piece;

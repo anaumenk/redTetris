@@ -17,9 +17,11 @@ export function createField(height, width, fill) {
 
 export function checkFieldFill(allPieces, setField) {
   const field = createField(FIELD_HEIGHT, FIELD_WIDTH, allPieces);
-  if (field[FIELD_HEIGHT - 1].every((square) => square.color !== NO_COLOR)) {
-    pieceMoving.moveAll(allPieces, setField);
-    return true;
+  for (let i = 0; i < field.length; i++) {
+    if (field[i].every((square) => square.color !== NO_COLOR)) {
+      pieceMoving.moveAll(allPieces, setField, i);
+      return true;
+    }
   }
   return false;
 }

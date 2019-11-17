@@ -71,17 +71,17 @@ code {
   padding: 0;
 }
 
-.room-list ul li {
+.room-list ul a li {
   padding: 5px;
   transition: .1s;
   cursor: pointer;
 }
 
-.room-list ul li:hover {
+.room-list ul a:hover {
   font-weight: bold;
 }
 
-.room-list ul li:hover a {
+.room-list ul a:hover {
   text-decoration: none;
 }
 
@@ -104,6 +104,7 @@ code {
 .field {
   background-color: #d5ecff6b;
   border: 1px solid transparent;
+  width: fit-content;
 }
 
 .field > div {
