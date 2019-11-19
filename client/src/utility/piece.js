@@ -6,10 +6,10 @@ export function getNextPieceFigure() {
   return keys[Math.floor(Math.random() * Math.floor(keys.length - 1))];
 }
 
-export function getPieceTurn(random = true, i) {
+export function getPieceTurn(random = true, i, figure) {
   return random
-    ? Math.floor(Math.random() * Math.floor(PIECES[getNextPieceFigure()].length))
-    : i === 3 ? 0 : i + 1;
+    ? Math.floor(Math.random() * Math.floor(PIECES[figure].length))
+    : i === PIECES[figure].length - 1 ? 0 : i + 1;
 }
 
 export function getColor() {
@@ -114,7 +114,7 @@ export const pieceMoving = {
   },
   moveAll(field, setField, lineId) {
     setField(field.map((piece) => {
-      piece.place = piece.place.filter((line) => line[1] !== lineId)
+      piece.place = piece.place.filter((line) => line[1] !== lineId);
       piece.place = piece.place.map((line) => {
         let newLine = [...line];
         if (line[1] < lineId) { newLine[1]++; }

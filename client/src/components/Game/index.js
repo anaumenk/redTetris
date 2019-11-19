@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { isRoom, getAllRooms, nullifyCreatedRoom, setNextPiece, scoreUpdate, setNextTurn } from "../../actions"
-import { Field, Title } from "../common";
-import {Button, Col, Modal, Row, Spinner} from "react-bootstrap";
+import {
+  getAllRooms,
+  nullifyCreatedRoom,
+  setNextPiece,
+  scoreUpdate,
+  setNextTurn,
+  stopGame
+} from "../../actions"
+import { Field } from "../common";
+import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
 import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, PIECES, UNSENT_INT } from "../../constants";
 import { checkFieldFill, noMoreSpace, pieceMoving, getPieceTurn } from "../../utility";
+import Total from "./Total";
 
 const Game = (props) => {
   const roomId = parseInt(props.match.params.room);
@@ -16,7 +24,6 @@ const Game = (props) => {
   const [field, setField] = useState([]);
   const [intervalId, setIntervalId] = useState(UNSENT_INT);
   const [restart, setRestart] = useState(false);
-
   const [key, setKey] = useState(UNSENT_INT);
 
   useEffect(() => {
@@ -31,7 +38,8 @@ const Game = (props) => {
           break;
         }
         case 38: {
-          const newPiecePlace = PIECES[props.currentPieceFigure][getPieceTurn(false, props.currentPieceTurn)];
+          const newPieceTurn = getPieceTurn(false, props.currentPieceTurn, props.currentPieceFigure);
+          const newPiecePlace = PIECES[props.currentPieceFigure][newPieceTurn];
           pieceMoving.rotation(field, pieceId, setField, newPiecePlace, props.setNextTurn);
           break;
         }
@@ -56,8 +64,7 @@ const Game = (props) => {
   useEffect(() => props.nullifyCreatedRoom());
 
   useEffect(() => {
-     props.isRoom(roomId, playerName);
-     props.getAllRooms(roomId);
+     props.getAllRooms(roomId, playerName);
      window.addEventListener("keydown", (e) => setKey(e.keyCode));
   }, []);
 
@@ -70,19 +77,24 @@ const Game = (props) => {
     }
   }, [pieceId]);
 
+  const sortPlayers = props.room ? Object.values(props.room.players).sort((a, b) => {
+    return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
+  }) : [];
+
   const addPieceToField = (piece) => {
     if (!noMoreSpace([...field], DIRECTION.CURRENT, piece)) {
       setField([...field, piece]);
       setPieceId(piece.id);
     } else {
-      setGame(!game);
-      setField([]);
+      stopGame();
     }
   };
 
   const getPieceAndStartMoving = () => {
+    let i = 10;
     while (checkFieldFill(field, setField)) {
-      props.scoreUpdate(10, roomId);
+      props.scoreUpdate(i, roomId);
+      i += 10;
     }
     const piece = {
       id: field.length,
@@ -115,8 +127,10 @@ const Game = (props) => {
     setField([]);
     clearInterval(intervalId);
     setIntervalId(UNSENT_INT);
-    setRestart(true)
+    setRestart(true);
+    props.stopGame(roomId);
   };
+
 
   return props.room ? (
     <>
@@ -140,28 +154,10 @@ const Game = (props) => {
               game={game}
               startGame={startGame}
               stopGame={stopGame}
+              players={sortPlayers}
             /></Col>
         </Row>
-        <Modal show={restart} onHide={() => setRestart(false)} >
-          <Modal.Header>The game is finished</Modal.Header>
-          <Modal.Body>
-            <Title title="Winner" />
-            <div className="aside-heading">
-              <Title title="Player"/>
-              <Title title="Score"/>
-            </div>
-            <Row className="aside-content">
-              <Row className="player-game-info">
-                <Col sm={6}>1</Col>
-                <Col sm={6}>0</Col>
-              </Row>
-            </Row>
-            <div className="buttons justify-content-center">
-              <Button>Restart</Button>
-              <Button variant="secondary">Exit</Button>
-            </div>
-          </Modal.Body>
-        </Modal>
+        <Total restart={restart} setRestart={setRestart} />
     </>
     ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;
 };
@@ -172,16 +168,16 @@ const mapStateToProps = (state) => ({
   nextPieceTurn: state.game.nextPieceTurn,
   nextPieceColor: state.game.nextPieceColor,
   currentPieceTurn: state.game.currentPieceTurn,
-  currentPieceFigure: state.game.currentPieceFigure
+  currentPieceFigure: state.game.currentPieceFigure,
 });
 
 const mapDispatchToProps = {
-  isRoom,
   getAllRooms,
   nullifyCreatedRoom,
   setNextPiece,
   scoreUpdate,
-  setNextTurn
+  setNextTurn,
+  stopGame,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

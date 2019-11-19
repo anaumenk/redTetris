@@ -73,7 +73,9 @@ const getPlayerByToken = (token) => players.find((player) => player.getToken ===
 const getRoom = (id, name, token) => {
   const room = rooms.find((room) => room.id === id && room.lid.name === name);
   const player = getPlayerByToken(token);
-  room.addPlayer(player);
+  if (room) {
+    room.addPlayer(player);
+  }
   return room;
 };
 
@@ -93,7 +95,19 @@ const updateRoomScore = (roomId, playerId, score) => {
       player.score -= score;
     }
   });
-  return rooms[room];
+};
+
+const stopGame = (roomId) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  const total = [];
+  for (let i = 0; i < rooms[room].players.length; i++) {
+    total.push(Object.assign({}, rooms[room].players[i]))
+  }
+  rooms[room].players.forEach((player) => {
+    players[players.findIndex((p) => p.id === player.id)].updateScore(player.score);
+    player.score = 0;
+  });
+  return total;
 };
 
 module.exports.addNewRoom = addNewRoom;
@@ -105,3 +119,4 @@ module.exports.getRoom = getRoom;
 module.exports.checkLid = checkLid;
 module.exports.deleteRoom = deleteRoom;
 module.exports.updateRoomScore = updateRoomScore;
+module.exports.stopGame = stopGame;

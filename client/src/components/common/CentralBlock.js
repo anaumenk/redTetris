@@ -4,10 +4,10 @@ import { ButtonRef, Title } from "./";
 import { ROUTES } from "../../constants";
 import { FaTimes } from "react-icons/fa";
 
-const CentralBlock = (props) => (
+const CentralBlock = ({ close, title, children }) => (
   <Row className="homepage align-items-center">
       <Col md={7} className="container">
-        {props.close && (
+        {close && (
           <ButtonRef
             variant="secondary"
             to={ROUTES.MENU}
@@ -16,8 +16,8 @@ const CentralBlock = (props) => (
             <FaTimes/>
           </ButtonRef>
         )}
-          <Title title={props.title} />
-          {props.children}
+          <Title title={title} />
+          {children}
       </Col>
   </Row>
 );

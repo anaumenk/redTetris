@@ -5,10 +5,9 @@ import { getRooms, createRoom } from "../../actions"
 import { Link, withRouter, Redirect } from "react-router-dom";
 import {Button, Form, FormControl, Modal} from "react-bootstrap";
 
-const RoomsList = (props) => {
+const RoomsList = ({ getRooms, createRoom, createdRoom, rooms }) => {
     useEffect(() => {
-      props.getRooms();
-      // return () => console.log(props.createdRoom)
+      getRooms();
     }, []);
 
     const [show, setShow] = useState(false);
@@ -23,7 +22,7 @@ const RoomsList = (props) => {
             multi
         };
         event.preventDefault();
-        props.createRoom(newRoom);
+        createRoom(newRoom);
         setName("");
         setMulti(false);
         setShow(false);
@@ -31,12 +30,12 @@ const RoomsList = (props) => {
 
     const onClick = () => setShow(true);
 
-  return props.createdRoom
-    ? (<Redirect to={`/${props.createdRoom.id}[<${props.createdRoom.lid.name}>]`} />)
+  return createdRoom
+    ? (<Redirect to={`/${createdRoom.id}[<${createdRoom.lid.name}>]`} />)
     : (<CentralBlock title="Choose the room or create a new one" close={true}>
           <div className="room-list">
               <ul>
-                  {props.rooms.map((room) => {
+                  {rooms.map((room) => {
                       return (
                         <Link key={room.id} to={`/${room.id}[<${room.lid.name}>]`}>
                             <li>{room.name}</li>

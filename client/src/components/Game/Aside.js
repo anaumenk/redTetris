@@ -1,20 +1,17 @@
-import React from "react";
-import { Field, AsideInfo } from "../common";
-import { Button, Col, Row } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Field, AsideInfo, PlayerInfo } from "../common";
+import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { PIECES } from "../../constants";
+import { isRoomLid } from "../../actions";
+import { withRouter } from "react-router-dom";
 
 const Aside = (props) => {
-  const players = props.room.players;
+  useEffect(()=> {
+    props.isRoomLid(parseInt(props.match.params.room), props.match.params.player)
+  }, []);
 
-  const playersInfo = Object.values(players).sort((a, b) => {
-    return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
-  }).map((player, index) => (
-    <Row key={index} className="player-game-info">
-      <Col sm={6}>{player.name}</Col>
-      <Col sm={6}>{player.score}</Col>
-    </Row>
-  ));
+  const playersInfo = props.players.map((player, index) => <PlayerInfo key={index} player={player} />);
 
   const nextPiece = <Field
     fieldWidth={4}
@@ -56,4 +53,4 @@ const mapStateToProps = (state) => ({
   nextPieceColor: state.game.nextPieceColor,
 });
 
-export default connect(mapStateToProps)(Aside);
+export default withRouter(connect(mapStateToProps, { isRoomLid })(Aside));

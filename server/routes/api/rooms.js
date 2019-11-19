@@ -18,17 +18,16 @@ router.post('/', (req, res) => {
   res.send(response);
 });
 
-router.post('/room', (req, res) => {
+router.post('/lid', (req, res) => {
   const token = req.body.token;
   const response = {
     data: null,
     error: null
   };
   if (index.checkToken(token)) {
-    response.data = {};
     const room = index.getRoom(req.body.id, req.body.name, token);
     if (room) {
-      response.data.room = room;
+      response.data = {};
       response.data.lid = index.checkLid(room.lid.id, token)
     } else {
       response.error = "No such room."
@@ -39,32 +38,40 @@ router.post('/room', (req, res) => {
   res.send(response);
 });
 
-router.post('/delete', (req) => {
+// router.post('/delete', (req) => {
+//   const token = req.body.token;
+//   if (index.checkToken(token)) {
+//     const room = index.getRoom(req.body.id, req.body.name, token);
+//     if (room) {
+//       index.deleteRoom(req.body.id);
+//     }
+//   }
+// });
+
+router.post('/score', (req) => {
   const token = req.body.token;
+  const score = req.body.score;
+  const roomId = req.body.roomId;
   if (index.checkToken(token)) {
-    const room = index.getRoom(req.body.id, req.body.name, token);
-    if (room) {
-      index.deleteRoom(req.body.id);
-    }
+    const player = index.getPlayerInfo(token);
+    index.updateRoomScore(roomId, player.id, score);
   }
 });
 
-router.post('/score', (req, res) => {
+router.post('/stop', (req, res) => {
   const token = req.body.token;
-  const score = req.body.score;
   const roomId = req.body.roomId;
   const response = {
     data: null,
     error: null
   };
   if (index.checkToken(token)) {
-    response.data = {};
-    const player = index.getPlayerInfo(token);
-    const newRoom = index.updateRoomScore(roomId, player.id, score);
-    if (newRoom) {
-      response.data.room = newRoom;
+    const total = index.stopGame(roomId);
+    if (total) {
+      response.data = {};
+      response.data.total = total;
     } else {
-      response.error = "Update score error."
+      response.error = "Players error."
     }
   } else {
     response.error = "No such user."

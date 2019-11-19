@@ -6,7 +6,7 @@ import { API, ENTER_ACTIONS, METHODS, ROUTES } from "../../constants";
 import { auth } from "../../utility";
 import { withRouter } from "react-router-dom";
 
-const EnterForm = (props) => {
+const EnterForm = ({ action, history }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,7 +28,7 @@ const EnterForm = (props) => {
     event.preventDefault();
     setError("");
     let api;
-    switch (props.action) {
+    switch (action) {
       case ENTER_ACTIONS.REGISTER:
         api = API.REGISTER;
         break;
@@ -42,7 +42,7 @@ const EnterForm = (props) => {
       const data = response.data;
       if (!data.error) {
         auth.authenticate(data.data.token);
-        props.history.push(ROUTES.MENU);
+        history.push(ROUTES.MENU);
       } else {
         setError(data.error)
       }
@@ -50,13 +50,13 @@ const EnterForm = (props) => {
   };
 
   return (
-    <CentralBlock title={props.action} close={true}>
+    <CentralBlock title={action} close={true}>
       <Form className="enter" onSubmit={onSubmit}>
         <Input title="Player name" type="text" value={name} onChange={onChange} name="name" />
         <Input title="Password" type="password" value={password} onChange={onChange} name="password" />
         {!!error && <div className="error">{error}</div>}
         <div className="buttons justify-content-center">
-          <Button disabled={!name || !password} type="submit">{props.action}</Button>
+          <Button disabled={!name || !password} type="submit">{action}</Button>
         </div>
       </Form>
     </CentralBlock>

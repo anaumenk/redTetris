@@ -16,7 +16,7 @@ export const configAxios = (method, url, data = {}) => {
             response = axios.get(url, config).catch(err => console.log(err));
             break;
         case METHODS.POST:
-            response = axios.post(url, data, config).catch(err => console.log(err));
+            response = axios.post(url, data, config).catch(err => console.log(err)) || [];
             break;
         default:
             response = [];

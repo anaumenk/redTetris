@@ -33,6 +33,10 @@ class Player {
   checkLogin(name, password) {
     return this.name === name && bcrypt.compareSync(password, this.password);
   }
+
+  updateScore(score) {
+    this.score += score;
+  }
 }
 
 module.exports = Player;

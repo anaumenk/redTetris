@@ -1,10 +1,11 @@
-import { CREATE_ROOM, GET_ROOM, GET_GAME_ROOM, GET_ROOMS, UPDATE_ROOM_SCORE } from '../actions';
+import { CREATE_ROOM, GET_ROOM, GET_ROOM_LID, GET_ROOMS, STOP_GAME } from '../actions';
 
 const initialState = {
   rooms: [],
   createdRoom: null,
   room: null,
   lid: false,
+  total: null,
 };
 
 export default function (state = initialState, action) {
@@ -24,16 +25,15 @@ export default function (state = initialState, action) {
         ...state,
         createdRoom: action.payload.createdRoom
       };
-    case GET_GAME_ROOM:
+    case GET_ROOM_LID:
       return {
         ...state,
-        room: action.payload.room,
         lid: action.payload.lid,
       };
-    case UPDATE_ROOM_SCORE:
+    case STOP_GAME:
       return {
         ...state,
-        room: action.payload.room,
+        total: action.payload.total,
       };
     default:
       return state;

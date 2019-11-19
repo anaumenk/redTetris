@@ -5,6 +5,7 @@ export const setNextPiece = () => dispatch => {
     type: SET_NEXT_PIECE,
   })
 };
+
 export const setNextTurn = () => dispatch => {
   dispatch({
     type: SET_NEXT_TURN,
