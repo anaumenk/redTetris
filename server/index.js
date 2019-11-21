@@ -20,18 +20,19 @@ const players = [];
 
 const getMultiRooms = () => {
   return rooms.filter((room) => {
-    if (room.multi) {
+    if (room.multi && !room.status) {
       return room;
     }
   });
 };
 
-const getRooms = async socket => {
+const getRooms = socket => {
   socket.emit("/api/rooms/get/multi", getMultiRooms());
 };
 
-io.on("connection", socket => {
-  console.log("New client connected"), setInterval(
+io.sockets.on("connection", socket => {
+  console.log("New client connected");
+  setInterval(
     () => {
       getRooms(socket);
       socket.emit("/api/rooms/get/all", rooms);
@@ -79,8 +80,7 @@ const getRoom = (id, name, token) => {
   return room;
 };
 
-const checkLid = (playerId, token) => !!players
-  .find((player) => player.token === token && player.id === playerId);
+const checkLid = (playerId, token) => !!players.find((player) => player.token === token && player.id === playerId);
 
 const deleteRoom = (id) => {
   rooms = rooms.filter((room) => room.id !== id);
@@ -95,19 +95,29 @@ const updateRoomScore = (roomId, playerId, score) => {
       player.score -= score;
     }
   });
+  return rooms[room];
 };
 
 const stopGame = (roomId) => {
   const room = rooms.findIndex((room) => room.id === roomId);
-  const total = [];
-  for (let i = 0; i < rooms[room].players.length; i++) {
-    total.push(Object.assign({}, rooms[room].players[i]))
-  }
   rooms[room].players.forEach((player) => {
     players[players.findIndex((p) => p.id === player.id)].updateScore(player.score);
+  });
+  return rooms[room];
+};
+
+const restartGame = (roomId) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  rooms[room].players.forEach((player) => {
     player.score = 0;
   });
-  return total;
+  return rooms[room].players;
+};
+
+const setGameStatus = (roomId, status) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  rooms[room].status = status;
+  return rooms[room];
 };
 
 module.exports.addNewRoom = addNewRoom;
@@ -120,3 +130,5 @@ module.exports.checkLid = checkLid;
 module.exports.deleteRoom = deleteRoom;
 module.exports.updateRoomScore = updateRoomScore;
 module.exports.stopGame = stopGame;
+module.exports.setGameStatus = setGameStatus;
+module.exports.restartGame = restartGame;

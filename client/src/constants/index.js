@@ -14,3 +14,9 @@ export const DIRECTION = {
   LEFT: "LEFT",
   CURRENT: "CURRENT",
 };
+
+export const GAME_STATUS = {
+  START: "START",
+  STOP: "STOP",
+  PAUSE: "PAUSE"
+};

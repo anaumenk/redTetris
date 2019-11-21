@@ -1,35 +1,41 @@
 import { Button, Modal } from "react-bootstrap";
-import { AsideInfo, ButtonRef, Title, PlayerInfo } from "../common";
+import { AsideInfo, Title, PlayerInfo } from "../common";
 import React from "react";
-import { ROUTES } from "../../constants";
+import { GAME_STATUS, ROUTES } from "../../constants";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { setGameStatus } from "../../actions";
 
-const Total = ({ restart, setRestart, total }) => {
-  const winner = total ? total.shift() : [];
+
+const Total = ({ total, restartGame, status, lid, history, match, setGameStatus }) => {
+  const totalCopy = total ? [...total] : [];
+  const winner = totalCopy ? totalCopy.shift() : [];
+  const roomId = parseInt(match.params.room);
 
   const winnerInfo = winner ? <PlayerInfo player={winner}/> : null;
 
-  const close = () => {
-    setRestart(false);
+  const playersInfo = totalCopy ? totalCopy.map((player, index) => <PlayerInfo player={player} key={index}/>) : null;
+
+  const exit = () => {
+    setGameStatus(roomId, null);
+    history.push(ROUTES.MENU)
   };
 
-  const playersInfo = total ? total.map((player, index) => <PlayerInfo player={player} key={index}/>) : null;
-
   return (
-    <Modal show={restart} onHide={close}>
+    <Modal show={status === GAME_STATUS.STOP} onHide={restartGame}>
       <Modal.Header>The game is finished</Modal.Header>
       <Modal.Body>
         <Title title="Best score" />
         <AsideInfo title={["Player", "Score"]} info={winnerInfo}/>
-        {total && total.length > 0 &&
+        {totalCopy && totalCopy.length > 0 &&
           <>
             <Title title="Other" />
             <AsideInfo title={["Player", "Score"]} info={playersInfo}/>
           </>
         }
         <div className="buttons justify-content-center">
-          <Button onClick={close}>Restart</Button>
-          <ButtonRef variant="secondary" to={ROUTES.MENU}>Exit</ButtonRef>
+          {lid && <Button onClick={restartGame}>Restart</Button>}
+          <Button onClick={exit} variant="secondary">Exit</Button>
         </div>
       </Modal.Body>
     </Modal>
@@ -37,7 +43,8 @@ const Total = ({ restart, setRestart, total }) => {
 };
 
 const mapStateToProps = state => ({
-  total: state.rooms.total
+  status: state.rooms.status,
+  lid: state.rooms.lid
 });
 
-export default connect(mapStateToProps)(Total);
+export default withRouter(connect(mapStateToProps, { setGameStatus })(Total));

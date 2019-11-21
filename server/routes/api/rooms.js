@@ -48,14 +48,31 @@ router.post('/lid', (req, res) => {
 //   }
 // });
 
-router.post('/score', (req) => {
+router.post('/score', (req, res) => {
   const token = req.body.token;
   const score = req.body.score;
   const roomId = req.body.roomId;
+  const response = {
+    data: null,
+    error: null
+  };
   if (index.checkToken(token)) {
     const player = index.getPlayerInfo(token);
-    index.updateRoomScore(roomId, player.id, score);
+    if (player) {
+      response.data = {};
+      const room = index.updateRoomScore(roomId, player.id, score);
+      if (room) {
+        response.data.room = room;
+      } else {
+        response.error = "Score update error."
+      }
+    } else {
+      response.error = "No such player."
+    }
+  } else {
+    response.error = "No such user."
   }
+  res.send(response);
 });
 
 router.post('/stop', (req, res) => {
@@ -66,12 +83,51 @@ router.post('/stop', (req, res) => {
     error: null
   };
   if (index.checkToken(token)) {
-    const total = index.stopGame(roomId);
-    if (total) {
+    const room = index.stopGame(roomId);
+    if (room) {
       response.data = {};
-      response.data.total = total;
+      response.data.room = room;
     } else {
-      response.error = "Players error."
+      response.error = "No such room."
+    }
+  } else {
+    response.error = "No such user."
+  }
+  res.send(response);
+});
+
+router.post('/status', (req, res) => {
+  const token = req.body.token;
+  const roomId = req.body.roomId;
+  const status = req.body.status;
+  const response = {
+    data: null,
+    error: null
+  };
+  if (index.checkToken(token)) {
+    const room = index.setGameStatus(roomId, status);
+    response.data = {};
+    response.data.status = room.status;
+  } else {
+    response.error = "No such user."
+  }
+  res.send(response);
+});
+
+router.post('/restart', (req, res) => {
+  const token = req.body.token;
+  const roomId = req.body.roomId;
+  const response = {
+    data: null,
+    error: null
+  };
+  if (index.checkToken(token)) {
+    const players = index.restartGame(roomId);
+    if (players) {
+      response.data = {};
+      response.data.players = players;
+    } else {
+      response.error = "No such room."
     }
   } else {
     response.error = "No such user."

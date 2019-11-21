@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Field, AsideInfo, PlayerInfo } from "../common";
 import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
-import { PIECES } from "../../constants";
+import { GAME_STATUS, PIECES } from "../../constants";
 import { isRoomLid } from "../../actions";
 import { withRouter } from "react-router-dom";
 
@@ -29,9 +29,13 @@ const Aside = (props) => {
   return (
     <div className="aside-container">
       {props.lid && <div className="buttons">
-        {!props.game && <Button variant="secondary" onClick={props.startGame}>Start</Button>}
-        {props.game && <Button variant="secondary" onClick={props.startGame}>Pause</Button>}
-        {props.game && <Button variant="secondary" onClick={props.stopGame}>Stop</Button>}
+        {props.status !== GAME_STATUS.START && <Button variant="secondary" onClick={props.startGame}>Start</Button>}
+        {props.status === GAME_STATUS.START &&
+          <>
+            <Button variant="secondary" onClick={props.startGame}>Pause</Button>
+            <Button variant="secondary" onClick={props.stopGame}>Stop</Button>
+          </>
+        }
       </div>}
       <AsideInfo
         title={["Next piece"]}
@@ -46,8 +50,8 @@ const Aside = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  room: state.rooms.room,
   lid: state.rooms.lid,
+  status: state.rooms.status,
   nextPieceFigure: state.game.nextPieceFigure,
   nextPieceTurn: state.game.nextPieceTurn,
   nextPieceColor: state.game.nextPieceColor,

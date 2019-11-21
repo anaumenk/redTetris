@@ -6,13 +6,15 @@ import {
   setNextPiece,
   scoreUpdate,
   setNextTurn,
-  stopGame
+  stopGame,
+  setGameStatus,
+  restartGame,
 } from "../../actions"
 import { Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
-import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, PIECES, UNSENT_INT } from "../../constants";
+import {DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT} from "../../constants";
 import { checkFieldFill, noMoreSpace, pieceMoving, getPieceTurn } from "../../utility";
 import Total from "./Total";
 
@@ -20,14 +22,12 @@ const Game = (props) => {
   const roomId = parseInt(props.match.params.room);
   const playerName = props.match.params.player;
   const [pieceId, setPieceId] = useState(UNSENT_INT);
-  const [game, setGame] = useState(false);
   const [field, setField] = useState([]);
   const [intervalId, setIntervalId] = useState(UNSENT_INT);
-  const [restart, setRestart] = useState(false);
   const [key, setKey] = useState(UNSENT_INT);
 
   useEffect(() => {
-    if (game) {
+    if (props.status === GAME_STATUS.START) {
       switch (key) {
         case 37: {
           pieceMoving.left(field, pieceId, setField);
@@ -77,6 +77,34 @@ const Game = (props) => {
     }
   }, [pieceId]);
 
+  useEffect(() => {
+    switch (props.status) {
+      case null:
+      case GAME_STATUS.STOP: {
+        setPieceId(UNSENT_INT);
+        setField([]);
+        clearInterval(intervalId);
+        setIntervalId(UNSENT_INT);
+        break;
+      }
+      case GAME_STATUS.PAUSE: {
+        clearInterval(intervalId);
+        break;
+      }
+      case GAME_STATUS.START: {
+        if (pieceId === UNSENT_INT) {
+          getPieceAndStartMoving();
+        } else {
+          const newIntervalId = setInterval(() => {
+            return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
+          }, 1000);
+          setIntervalId(newIntervalId);
+          break;
+        }
+      }
+    }
+  }, [props.status]);
+
   const sortPlayers = props.room ? Object.values(props.room.players).sort((a, b) => {
     return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
   }) : [];
@@ -86,6 +114,7 @@ const Game = (props) => {
       setField([...field, piece]);
       setPieceId(piece.id);
     } else {
+      props.scoreUpdate(-10, roomId);
       stopGame();
     }
   };
@@ -106,31 +135,19 @@ const Game = (props) => {
   };
 
   const startGame = () => {
-    setGame(!game);
-    if (game) {
-      clearInterval(intervalId)
-    } else {
-      if (pieceId === UNSENT_INT) {
-        getPieceAndStartMoving();
-      } else {
-        const newIntervalId = setInterval(() => {
-          return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
-        }, 1000);
-        setIntervalId(newIntervalId)
-      }
-    }
+    const status = !props.status || props.status === GAME_STATUS.PAUSE ? GAME_STATUS.START : GAME_STATUS.PAUSE;
+    props.setGameStatus(roomId, status);
   };
 
   const stopGame = () => {
-    setGame(!game);
-    setPieceId(UNSENT_INT);
-    setField([]);
-    clearInterval(intervalId);
-    setIntervalId(UNSENT_INT);
-    setRestart(true);
     props.stopGame(roomId);
+    props.setGameStatus(roomId, GAME_STATUS.STOP);
   };
 
+  const restartGame = () => {
+    props.restartGame(roomId);
+    props.setGameStatus(roomId, null);
+  };
 
   return props.room ? (
     <>
@@ -151,19 +168,19 @@ const Game = (props) => {
           </Col>
           <Col>
             <Aside
-              game={game}
               startGame={startGame}
               stopGame={stopGame}
               players={sortPlayers}
             /></Col>
         </Row>
-        <Total restart={restart} setRestart={setRestart} />
+        <Total restartGame={restartGame} total={sortPlayers}/>
     </>
     ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;
 };
 
 const mapStateToProps = (state) => ({
   room: state.rooms.room,
+  status: state.rooms.status,
   nextPieceFigure: state.game.nextPieceFigure,
   nextPieceTurn: state.game.nextPieceTurn,
   nextPieceColor: state.game.nextPieceColor,
@@ -178,6 +195,8 @@ const mapDispatchToProps = {
   scoreUpdate,
   setNextTurn,
   stopGame,
+  setGameStatus,
+  restartGame,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

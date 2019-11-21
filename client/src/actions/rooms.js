@@ -1,4 +1,4 @@
-import { GET_ROOMS, CREATE_ROOM, GET_ROOM_LID, GET_ROOM, STOP_GAME } from "./";
+import { GET_ROOMS, CREATE_ROOM, GET_ROOM_LID, GET_ROOM, SET_GAME_STATUS } from "./";
 import { configAxios } from "../axios";
 import { API, METHODS } from "../constants";
 import socketIOClient from "socket.io-client";
@@ -29,7 +29,7 @@ export const getAllRooms = (roomId, playerName) => dispatch => {
         ?
           (room.players.length !== prevState.players.length
             || !room.players.every((p, i) => p.score === prevState.players[i].score)
-            // || room.status !== prevState.status
+            || room.status !== prevState.status
           )
         : true
       )
@@ -38,6 +38,7 @@ export const getAllRooms = (roomId, playerName) => dispatch => {
         type: GET_ROOM,
         payload: {
           room,
+          status: room.status
         }
       })
     }
@@ -89,19 +90,27 @@ export const scoreUpdate = (score, roomId) => dispatch => {
 };
 
 export const stopGame = (roomId) => dispatch => {
-  configAxios(METHODS.POST, API.STOP_GAME, { roomId }).then((response) => {
+  configAxios(METHODS.POST, API.STOP_GAME, { roomId })
+};
+
+export const setGameStatus = (roomId, status) => dispatch => {
+  configAxios(METHODS.POST, API.SET_GAME_STATUS, { roomId, status }).then((response) => {
     const data = response.data.data;
     if (data) {
-      const total = data.total;
+      const status = data.status;
       dispatch({
-        type: STOP_GAME,
+        type: SET_GAME_STATUS,
         payload: {
-          total
+          status
         }
       })
     }
   })
     .catch((err) => console.log(err));
+};
+
+export const restartGame = (roomId) => dispatch => {
+  configAxios(METHODS.POST, API.RESTART_GAME, { roomId })
 };
 
 

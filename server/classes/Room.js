@@ -14,6 +14,7 @@ class Room {
       }
     ];
     this.multi = multi;
+    this.status = null;
   }
 
   static incrementId() {

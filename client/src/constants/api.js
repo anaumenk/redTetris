@@ -9,6 +9,8 @@ export const API = {
     GET_PLAYER: "/api/player/info",
     UPDATE_ROOM_SCORE: "/api/rooms/score",
     STOP_GAME: "/api/rooms/stop",
+    SET_GAME_STATUS: "/api/rooms/status",
+    RESTART_GAME: "/api/rooms/restart"
     // DELETE_ROOM: "/api/rooms/delete"
 };
 
