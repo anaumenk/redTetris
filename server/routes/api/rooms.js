@@ -38,15 +38,32 @@ router.post('/lid', (req, res) => {
   res.send(response);
 });
 
-// router.post('/delete', (req) => {
-//   const token = req.body.token;
-//   if (index.checkToken(token)) {
-//     const room = index.getRoom(req.body.id, req.body.name, token);
-//     if (room) {
-//       index.deleteRoom(req.body.id);
-//     }
-//   }
-// });
+router.post('/delete/player', (req, res) => {
+  const token = req.body.token;
+  const roomId = req.body.roomId;
+  const response = {
+    data: null,
+    error: null
+  };
+  if (index.checkToken(token)) {
+    const room = index.stopGame(roomId);
+    if (room) {
+      response.data = {};
+      if (index.checkLid(room.lid.id, token)) {
+        index.deleteRoom(roomId);
+        response.data.room = [];
+      } else {
+        const playerInfo = index.getPlayerInfo(token);
+        response.data.room = index.deletePlayer(roomId, playerInfo.id);
+      }
+    } else {
+      response.error = "No such room."
+    }
+  } else {
+    response.error = "No such user."
+  }
+  res.send(response);
+});
 
 router.post('/score', (req, res) => {
   const token = req.body.token;

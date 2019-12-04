@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {
-  getAllRooms,
-  nullifyCreatedRoom,
-  setNextPiece,
-  scoreUpdate,
-  setNextTurn,
-  stopGame,
-  setGameStatus,
-  restartGame,
+  getAllRooms, nullifyCreatedRoom,
+  setNextPiece, setNextTurn, setGameStatus,
 } from "../../actions"
 import { Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
-import {DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT} from "../../constants";
-import { checkFieldFill, noMoreSpace, pieceMoving, getPieceTurn } from "../../utility";
+import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT } from "../../constants";
+import {
+  stopGame as stopGameApi, restartGame as restartGameApi, checkFieldFill,
+  noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, removePlayerFromRoom
+} from "../../utility";
 import Total from "./Total";
 
 const Game = (props) => {
@@ -64,14 +61,21 @@ const Game = (props) => {
   useEffect(() => props.nullifyCreatedRoom());
 
   useEffect(() => {
-     props.getAllRooms(roomId, playerName);
-     window.addEventListener("keydown", (e) => setKey(e.keyCode));
+    props.getAllRooms(roomId, playerName);
+    window.addEventListener("keydown", (e) => setKey(e.keyCode));
+    window.addEventListener("beforeunload", (e) => {
+      e.preventDefault();
+      return removePlayerFromRoom(roomId);
+    });
+    return () => {
+      window.removeEventListener("keydown", (e) => setKey(e.keyCode))
+    }
   }, []);
 
   useEffect(() => {
     if (pieceId !== UNSENT_INT) {
       const newIntervalId = setInterval(() => {
-            return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
+        return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
       }, 1000);
       setIntervalId(newIntervalId)
     }
@@ -114,7 +118,7 @@ const Game = (props) => {
       setField([...field, piece]);
       setPieceId(piece.id);
     } else {
-      props.scoreUpdate(-10, roomId);
+      scoreUpdate(-10, roomId);
       stopGame();
     }
   };
@@ -122,7 +126,7 @@ const Game = (props) => {
   const getPieceAndStartMoving = () => {
     let i = 10;
     while (checkFieldFill(field, setField)) {
-      props.scoreUpdate(i, roomId);
+      scoreUpdate(i, roomId);
       i += 10;
     }
     const piece = {
@@ -140,12 +144,12 @@ const Game = (props) => {
   };
 
   const stopGame = () => {
-    props.stopGame(roomId);
+    stopGameApi(roomId);
     props.setGameStatus(roomId, GAME_STATUS.STOP);
   };
 
   const restartGame = () => {
-    props.restartGame(roomId);
+    restartGameApi(roomId);
     props.setGameStatus(roomId, null);
   };
 
@@ -192,11 +196,8 @@ const mapDispatchToProps = {
   getAllRooms,
   nullifyCreatedRoom,
   setNextPiece,
-  scoreUpdate,
   setNextTurn,
-  stopGame,
   setGameStatus,
-  restartGame,
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

@@ -10,8 +10,8 @@ export const API = {
     UPDATE_ROOM_SCORE: "/api/rooms/score",
     STOP_GAME: "/api/rooms/stop",
     SET_GAME_STATUS: "/api/rooms/status",
-    RESTART_GAME: "/api/rooms/restart"
-    // DELETE_ROOM: "/api/rooms/delete"
+    RESTART_GAME: "/api/rooms/restart",
+    REMOVE_PLAYER: "/api/rooms/delete/player"
 };
 
 export const METHODS = {

@@ -24,7 +24,7 @@ export const getAllRooms = (roomId, playerName) => dispatch => {
   socket.on(API.GET_All_ROOMS, data => {
     const prevState = store.getState().rooms.room;
     const room = data.find((room) => room.id === roomId && room.lid.name === playerName);
-    if (room && room.players &&
+    if ((room && room.players &&
       (prevState && prevState.players
         ?
           (room.players.length !== prevState.players.length
@@ -33,12 +33,12 @@ export const getAllRooms = (roomId, playerName) => dispatch => {
           )
         : true
       )
-    ) {
+    ) || prevState !== room) {
       dispatch({
         type: GET_ROOM,
         payload: {
           room,
-          status: room.status
+          status: room ? room.status : null
         }
       })
     }
@@ -85,14 +85,6 @@ export const nullifyCreatedRoom = () => dispatch => {
   })
 };
 
-export const scoreUpdate = (score, roomId) => dispatch => {
-  configAxios(METHODS.POST, API.UPDATE_ROOM_SCORE,{ score, roomId });
-};
-
-export const stopGame = (roomId) => dispatch => {
-  configAxios(METHODS.POST, API.STOP_GAME, { roomId })
-};
-
 export const setGameStatus = (roomId, status) => dispatch => {
   configAxios(METHODS.POST, API.SET_GAME_STATUS, { roomId, status }).then((response) => {
     const data = response.data.data;
@@ -107,10 +99,6 @@ export const setGameStatus = (roomId, status) => dispatch => {
     }
   })
     .catch((err) => console.log(err));
-};
-
-export const restartGame = (roomId) => dispatch => {
-  configAxios(METHODS.POST, API.RESTART_GAME, { roomId })
 };
 
 

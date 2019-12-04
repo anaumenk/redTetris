@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import { ROUTES } from "../constants";
 import { Redirect, Route } from "react-router-dom";
 import { auth } from "./";

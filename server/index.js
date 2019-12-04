@@ -86,6 +86,12 @@ const deleteRoom = (id) => {
   rooms = rooms.filter((room) => room.id !== id);
 };
 
+const deletePlayer = (roomId, playerId) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  rooms[room].players = rooms[room].players.filter((player) => player.id !== playerId);
+  return rooms[room];
+};
+
 const updateRoomScore = (roomId, playerId, score) => {
   const room = rooms.findIndex((room) => room.id === roomId);
   rooms[room].players.forEach((player) => {
@@ -100,9 +106,11 @@ const updateRoomScore = (roomId, playerId, score) => {
 
 const stopGame = (roomId) => {
   const room = rooms.findIndex((room) => room.id === roomId);
-  rooms[room].players.forEach((player) => {
-    players[players.findIndex((p) => p.id === player.id)].updateScore(player.score);
-  });
+  if (rooms[room]) {
+    rooms[room].players.forEach((player) => {
+      players[players.findIndex((p) => p.id === player.id)].updateScore(player.score);
+    });
+  }
   return rooms[room];
 };
 
@@ -132,3 +140,4 @@ module.exports.updateRoomScore = updateRoomScore;
 module.exports.stopGame = stopGame;
 module.exports.setGameStatus = setGameStatus;
 module.exports.restartGame = restartGame;
+module.exports.deletePlayer = deletePlayer;
