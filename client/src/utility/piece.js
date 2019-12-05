@@ -33,6 +33,13 @@ export function noMoreSpace(allPieces, direction, piece) {
         && field[line[1]][line[0] + 1].color === NO_COLOR);
     case DIRECTION.CURRENT:
       return !piece.place.every((line) => field[line[1]][line[0]].color === NO_COLOR);
+    case DIRECTION.ROTATE: {
+      const res = piece.map((line) => {
+        return line[0] < FIELD_WIDTH && line[1] < FIELD_HEIGHT
+          && field[line[1]][line[0]].color === NO_COLOR
+      });
+      return !res.every((line) => line);
+    }
     default:
       return true;
   }
@@ -132,7 +139,11 @@ export const pieceMoving = {
           newLine[1] += piece.place[0][1];
           return newLine;
         });
-        if (newPiecePlace.every((line) => line[0] < FIELD_WIDTH && line[1] < FIELD_HEIGHT)) {
+        const fieldCopy = [...field];
+        if (fieldCopy.length > 0) {
+          fieldCopy.pop();
+        }
+        if (!noMoreSpace(fieldCopy, DIRECTION.ROTATE, newPiecePlace)) {
           setNextTurn();
           piece.place = newPiecePlace;
         }

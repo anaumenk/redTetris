@@ -49,13 +49,12 @@ router.post('/delete/player', (req, res) => {
     const room = index.stopGame(roomId);
     if (room) {
       response.data = {};
-      if (index.checkLid(room.lid.id, token)) {
-        index.deleteRoom(roomId);
-        response.data.room = [];
-      } else {
         const playerInfo = index.getPlayerInfo(token);
-        response.data.room = index.deletePlayer(roomId, playerInfo.id);
-      }
+        const newRoom = index.deletePlayer(roomId, playerInfo.id);
+        if (!newRoom.players) {
+          index.deleteRoom(roomId);
+        }
+        response.data.room = newRoom;
     } else {
       response.error = "No such room."
     }

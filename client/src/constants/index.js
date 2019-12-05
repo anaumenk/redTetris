@@ -13,6 +13,7 @@ export const DIRECTION = {
   RIGHT: "RIGHT",
   LEFT: "LEFT",
   CURRENT: "CURRENT",
+  ROTATE: "ROTATE",
 };
 
 export const GAME_STATUS = {
