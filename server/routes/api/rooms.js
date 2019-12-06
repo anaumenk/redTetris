@@ -151,4 +151,23 @@ router.post('/restart', (req, res) => {
   res.send(response);
 });
 
+router.post('/mode', (req, res) => {
+  const token = req.body.token;
+  const roomId = req.body.roomId;
+  const mode = req.body.mode;
+  const status = req.body.status;
+  const response = {
+    data: null,
+    error: null
+  };
+  if (index.checkToken(token)) {
+      const room = index.changeGameMode(roomId, mode, status);
+      response.data = {};
+      response.data.mode = room.mode;
+  } else {
+    response.error = "No such user."
+  }
+  res.send(response);
+});
+
 module.exports = router;

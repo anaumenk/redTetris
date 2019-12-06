@@ -4,11 +4,11 @@ import {
   getAllRooms, nullifyCreatedRoom,
   setNextPiece, setNextTurn, setGameStatus,
 } from "../../actions"
-import { Field } from "../common";
+import {Field, Fireworks} from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
-import { DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT } from "../../constants";
+import { PIECES_DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT } from "../../constants";
 import {
   stopGame as stopGameApi, restartGame as restartGameApi, checkFieldFill,
   noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, removePlayerFromRoom
@@ -35,9 +35,11 @@ const Game = (props) => {
           break;
         }
         case 38: {
-          const newPieceTurn = getPieceTurn(false, props.currentPieceTurn, props.currentPieceFigure);
-          const newPiecePlace = PIECES[props.currentPieceFigure][newPieceTurn];
-          pieceMoving.rotation(field, pieceId, setField, newPiecePlace, props.setNextTurn);
+          if (props.room.mode.rotation) {
+            const newPieceTurn = getPieceTurn(false, props.currentPieceTurn, props.currentPieceFigure);
+            const newPiecePlace = PIECES[props.currentPieceFigure][newPieceTurn];
+            pieceMoving.rotation(field, pieceId, setField, newPiecePlace, props.setNextTurn);
+          }
           break;
         }
         case 40: {
@@ -103,8 +105,11 @@ const Game = (props) => {
             return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
           }, 1000);
           setIntervalId(newIntervalId);
-          break;
         }
+        break;
+      }
+      default: {
+        break;
       }
     }
   }, [props.status]);
@@ -114,7 +119,7 @@ const Game = (props) => {
   }) : [];
 
   const addPieceToField = (piece) => {
-    if (!noMoreSpace([...field], DIRECTION.CURRENT, piece)) {
+    if (!noMoreSpace([...field], PIECES_DIRECTION.CURRENT, piece)) {
       setField([...field, piece]);
       setPieceId(piece.id);
     } else {
@@ -168,6 +173,7 @@ const Game = (props) => {
               color="#d5ecff6b"
               border="#989898b5"
               fill={field}
+              inverted={props.room.mode.inverted}
             />
           </Col>
           <Col>
@@ -177,6 +183,7 @@ const Game = (props) => {
               players={sortPlayers}
             /></Col>
         </Row>
+        {props.status === GAME_STATUS.STOP && <Fireworks />}
         <Total restartGame={restartGame} total={sortPlayers}/>
     </>
     ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;

@@ -25,7 +25,8 @@ export const getAllRooms = (roomId, playerName) => dispatch => {
     const prevState = store.getState().rooms.room;
     const room = data.find((room) => room.id === roomId && room.lid.name === playerName);
     if ((room && room.players &&
-      (prevState && prevState.players
+      (prevState && prevState.players && prevState.room
+        && !Object.keys(room.mode).every((item) => room.mode[item] === prevState.room.mode[item])
         ?
           (room.players.length !== prevState.players.length
             || !room.players.every((p, i) => p.score === prevState.players[i].score)

@@ -15,6 +15,10 @@ class Room {
     ];
     this.multi = multi;
     this.status = null;
+    this.mode = {
+      rotation: true,
+      inverted: false,
+    }
   }
 
   static incrementId() {

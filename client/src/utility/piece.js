@@ -1,4 +1,4 @@
-import { COLORS, DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR, PIECES } from "../constants";
+import { PIECES_COLORS, PIECES_DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR, PIECES } from "../constants";
 import { createField } from "./field";
 
 export function getNextPieceFigure() {
@@ -13,27 +13,27 @@ export function getPieceTurn(random = true, i, figure) {
 }
 
 export function getColor() {
-  const max = Object.keys(COLORS).length;
+  const max = Object.keys(PIECES_COLORS).length;
   const colorIndex = Math.floor(Math.random() * Math.floor(max - 1));
-  return COLORS[colorIndex];
+  return PIECES_COLORS[colorIndex];
 }
 
 export function noMoreSpace(allPieces, direction, piece) {
   piece = piece || allPieces.pop();
   const field = createField(FIELD_HEIGHT, FIELD_WIDTH, allPieces);
   switch (direction) {
-    case DIRECTION.DOWN:
+    case PIECES_DIRECTION.DOWN:
       return !piece.place.every((line) => line[1] + 1 < FIELD_HEIGHT
         && field[line[1] + 1][line[0]].color === NO_COLOR);
-    case DIRECTION.LEFT:
+    case PIECES_DIRECTION.LEFT:
       return !piece.place.every((line) => line[0] - 1 >= 0
         && field[line[1]][line[0] - 1].color === NO_COLOR);
-    case DIRECTION.RIGHT:
+    case PIECES_DIRECTION.RIGHT:
       return !piece.place.every((line) => line[0] + 1 < FIELD_WIDTH
         && field[line[1]][line[0] + 1].color === NO_COLOR);
-    case DIRECTION.CURRENT:
+    case PIECES_DIRECTION.CURRENT:
       return !piece.place.every((line) => field[line[1]][line[0]].color === NO_COLOR);
-    case DIRECTION.ROTATE: {
+    case PIECES_DIRECTION.ROTATE: {
       const res = piece.map((line) => {
         return line[0] < FIELD_WIDTH && line[1] < FIELD_HEIGHT
           && field[line[1]][line[0]].color === NO_COLOR
@@ -47,7 +47,7 @@ export function noMoreSpace(allPieces, direction, piece) {
 
 export const pieceMoving = {
   downInterval(field, pieceId, intervalId, start, setField) {
-    if (noMoreSpace([...field], DIRECTION.DOWN)) {
+    if (noMoreSpace([...field], PIECES_DIRECTION.DOWN)) {
         clearInterval(intervalId);
         start();
       } else {
@@ -64,7 +64,7 @@ export const pieceMoving = {
       }
   },
   left(field, pieceId, setField) {
-    if (!noMoreSpace([...field], DIRECTION.LEFT)) {
+    if (!noMoreSpace([...field], PIECES_DIRECTION.LEFT)) {
       setField(field.map((piece) => {
         if (piece.id === pieceId) {
           piece.place = piece.place.map((line) => {
@@ -78,7 +78,7 @@ export const pieceMoving = {
     }
   },
   right(field, pieceId, setField) {
-    if (!noMoreSpace([...field], DIRECTION.RIGHT)) {
+    if (!noMoreSpace([...field], PIECES_DIRECTION.RIGHT)) {
       setField(field.map((piece) => {
         if (piece.id === pieceId) {
           piece.place = piece.place.map((line) => {
@@ -92,7 +92,7 @@ export const pieceMoving = {
     }
   },
   down(field, pieceId, setField) {
-    if (!noMoreSpace([...field], DIRECTION.DOWN)) {
+    if (!noMoreSpace([...field], PIECES_DIRECTION.DOWN)) {
       setField(field.map((piece) => {
         if (piece.id === pieceId) {
           piece.place = piece.place.map((line) => {
@@ -106,10 +106,10 @@ export const pieceMoving = {
     }
   },
   downBottom(field, pieceId, setField) {
-    if (!noMoreSpace([...field], DIRECTION.DOWN)) {
+    if (!noMoreSpace([...field], PIECES_DIRECTION.DOWN)) {
       let newField = [...field];
       const id = newField.findIndex((piece) => piece.id === pieceId);
-      while (!noMoreSpace([...newField], DIRECTION.DOWN)) {
+      while (!noMoreSpace([...newField], PIECES_DIRECTION.DOWN)) {
         newField[id].place = newField[id].place.map((line) => {
           let newLine = [...line];
           newLine[1]++;
@@ -143,7 +143,7 @@ export const pieceMoving = {
         if (fieldCopy.length > 0) {
           fieldCopy.pop();
         }
-        if (!noMoreSpace(fieldCopy, DIRECTION.ROTATE, newPiecePlace)) {
+        if (!noMoreSpace(fieldCopy, PIECES_DIRECTION.ROTATE, newPiecePlace)) {
           setNextTurn();
           piece.place = newPiecePlace;
         }

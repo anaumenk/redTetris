@@ -153,7 +153,7 @@ export const PIECES = {
   ],
 };
 
-export const COLORS = {
+export const PIECES_COLORS = {
   0: "#4BC6B9",
   1: "#BDEAE5",
   2: "#9CDFD8",
@@ -184,4 +184,12 @@ export const COLORS = {
   27: "#957D95",
   28: "#97847D",
   29: "#D7A896",
+};
+
+export const PIECES_DIRECTION = {
+  DOWN: "DOWN",
+  RIGHT: "RIGHT",
+  LEFT: "LEFT",
+  CURRENT: "CURRENT",
+  ROTATE: "ROTATE",
 };

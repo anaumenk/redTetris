@@ -128,6 +128,12 @@ const setGameStatus = (roomId, status) => {
   return rooms[room];
 };
 
+const changeGameMode = (roomId, mode, status) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  rooms[room].mode[mode] = status;
+  return rooms[room];
+};
+
 module.exports.addNewRoom = addNewRoom;
 module.exports.checkToken = checkToken;
 module.exports.addNewPlayer = addNewPlayer;
@@ -141,3 +147,4 @@ module.exports.stopGame = stopGame;
 module.exports.setGameStatus = setGameStatus;
 module.exports.restartGame = restartGame;
 module.exports.deletePlayer = deletePlayer;
+module.exports.changeGameMode = changeGameMode;

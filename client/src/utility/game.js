@@ -16,3 +16,7 @@ export function restartGame(roomId) {
 export function removePlayerFromRoom(roomId) {
   configAxios(METHODS.POST, API.REMOVE_PLAYER, { roomId });
 }
+
+export function changeGameMode (roomId, mode, status) {
+  configAxios(METHODS.POST, API.CHANGE_GAME_MODE, { roomId, mode, status });
+}
