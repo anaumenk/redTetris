@@ -5,7 +5,9 @@ import { GAME_STATUS, ROUTES } from "../../constants";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { setGameStatus } from "../../actions";
-
+import Sound from 'react-sound';
+import soundfile from '../../sounds/GameoverOne.wav';
+window.soundManager.setup({debugMode: false});
 
 const Total = ({ total, restartGame, status, lid, history, match, setGameStatus }) => {
   const totalCopy = total ? [...total] : [];
@@ -23,6 +25,12 @@ const Total = ({ total, restartGame, status, lid, history, match, setGameStatus 
 
   return (
     <Modal show={status === GAME_STATUS.STOP} onHide={restartGame}>
+      <Sound
+        autoLoad={true}
+        url={soundfile}
+        playStatus={Sound.status.PLAYING}
+        loop={true}
+      />
       <Modal.Header>The game is finished</Modal.Header>
       <Modal.Body>
         <Title title="Best score" />
