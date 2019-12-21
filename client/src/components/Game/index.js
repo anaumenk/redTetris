@@ -11,11 +11,13 @@ import { withRouter } from "react-router-dom";
 import { PIECES_DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT, TIMEOUT } from "../../constants";
 import {
   stopGame as stopGameApi, restartGame as restartGameApi, checkFieldFill,
-  noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, removePlayerFromRoom
+  noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, mathSum,
+  removePlayerFromRoom
 } from "../../utility";
 import Total from "./Total";
 import Sound from 'react-sound';
-import soundfile from '../../sounds/Doll House (Piano_Soft).mp3';
+import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
+import starsSound from '../../sounds/magic.mp3';
 window.soundManager.setup({debugMode: false});
 
 const Game = (props) => {
@@ -25,6 +27,20 @@ const Game = (props) => {
   const [field, setField] = useState([]);
   const [intervalId, setIntervalId] = useState(UNSENT_INT);
   const [key, setKey] = useState(UNSENT_INT);
+  const [starsRow, setStarsRow] = useState([]);
+  const [sound, setSoundPlay] = useState(false);
+
+  useEffect(() => {
+    const stars = starsRow;
+    if (stars.length > 0) {
+      setSoundPlay(true);
+      setTimeout(() => {
+        pieceMoving.moveAll(field, setField, stars);
+        getPieceAndStartMoving();
+        setStarsRow([]);
+      }, 500)
+    }
+  }, [starsRow]);
 
   useEffect(() => {
     if (props.status === GAME_STATUS.START) {
@@ -68,10 +84,10 @@ const Game = (props) => {
   useEffect(() => {
     props.getAllRooms(roomId, playerName);
     window.addEventListener("keydown", (e) => setKey(e.keyCode));
-    // window.addEventListener("beforeunload", (e) => {
-    //   e.preventDefault();
-    //   return removePlayerFromRoom(roomId);
-    // });
+    window.addEventListener("beforeunload", (e) => {
+      e.preventDefault();
+      return removePlayerFromRoom(roomId);
+    });
     return () => {
       window.removeEventListener("keydown", (e) => setKey(e.keyCode))
     }
@@ -137,17 +153,19 @@ const Game = (props) => {
       : (!props.room.mode.rotation || props.room.mode.inverted)
         ? 50
         : 10;
-    while (checkFieldFill(field, setField)) {
-      scoreUpdate(i, roomId);
-      i *= 2;
+    const stars = checkFieldFill(field);
+    if (stars.length > 0) {
+      setStarsRow(stars);
+      scoreUpdate(mathSum(stars.length, i), roomId)
+    } else {
+      const piece = {
+        id: field.length,
+        color: props.nextPieceColor,
+        place: PIECES[props.nextPieceFigure][props.nextPieceTurn]
+      };
+      props.setNextPiece();
+      addPieceToField(piece);
     }
-    const piece = {
-      id: field.length,
-      color: props.nextPieceColor,
-      place: PIECES[props.nextPieceFigure][props.nextPieceTurn]
-    };
-    props.setNextPiece();
-    addPieceToField(piece);
   };
 
   const startGame = () => {
@@ -165,13 +183,23 @@ const Game = (props) => {
     props.setGameStatus(roomId, null);
   };
 
+  const handleSongFinishedPlaying = () => {
+    setSoundPlay(false);
+  };
+
   return props.room ? (
     <>
       <Sound
         autoLoad={true}
-        url={soundfile}
+        url={gameSound}
         playStatus={props.room.status === GAME_STATUS.START ? Sound.status.PLAYING : Sound.status.STOPPED}
         loop={true}
+      />
+      <Sound
+        autoLoad={true}
+        url={starsSound}
+        playStatus={sound ? Sound.status.PLAYING : Sound.status.STOPPED}
+        onFinishedPlaying={handleSongFinishedPlaying}
       />
       <div className="room-name">
         <h1>Room {props.room.name}</h1>
@@ -187,6 +215,8 @@ const Game = (props) => {
               border="#989898b5"
               fill={field}
               inverted={props.room.mode.inverted}
+              stars={true}
+              starsRow={starsRow}
             />
           </Col>
           <Col>

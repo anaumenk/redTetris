@@ -119,16 +119,19 @@ export const pieceMoving = {
       setField(newField);
     }
   },
-  moveAll(field, setField, lineId) {
-    setField(field.map((piece) => {
-      piece.place = piece.place.filter((line) => line[1] !== lineId);
-      piece.place = piece.place.map((line) => {
-        let newLine = [...line];
-        if (line[1] < lineId) { newLine[1]++; }
-        return newLine;
-      });
-      return piece;
-    }))
+  moveAll(field, setField, stars) {
+    for (let i = 0; i < stars.length; i++) {
+      field = field.map((piece) => {
+        piece.place = piece.place.filter((line) => line[1] !== stars[i]);
+          piece.place = piece.place.map((line) => {
+            let newLine = [...line];
+            if (line[1] < stars[i]) { newLine[1]++; }
+            return newLine;
+          });
+          return piece;
+      })
+    }
+    setField(field);
   },
   rotation(field, pieceId, setField, newPiecePlace, setNextTurn) {
     setField(field.map((piece) => {

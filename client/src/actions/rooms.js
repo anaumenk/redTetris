@@ -24,17 +24,11 @@ export const getAllRooms = (roomId, playerName) => dispatch => {
   socket.on(API.GET_All_ROOMS, data => {
     const prevState = store.getState().rooms.room;
     const room = data.find((room) => room.id === roomId && room.lid.name === playerName);
-    if ((room && room.players &&
-      (prevState && prevState.players && prevState.room
-        && !Object.keys(room.mode).every((item) => room.mode[item] === prevState.room.mode[item])
-        ?
-          (room.players.length !== prevState.players.length
-            || !room.players.every((p, i) => p.score === prevState.players[i].score)
-            || room.status !== prevState.status
-          )
-        : true
-      )
-    ) || prevState !== room) {
+    if (!room || !prevState || (room && !prevState) || (room.players && !prevState.players)
+      || !Object.keys(room.mode).every((item) => room.mode[item] === prevState.mode[item])
+      || room.players.length !== prevState.players.length
+      || !room.players.every((p, i) => p.score === prevState.players[i].score)
+      || room.status !== prevState.status) {
       dispatch({
         type: GET_ROOM,
         payload: {

@@ -38,7 +38,6 @@ code {
   position: absolute;
   width: 40px;
   height: 40px;
-  /*background-color: #6c757d85;*/
   top: 15px;
   right: 15px;
   color: white;
@@ -97,13 +96,7 @@ button:not(:last-child) {
 
 .room-name {
   padding: 15px 0;
-  /*display: flex;*/
-  /*align-items: center;*/
 }
-
-/*.room-name button {*/
-/*  margin-left: 10px;*/
-/*}*/
 
 .field {
   background-color: #d5ecff6b;
@@ -119,6 +112,7 @@ button:not(:last-child) {
 
 .piece {
   border: 1px solid #989898b5;
+  position: relative;
 }
 
 .aside-heading {
@@ -225,10 +219,101 @@ form.enter {
   z-index: 1;
 }
 
-.modal-header {
-  /*background-color: black;*/
-  /*color: white;*/
-  /*font-size: 24px;*/
-  /*background-image: url("http://evasantos.com/ilustraciones/gatoCity/edificiosOne.svg");*/
-  /*background-size: cover;*/
+body .modal-backdrop.show {
+  opacity: 1;
+}
+
+.modal .modal-content {
+  background-color: black;
+  z-index: 0;
+  height: 600px;
+  background-position: center;
+  background-image: url("./images/hiclipart.com.png");
+  background-repeat: no-repeat;
+}
+
+.modal .modal-content:after {
+  content: "";
+  opacity: 0.5;
+  top: 55px;
+  left: 0;
+  bottom: 173px;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+  background-image: url("https://i.ibb.co/ccKYwW2/tree.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.modal .modal-header, .modal .modal-footer {
+  border: none;
+}
+
+.modal .modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal .aside-heading, .modal .aside-content {
+  color: white;
+}
+
+.modal .aside-content .player-game-info:first-child {
+  color: red;
+  font-weight: bold;
+}
+
+.modal .aside-heading {
+  justify-content: space-around;
+}
+
+.modal .aside-content .player-game-info {
+  width: unset;
+}
+
+.christmas-buttons {
+  position: relative;
+  height: 116px;
+}
+
+.christmas-buttons button{
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 0;
+  background-color: #F8B229;
+  border-color: #F8B229;
+}
+
+.christmas-buttons button:hover, .christmas-buttons button:active {
+  background-color: #dc9d25;
+  border-color: #dc9d25;
+}
+
+.buttons .christmas-1 {
+  top: -62px;
+  left: 40px;
+}
+.buttons .christmas-2 {
+  top: -25px;
+  left: 100px;
+}
+.buttons .christmas-3 {
+  top: -5px;
+  left: 171px;
+}
+.buttons .christmas-4 {
+  top: -18px;
+  right: 93px;
+}
+.buttons .christmas-5 {
+  top: -62px;
+  right: 40px;
 }
