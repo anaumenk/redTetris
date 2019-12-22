@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const Player = require("../../classes/Player");
 const index = require("../../index");
+const models = require('../../models');
+const bcrypt = require('bcrypt');
 
 router.post('/token', (req, res) => {
   const token = req.body.token;
@@ -17,44 +19,57 @@ router.post('/token', (req, res) => {
   res.send(response);
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { name, password } = req.body;
   const response = {
     data: null,
     error: null
   };
-  const player = new Player(name, password);
-  index.addNewPlayer(player);
-  response.data = { token: player.getToken };
-  res.send(response);
-});
-
-router.post('/login', (req, res) => {
-  const { name, password } = req.body;
-  const response = {
-    data: null,
-    error: null
-  };
-  const player = index.login(name, password);
-  if (player) {
-    response.data = { token: player.getToken }
-  } else {
-    response.error = "No such user or wrong password."
+  try {
+    const player = await models.User.create({name: name, password: password});
+    if (player){
+      await models.Score.create({owner: player.id});
+      response.data = { token: player.token };
+    }
+  } catch (error) {
+     response.error = error;
   }
   res.send(response);
 });
 
-router.post('/info', (req, res) => {
+router.post('/login', async (req, res) => {
+  const { name, password } = req.body;
+  const response = {
+    data: null,
+    error: null
+  };
+  const player = await models.User.findOne({name: name});
+  if(player){
+    if(bcrypt.compareSync(password, player.password)){
+      response.data = { token: player.token };
+    }else{
+      response.error = "No such user or wrong password.";
+    }
+  }else{
+    response.error = "No such user or wrong password.";
+  }
+  res.send(response);
+});
+
+router.post('/info', async (req, res) => {
   const token = req.body.token;
   const response = {
     data: null,
     error: null
   };
-  const player = index.getPlayerInfo(token);
+  const user = await models.User.findOne({token: token});
+  const score = await models.Score.findOne({owner: user.id});
+  let player = {name: user.name, score: score.score};
+  console.log(player);
   if (player) {
-    response.data = { player }
+    response.data = {player};
   } else {
-    response.error = "Something went wrong."
+    response.error = "Something went wrong.";
   }
   res.send(response);
 });

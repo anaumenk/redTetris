@@ -3,15 +3,20 @@ const bodyParser = require("body-parser");
 const socketIo = require("socket.io");
 const http = require("http");
 const errorHandler = require("errorhandler");
+const database = require('./database');
+const config = require('./config');
 
 const app = express();
-const port = process.env.PORT || 8000;
+const port = config.PORT || 8000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(errorHandler());
 app.use(require("./routes"));
+database().then(info => {
+  console.log(`Connected to ${info.host}:${info.port}/${info.name}`);
+});
 
 const server = http.createServer(app);
 const io = socketIo(server);

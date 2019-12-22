@@ -1,20 +1,31 @@
 const router = require('express').Router();
 const Room = require("../../classes/Room");
 const index = require("../../index");
+const models = require('../../models');
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const token = req.body.token;
   const response = {
     data: null,
     error: null
   };
-  if (index.checkToken(token)) {
-    const newRoom = new Room(req.body.name, token, req.body.multi);
-    index.addNewRoom(newRoom);
-    response.data = newRoom;
-  } else {
-    response.error = "No such user."
-  }
+  //if (index.checkToken(token)) {
+    const player = await models.User.findOne({token: token});
+    if(player){
+      const newRoom = await models.Room.create({name: req.body.name, lid: player.id, players: player.id});
+      console.log(newRoom);
+      response.data = newRoom;
+    }else{
+      response.error = "No such user.";
+    }
+    // const newRoom = await models.Room.create({name: req.body.name, lid: player.id, players: player.id});
+    // console.log(newRoom);
+    //const newRoom = new Room(req.body.name, token, req.body.multi);
+    //index.addNewRoom(newRoom);
+    //response.data = newRoom;
+  //} else {
+    
+  
   res.send(response);
 });
 
