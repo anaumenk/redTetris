@@ -1,11 +1,15 @@
-import { CREATE_ROOM, GET_ROOM, GET_ROOM_LID, GET_ROOMS, SET_GAME_STATUS } from '../actions';
+import { GET_ROOM, GET_ROOM_LID, GET_ROOMS, SET_GAME_STATUS, CLEAN_THE_ROOM, SET_ROOM } from '../actions';
+import { UNSENT_INT } from "../constants";
 
 const initialState = {
-  rooms: [],
-  createdRoom: null,
+  allRooms: [],
   room: null,
   lid: false,
   status: null,
+  roomInfo: {
+    id: UNSENT_INT,
+    lid: null,
+  }
 };
 
 export default function (state = initialState, action) {
@@ -13,18 +17,14 @@ export default function (state = initialState, action) {
     case GET_ROOMS:
       return {
         ...state,
-        rooms: action.payload.rooms
+        allRooms: action.payload.allRooms
       };
     case GET_ROOM:
       return {
         ...state,
         room: action.payload.room,
         status: action.payload.status,
-      };
-    case CREATE_ROOM:
-      return {
-        ...state,
-        createdRoom: action.payload.createdRoom
+        allRooms: action.payload.allRooms
       };
     case GET_ROOM_LID:
       return {
@@ -35,6 +35,19 @@ export default function (state = initialState, action) {
       return {
         ...state,
         status: action.payload.status,
+      };
+    case CLEAN_THE_ROOM:
+      return {
+        ...state,
+        room: action.payload.room,
+      };
+    case SET_ROOM:
+      return {
+        ...state,
+        roomInfo: {
+          id: action.payload.roomInfo.id,
+          lid: action.payload.roomInfo.lid,
+        },
       };
     default:
       return state;

@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import {
-  getAllRooms, nullifyCreatedRoom,
-  setNextPiece, setNextTurn, setGameStatus,
-} from "../../actions"
+import { setNextPiece, setNextTurn, setGameStatus, setRoom } from "../../actions"
 import { Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
@@ -79,17 +76,19 @@ const Game = (props) => {
     }
   }, [key]);
 
-  useEffect(() => props.nullifyCreatedRoom());
+  const handleUserKeyPress = event => {
+    setKey(event.keyCode);
+  };
 
   useEffect(() => {
-    props.getAllRooms(roomId, playerName);
-    window.addEventListener("keydown", (e) => setKey(e.keyCode));
+    props.setRoom(roomId, playerName);
+    window.addEventListener("keydown", handleUserKeyPress);
     window.addEventListener("beforeunload", (e) => {
       e.preventDefault();
       return removePlayerFromRoom(roomId);
     });
     return () => {
-      window.removeEventListener("keydown", (e) => setKey(e.keyCode))
+      window.removeEventListener("keydown", handleUserKeyPress)
     }
   }, []);
 
@@ -242,11 +241,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  getAllRooms,
-  nullifyCreatedRoom,
   setNextPiece,
   setNextTurn,
   setGameStatus,
+  setRoom
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));
