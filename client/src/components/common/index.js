@@ -6,4 +6,4 @@ export { default as AsideInfo } from "./AsideInfo";
 export { default as Input } from "./Input";
 export { default as EnterForm } from "./EnterForm";
 export { default as PlayerInfo } from "./PlayerInfo";
-export { default as Fireworks } from "./Fireworks";
+export { default as Snowfall } from "./Snowfall";
