@@ -5,7 +5,7 @@ const http = require("http");
 const errorHandler = require("errorhandler");
 const database = require('./database');
 const config = require('./config');
-
+const autoIncrement = require('mongoose-auto-increment');
 const app = express();
 const port = config.PORT || 8000;
 
@@ -16,6 +16,7 @@ app.use(errorHandler());
 app.use(require("./routes"));
 database().then(info => {
   console.log(`Connected to ${info.host}:${info.port}/${info.name}`);
+  autoIncrement.initialize(info);
 });
 
 const server = http.createServer(app);
@@ -76,9 +77,8 @@ const getPlayerInfo = (token) => {
 
 const getPlayerByToken = (token) => players.find((player) => player.getToken === token);
 
-const getRoom = (id, name, token) => {
+const getRoom = (id, name, player) => {
   const room = rooms.find((room) => room.id === id && room.lid.name === name);
-  const player = getPlayerByToken(token);
   if (room) {
     room.addPlayer(player);
   }
@@ -113,7 +113,7 @@ const stopGame = (roomId) => {
   const room = rooms.findIndex((room) => room.id === roomId);
   if (rooms[room]) {
     rooms[room].players.forEach((player) => {
-      players[players.findIndex((p) => p.id === player.id)].updateScore(player.score);
+      players[players.findIndex((p) => p.id === player.id)];/*.updateScore(player.score);*/
     });
   }
   return rooms[room];

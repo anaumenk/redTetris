@@ -1,45 +1,27 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const schema = new Schema({
+    _id: {
+        type: Number
+    },
     name: {
         type: String,
         unique: true
     },
-    id: {
-        type: Number,
-        default: 0
+    access: {
+        type: Boolean,
+        default: true
     },
     lid: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    },
-    players: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ],
-    multi: {
-        type: Boolean,
-        default: false
-    },
-    status: {
-        type: String,
-        default: null
-    },
-    rotatin: {
-        type: Boolean,
-        default: true
-    },
-    inverted: {
-        type: Boolean,
-        default: false
     }
 },
 {
     timestamps: true
-});
+}).plugin(AutoIncrement);
 
 schema.set('toJson', {
     virtuals: true

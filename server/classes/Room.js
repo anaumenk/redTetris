@@ -1,10 +1,9 @@
 const index = require("../index");
 
 class Room {
-  constructor(name, token, multi) {
-    this.id = Room.incrementId();
+  constructor(name, lid, multi, id) {
+    this.id = id;
     this.name = name;
-    const lid = index.getPlayerInfo(token);
     this.lid = lid;
     this.players = [
       {
@@ -19,15 +18,6 @@ class Room {
       rotation: true,
       inverted: false,
     }
-  }
-
-  static incrementId() {
-    if (!this.latestId) {
-      this.latestId = 1;
-    } else {
-      this.latestId++;
-    }
-    return this.latestId;
   }
 
   addPlayer(player) {
