@@ -2,11 +2,10 @@ import React from "react";
 import { createField } from "../../utility";
 import { NO_COLOR } from "../../constants";
 
-const Field = ({ fieldHeight, fieldWidth, fill, width, height, color, border, inverted, stars, starsRow }) => (
+const Field = ({ fieldHeight, fieldWidth, fill, width, height, border, inverted, stars, starsRow }) => (
   <div
     className="field"
     style={{
-      backgroundColor: color || NO_COLOR,
       borderColor: border || NO_COLOR,
       transform: inverted ? "rotate(180deg)" : "none"
     }}

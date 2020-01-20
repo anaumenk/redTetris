@@ -4,9 +4,9 @@ import { ROUTES } from "../../constants";
 
 const Homepage = () => (
   <CentralBlock title="Red tetris">
-      <div className="buttons">
-      <ButtonRef to={ROUTES.MENU}>Start the game</ButtonRef>
-    </div>
+      <div>
+        <ButtonRef className="button" to={ROUTES.MENU}>Start the game</ButtonRef>
+      </div>
   </CentralBlock>
 );
 

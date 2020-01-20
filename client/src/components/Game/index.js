@@ -210,7 +210,6 @@ const Game = (props) => {
               fieldHeight={FIELD_HEIGHT}
               width={45}
               height={45}
-              color="#d5ecff6b"
               border="#989898b5"
               fill={field}
               inverted={props.room.mode.inverted}

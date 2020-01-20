@@ -30,7 +30,7 @@ const App = ({ getRooms }) => {
                   <IsLogin path={ROUTES.MENU}><Menu /></IsLogin>
                   <IsLogin path={ROUTES.ROOMS}><RoomsList /></IsLogin>
                   <IsLogin path={ROUTES.PLAYER}><Player /></IsLogin>
-                  <IsLogin path={ROUTES.ROOM}><Game /></IsLogin>
+                  <IsLogin goToMenu={true} path={ROUTES.ROOM}><Game /></IsLogin>
                   <Redirect to={ROUTES.ROOT} />
               </Switch>
           </Container>

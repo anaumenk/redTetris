@@ -8,28 +8,30 @@ const socket = socketIOClient(`${process.env.HOST || "http://localhost"}:${proce
 
 export const getRooms = () => dispatch => {
   socket.on(API.GET_ROOMS, data => {
-    const prevState = store.getState().rooms.room;
-    const roomInfo = store.getState().rooms.roomInfo;
+    const prevState = store.getState().rooms;
+    const allRooms = prevState.allRooms;
+    const prevRoom = prevState.room;
+    const roomInfo = prevState.roomInfo;
     const room = data.find((room) => room.id === roomInfo.id && room.lid.name === roomInfo.lid);
-    if (!room || !prevState || (room && !prevState) || (room.players && !prevState.players)
-      || room.id !== prevState.id
-      || !Object.keys(room.mode).every((item) => room.mode[item] === prevState.mode[item])
-      || room.players.length !== prevState.players.length
-      || !room.players.every((p, i) => p.score === prevState.players[i].score)
-      || room.status !== prevState.status) {
+    if (!room || !prevRoom || (room && !prevRoom) || (room.players && !prevRoom.players)
+      || room.id !== prevRoom.id
+      || !Object.keys(room.mode).every((item) => room.mode[item] === prevRoom.mode[item])
+      || room.players.length !== prevRoom.players.length
+      || !room.players.every((p, i) => p.score === prevRoom.players[i].score)
+      || room.status !== prevRoom.status) {
       dispatch({
         type: GET_ROOM,
         payload: {
           room,
           status: room ? room.status : null,
-          allRooms: data
+          allRooms: allRooms.length === data.length ? allRooms : data
         }
       })
     } else {
       dispatch({
         type: GET_ROOMS,
         payload: {
-          allRooms: data
+          allRooms: allRooms.length === data.length ? allRooms : data
         }
       })
     }

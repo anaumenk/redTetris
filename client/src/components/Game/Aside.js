@@ -52,15 +52,15 @@ const Aside = (props) => {
         <Button
           active={!props.mode.rotation}
           onClick={changeMode}
-          variant="outline-secondary"
+          className="outline-button"
           value={GAME_MODES.NO_ROTATION}
         >
           {GAME_MODES.NO_ROTATION}
         </Button>
         <Button
           active={props.mode.inverted}
+          className="outline-button"
           onClick={changeMode}
-          variant="outline-secondary"
           value={GAME_MODES.INVERTED_FIELD}
         >
           {GAME_MODES.INVERTED_FIELD}
@@ -76,11 +76,14 @@ const Aside = (props) => {
   return (
     <div className="aside-container">
       {props.lid && <div className="buttons">
-        {props.status !== GAME_STATUS.START && <Button variant="secondary" onClick={props.startGame}>Start</Button>}
+        {
+          props.status !== GAME_STATUS.START
+          && <Button className="button" onClick={props.startGame}>Start</Button>
+        }
         {props.status === GAME_STATUS.START &&
           <>
-            <Button variant="secondary" onClick={props.startGame}>Pause</Button>
-            <Button variant="secondary" onClick={props.stopGame}>Stop</Button>
+            <Button className="button" onClick={props.startGame}>Pause</Button>
+            <Button className="button" onClick={props.stopGame}>Stop</Button>
           </>
         }
       </div>}

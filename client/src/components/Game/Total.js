@@ -1,5 +1,5 @@
 import { Button, Modal } from "react-bootstrap";
-import { AsideInfo, PlayerInfo, Snowfall } from "../common";
+import { AsideInfo, PlayerInfo } from "../common";
 import React from "react";
 import { GAME_STATUS, ROUTES } from "../../constants";
 import { connect } from "react-redux";
@@ -19,28 +19,18 @@ const Total = ({ total, restartGame, status, lid, history, match, setGameStatus,
   };
   return (
     <Modal show={status === GAME_STATUS.STOP} onHide={restartGame}>
-      <Sound
-        autoLoad={true}
-        url={soundfile}
-        playStatus={Sound.status.PLAYING}
-      />
-      <Snowfall />
-      <div className="modal-inner"/>
-      <Modal.Header />
       <Modal.Body>
-        <AsideInfo title={["Player", "Score"]} info={playersInfo} style={{color: "white"}}/>
-        <div className="buttons christmas-buttons">
-          {lid
-            ? <Button onClick={restartGame} className="christmas-1">Restart</Button>
-            : <Button className="christmas-1"/>
-          }
-          <Button className="christmas-2"/>
-          <Button className="christmas-3"/>
-          <Button className="christmas-4"/>
-          <Button onClick={exit} className="christmas-5">Exit</Button>
+        <Sound
+          autoLoad={true}
+          url={soundfile}
+          playStatus={Sound.status.PLAYING}
+        />
+        <AsideInfo title={["Player", "Score"]} info={playersInfo}/>
+        <div className="buttons">
+          {lid && <Button onClick={restartGame} className="button">Restart</Button>}
+          <Button onClick={exit} className="button">Exit</Button>
         </div>
       </Modal.Body>
-      <Modal.Footer/>
     </Modal>
   )
 };

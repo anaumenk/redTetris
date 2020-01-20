@@ -1,3 +1,5 @@
+/* General */
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -5,7 +7,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #d5ecff6b!important;
 }
 
 code {
@@ -13,9 +14,200 @@ code {
     monospace;
 }
 
-.buttons button:focus {
+ul a {
+  color: black;
+  transition: color .2s linear;
+}
+
+ul a:hover {
+  color: black;
+  text-decoration: none;
+}
+
+.error {
+  color: red;
+}
+
+.spinner {
+  color: #989898b5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.title {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.title-center {
+  text-align: center;
+}
+
+.logout {
+  font-size: 25px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #989898b5;
+  cursor: pointer;
+  display: flex;
+  z-index: 1;
+}
+
+/* Buttons */
+
+button.button {
+  background-color: #b0d5e4;
+  color: #fff;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 0;
+  transition: 0.2s linear;
+}
+
+button.button:active, button.button:hover, button.button.disabled, button.button:disabled  {
+  background-color: #86ACBB!important;
+}
+
+button.button:focus, button.close-button:focus, button.outline-button:focus {
   box-shadow: none!important;
 }
+
+button.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: inherit;
+  border: 0;
+  transition: transform 0.2s linear;
+}
+
+button.close-button:before, button.close-button:after {
+  content: "";
+  background-color: #333;
+  height: 3px;
+  color: #333;
+  width: 100%;
+  border-radius: 30%;
+  position: absolute;
+  top: 10px;
+  right: 0;
+}
+
+button.close-button:before {
+  transform: rotate(45deg);
+}
+
+button.close-button:after {
+  transform: rotate(135deg);
+}
+
+button.close-button:active, button.close-button:hover {
+  background-color: inherit!important;
+  transform: scale(1.2);
+}
+
+button.outline-button {
+  background-color: transparent;
+  border-color: #86ACBB;
+  color: #86ACBB;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+button.outline-button:hover, button.outline-button:active, button.outline-button.active {
+  background-color: #86ACBB!important;
+  border-color: #86ACBB!important;
+  color: #fff;
+}
+
+.buttons button:not(:last-child){
+  margin-right: 10px;
+}
+
+.buttons {
+  margin-top: 10px;
+  display: flex;
+}
+
+/* Inputs */
+
+input.form-control {
+  outline: none;
+  border-color: #ced4da;
+  box-shadow: inherit;
+}
+
+input.form-control:focus {
+  border: 1px solid #b0d5e4;
+  box-shadow: 0 0 0 0.1rem #b0d5e4;
+}
+
+.form-check label:before {
+  content: "";
+  width: 18px;
+  height: 16px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background: #fcfff4;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 1px white, 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.form-check label:after {
+  content: '';
+  width: 9px;
+  height: 5px;
+  position: absolute;
+  top: calc(50% - 3px);
+  left: 4px;
+  border: 3px solid #333;
+  border-top: none;
+  border-right: none;
+  background: transparent;
+  opacity: 0;
+  -webkit-transform: rotate(-45deg);
+  transform: translateY(calc(-50% + 3px)) rotate(-45deg);
+}
+
+.form-check:hover label:after {
+  opacity: 0.5;
+}
+
+.form-check input[type=checkbox] {
+  width: 18px;
+  top: 50%;
+  left: 20px;
+  z-index: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+.form-check input[type=checkbox]:checked + label:before {
+  background: linear-gradient(to bottom, #ffffff 0%, #b0d5e4 100%);
+}
+
+.form-check input[type=checkbox]:checked + label:after {
+  opacity: 1;
+}
+
+/* Modal window */
+
+.modal .modal-body {
+  padding: 50px 30px 30px;
+}
+
+/* Homepage containers */
 
 .homepage {
   flex-direction: column;
@@ -24,82 +216,80 @@ code {
 
 .homepage .container {
   min-height: 400px;
-  align-items: center;
   justify-content: center;
   display: flex;
   flex-direction: column;
-  background-color: white;
-  box-shadow: 0 0 5px 13px #d5ecff6b;
-  border-radius: 25% 10%;
+  background-color: #f2f2f2;
+  box-shadow: 0 0 10px 1px #f2f2f2;
   padding: 30px;
 }
 
-.homepage .close-button {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  top: 15px;
-  right: 15px;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  font-family: fantasy;
+/* Enter rooms */
+
+form.enter {
+  width: 100%;
 }
 
-.homepage .close-button:hover {
-  background-color: #6c757dbf;
-}
+/* Rooms list */
 
-.homepage h1 {
-  color: #989898b5!important;
-}
-
-button:not(:last-child) {
-  margin-right: 5px;
-}
-
-.buttons {
-  margin-top: 20px;
-  display: flex;
-}
-
-.room-list {
-  width: 80%;
-}
-
-.room-list ul{
+.room--list ul{
   list-style: none;
   padding: 0;
 }
 
-.room-list ul a li {
-  padding: 5px;
+.room--item {
+  padding: 10px 10px 10px 0;
   transition: .1s;
   cursor: pointer;
+  position: relative;
 }
 
-.room-list ul a:hover {
-  font-weight: bold;
+.room--item:hover .room--id{
+  color: #86ACBB;
 }
 
-.room-list ul a:hover {
-  text-decoration: none;
+.room--id {
+  font-weight: 900;
+  font-size: 30px;
+  position: absolute;
+  top: -13px;
+  color: #b0d5e4;
+  left: -15px;
+  transition: color .2s linear;
 }
 
 .create-room {
-  padding: 30px;
   display: flex;
   flex-direction: column;
 }
 
+/* Player info */
+
+.player-info {
+  width: 100%;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.player-info--name {
+  margin: auto;
+}
+
+.player-info--number {
+  font-weight: 900;
+  color: #b0d5e4;
+  font-size: 30px;
+}
+
+/* Tetris */
+
 .room-name {
   padding: 15px 0;
+  text-transform: uppercase;
 }
 
 .field {
-  background-color: #d5ecff6b;
+  /*background-color: #e7f3f8;*/
   border: 1px solid transparent;
   width: fit-content;
 }
@@ -118,6 +308,7 @@ button:not(:last-child) {
 .aside-heading {
   font-weight: bold;
   color: #989898b5;
+  text-transform: uppercase;
   border-bottom: 2px solid;
   display: flex;
   justify-content: space-around;
@@ -149,36 +340,10 @@ button:not(:last-child) {
   border-left: 1px solid #989898b5;
 }
 
-form.enter {
-  width: 100%;
-  padding: 0 30px;
-}
-
-.error {
-  color: red;
-}
-
-.player-info {
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
-  margin: 20px 0;
-}
-
-.player-info div {
-  margin: 5px 0;
-}
-
-.spinner {
-  color: #989898b5;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  display: flex;
+.aside-content .player-game-info {
+  color: #86ACBB;
+  font-size: 30px;
+  font-weight: 900;
 }
 
 .aside-container .buttons {
@@ -194,126 +359,7 @@ form.enter {
   margin-right: 10px;
 }
 
-.title-center {
- text-align: center;
-}
-
-.form-control {
-  outline: none!important;
-  border-color: #ced4da!important;
-  box-shadow: inherit!important;
-}
-
 .create-room .form-check{
   margin-top: 10px;
-}
-
-.logout {
-  font-size: 25px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  color: #989898b5;
-  cursor: pointer;
-  display: flex;
-  z-index: 1;
-}
-
-body .modal-backdrop.show {
-  opacity: 1;
-}
-
-.modal .modal-content {
-  background-color: black;
-  z-index: 0;
-  height: 600px;
-  background-position: center;
-  background-image: url("./images/hiclipart.com.png");
-  background-repeat: no-repeat;
-}
-
-.modal .modal-content:after {
-  content: "";
-  opacity: 0.5;
-  top: 55px;
-  left: 0;
-  bottom: 173px;
-  right: 0;
-  position: absolute;
-  z-index: -1;
-  background-image: url("https://i.ibb.co/ccKYwW2/tree.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.modal .modal-header, .modal .modal-footer {
-  border: none;
-}
-
-.modal .modal-body {
-  position: relative;
-  flex: 1 1 auto;
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.modal .aside-heading, .modal .aside-content {
-  color: white;
-}
-
-.modal .aside-content .player-game-info:first-child {
-  color: red;
-  font-weight: bold;
-}
-
-.modal .aside-heading {
-  justify-content: space-around;
-}
-
-.modal .aside-content .player-game-info {
-  width: unset;
-}
-
-.christmas-buttons {
-  position: relative;
-  height: 116px;
-}
-
-.christmas-buttons button{
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  padding: 0;
-  background-color: #F8B229;
-  border-color: #F8B229;
-}
-
-.christmas-buttons button:hover, .christmas-buttons button:active {
-  background-color: #dc9d25;
-  border-color: #dc9d25;
-}
-
-.buttons .christmas-1 {
-  top: -62px;
-  left: 40px;
-}
-.buttons .christmas-2 {
-  top: -25px;
-  left: 100px;
-}
-.buttons .christmas-3 {
-  top: -5px;
-  left: 171px;
-}
-.buttons .christmas-4 {
-  top: -18px;
-  right: 93px;
-}
-.buttons .christmas-5 {
-  top: -62px;
-  right: 40px;
+  padding: 10px 10px 10px 25px;
 }

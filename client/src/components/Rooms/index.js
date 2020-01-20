@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { CentralBlock, ButtonRef } from "../common";
+import {CentralBlock, ButtonRef, Title} from "../common";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { Button, Form, FormControl, Modal } from "react-bootstrap";
+import {Button, Form, FormControl, Modal} from "react-bootstrap";
 import { configAxios } from "../../axios";
 import { API, METHODS } from "../../constants";
 
@@ -30,22 +30,23 @@ const RoomsList = ({ allRooms, history }) => {
 
   return (
     <CentralBlock title="Choose the room or create a new one" close={true}>
-      <div className="room-list">
+      <div className="room--list">
         <ul>
           {roomsList.map((room) => (
             <Link key={room.id} to={`/${room.id}[<${room.lid.name}>]`}>
-              <li>{room.name}</li>
+              <li className="room--item"><span className="room--id">{room.id}</span><span className="room--name">{room.name}</span></li>
             </Link>
           ))}
         </ul>
-        <div className="buttons justify-content-center">
-          <Button type="submit" onClick={onClick}>Create</Button>
-          {randomRoom && <ButtonRef to={`/${randomRoom.id}[<${randomRoom.lid.name}>]`}>Start</ButtonRef>}
-          <Modal show={show} onHide={() => setShow(false)} >
-            <Modal.Header closeButton={true}>Create new room</Modal.Header>
+        <div className="buttons justify-content-end">
+          <Button className="button" type="submit" onClick={onClick}>Create</Button>
+          {randomRoom && <ButtonRef className="button" to={`/${randomRoom.id}[<${randomRoom.lid.name}>]`}>Start</ButtonRef>}
+          <Modal show={show}>
             <Modal.Body>
+              <Title title="Create new room"/>
+              <Button className="close-button" onClick={() => setShow(false)}/>
               <Form onSubmit={onSubmit} className="create-room">
-                <Form.Label>Room name</Form.Label>
+                <Form.Label column={false}>Room name</Form.Label>
                 <FormControl value={name} type="text" onChange={onChange}/>
                 <Form.Check
                   type="checkbox"
@@ -54,7 +55,7 @@ const RoomsList = ({ allRooms, history }) => {
                   onChange={onCheck}
                 />
                 <div className="buttons justify-content-center">
-                  <Button disabled={!name} type="submit">Create</Button>
+                  <Button className="button" disabled={!name} type="submit">Create</Button>
                 </div>
               </Form>
             </Modal.Body>
