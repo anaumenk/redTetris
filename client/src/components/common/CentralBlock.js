@@ -5,16 +5,13 @@ import { ROUTES } from "../../constants";
 import { FaTimes } from "react-icons/fa";
 
 const CentralBlock = ({ close, title, children }) => (
-  <Row className="homepage align-items-center">
+  <Row className="homepage">
       <Col md={7} className="container">
         {close && (
           <ButtonRef
-            variant="secondary"
             to={ROUTES.MENU}
             className="close-button"
-          >
-            <FaTimes/>
-          </ButtonRef>
+          />
         )}
           <Title title={title} />
           {children}

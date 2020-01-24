@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import {
-  getAllRooms, nullifyCreatedRoom,
-  setNextPiece, setNextTurn, setGameStatus,
-} from "../../actions"
-import {Field, Fireworks} from "../common";
+import { setNextPiece, setNextTurn, setGameStatus, setRoom } from "../../actions"
+import { Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
-import { PIECES_DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT } from "../../constants";
+import { PIECES_DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT, TIMEOUT } from "../../constants";
 import {
   stopGame as stopGameApi, restartGame as restartGameApi, checkFieldFill,
-  noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, removePlayerFromRoom
+  noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, mathSum,
+  removePlayerFromRoom
 } from "../../utility";
 import Total from "./Total";
+import Sound from 'react-sound';
+import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
+import starsSound from '../../sounds/magic.mp3';
+window.soundManager.setup({debugMode: false});
 
 const Game = (props) => {
   const roomId = parseInt(props.match.params.room);
@@ -22,6 +24,20 @@ const Game = (props) => {
   const [field, setField] = useState([]);
   const [intervalId, setIntervalId] = useState(UNSENT_INT);
   const [key, setKey] = useState(UNSENT_INT);
+  const [starsRow, setStarsRow] = useState([]);
+  const [sound, setSoundPlay] = useState(false);
+
+  useEffect(() => {
+    const stars = starsRow;
+    if (stars.length > 0) {
+      setSoundPlay(true);
+      setTimeout(() => {
+        pieceMoving.moveAll(field, setField, stars);
+        getPieceAndStartMoving();
+        setStarsRow([]);
+      }, 500)
+    }
+  }, [starsRow]);
 
   useEffect(() => {
     if (props.status === GAME_STATUS.START) {
@@ -60,17 +76,19 @@ const Game = (props) => {
     }
   }, [key]);
 
-  useEffect(() => props.nullifyCreatedRoom());
+  const handleUserKeyPress = event => {
+    setKey(event.keyCode);
+  };
 
   useEffect(() => {
-    props.getAllRooms(roomId, playerName);
-    window.addEventListener("keydown", (e) => setKey(e.keyCode));
+    props.setRoom(roomId, playerName);
+    window.addEventListener("keydown", handleUserKeyPress);
     window.addEventListener("beforeunload", (e) => {
       e.preventDefault();
       return removePlayerFromRoom(roomId);
     });
     return () => {
-      window.removeEventListener("keydown", (e) => setKey(e.keyCode))
+      window.removeEventListener("keydown", handleUserKeyPress)
     }
   }, []);
 
@@ -78,8 +96,8 @@ const Game = (props) => {
     if (pieceId !== UNSENT_INT) {
       const newIntervalId = setInterval(() => {
         return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
-      }, 1000);
-      setIntervalId(newIntervalId)
+      }, TIMEOUT - Object.keys(field).length * 10);
+      setIntervalId(newIntervalId);
     }
   }, [pieceId]);
 
@@ -129,18 +147,24 @@ const Game = (props) => {
   };
 
   const getPieceAndStartMoving = () => {
-    let i = 10;
-    while (checkFieldFill(field, setField)) {
-      scoreUpdate(i, roomId);
-      i += 10;
+    let i = !props.room.mode.rotation && props.room.mode.inverted
+      ? 100
+      : (!props.room.mode.rotation || props.room.mode.inverted)
+        ? 50
+        : 10;
+    const stars = checkFieldFill(field);
+    if (stars.length > 0) {
+      setStarsRow(stars);
+      scoreUpdate(mathSum(stars.length, i), roomId)
+    } else {
+      const piece = {
+        id: field.length,
+        color: props.nextPieceColor,
+        place: PIECES[props.nextPieceFigure][props.nextPieceTurn]
+      };
+      props.setNextPiece();
+      addPieceToField(piece);
     }
-    const piece = {
-      id: field.length,
-      color: props.nextPieceColor,
-      place: PIECES[props.nextPieceFigure][props.nextPieceTurn]
-    };
-    props.setNextPiece();
-    addPieceToField(piece);
   };
 
   const startGame = () => {
@@ -158,8 +182,24 @@ const Game = (props) => {
     props.setGameStatus(roomId, null);
   };
 
+  const handleSongFinishedPlaying = () => {
+    setSoundPlay(false);
+  };
+
   return props.room ? (
     <>
+      <Sound
+        autoLoad={true}
+        url={gameSound}
+        playStatus={props.room.status === GAME_STATUS.START ? Sound.status.PLAYING : Sound.status.STOPPED}
+        loop={true}
+      />
+      <Sound
+        autoLoad={true}
+        url={starsSound}
+        playStatus={sound ? Sound.status.PLAYING : Sound.status.STOPPED}
+        onFinishedPlaying={handleSongFinishedPlaying}
+      />
       <div className="room-name">
         <h1>Room {props.room.name}</h1>
       </div>
@@ -170,10 +210,11 @@ const Game = (props) => {
               fieldHeight={FIELD_HEIGHT}
               width={45}
               height={45}
-              color="#d5ecff6b"
               border="#989898b5"
               fill={field}
               inverted={props.room.mode.inverted}
+              stars={true}
+              starsRow={starsRow}
             />
           </Col>
           <Col>
@@ -183,7 +224,6 @@ const Game = (props) => {
               players={sortPlayers}
             /></Col>
         </Row>
-        {props.status === GAME_STATUS.STOP && <Fireworks />}
         <Total restartGame={restartGame} total={sortPlayers}/>
     </>
     ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;
@@ -200,11 +240,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  getAllRooms,
-  nullifyCreatedRoom,
   setNextPiece,
   setNextTurn,
   setGameStatus,
+  setRoom
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

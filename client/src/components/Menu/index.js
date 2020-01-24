@@ -5,8 +5,8 @@ import { ROUTES } from "../../constants";
 const Menu = () => (
   <CentralBlock title="Menu">
     <div className="buttons">
-      <ButtonRef to={ROUTES.ROOMS}>Rooms list</ButtonRef>
-      <ButtonRef to={ROUTES.PLAYER}>Player info</ButtonRef>
+      <ButtonRef className="button" to={ROUTES.ROOMS}>Rooms list</ButtonRef>
+      <ButtonRef className="button" to={ROUTES.PLAYER}>Player info</ButtonRef>
     </div>
   </CentralBlock>
 );

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Field, AsideInfo, PlayerInfo } from "../common";
-import { Button, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { GAME_MODES, GAME_STATUS, PIECES } from "../../constants";
 import { isRoomLid } from "../../actions";
@@ -47,35 +47,43 @@ const Aside = (props) => {
     }
   };
 
-  const gameModes = (
+  const gameModes = props.lid ? (
     <Row className="buttons">
-      <Button
-        active={!props.mode.rotation}
-        onClick={changeMode}
-        variant="outline-secondary"
-        value={GAME_MODES.NO_ROTATION}
-      >
-        {GAME_MODES.NO_ROTATION}
-      </Button>
-      <Button
-        active={props.mode.inverted}
-        onClick={changeMode}
-        variant="outline-secondary"
-        value={GAME_MODES.INVERTED_FIELD}
-      >
-        {GAME_MODES.INVERTED_FIELD}
-      </Button>
-    </Row>
+        <Button
+          active={!props.mode.rotation}
+          onClick={changeMode}
+          className="outline-button"
+          value={GAME_MODES.NO_ROTATION}
+        >
+          {GAME_MODES.NO_ROTATION}
+        </Button>
+        <Button
+          active={props.mode.inverted}
+          className="outline-button"
+          onClick={changeMode}
+          value={GAME_MODES.INVERTED_FIELD}
+        >
+          {GAME_MODES.INVERTED_FIELD}
+        </Button>
+      </Row>
+    ) : (
+    <Col>
+      {!props.mode.rotation && <p>{GAME_MODES.NO_ROTATION}</p>}
+      {props.mode.inverted && <p>{GAME_MODES.INVERTED_FIELD}</p>}
+    </Col>
   );
 
   return (
     <div className="aside-container">
       {props.lid && <div className="buttons">
-        {props.status !== GAME_STATUS.START && <Button variant="secondary" onClick={props.startGame}>Start</Button>}
+        {
+          props.status !== GAME_STATUS.START
+          && <Button className="button" onClick={props.startGame}>Start</Button>
+        }
         {props.status === GAME_STATUS.START &&
           <>
-            <Button variant="secondary" onClick={props.startGame}>Pause</Button>
-            <Button variant="secondary" onClick={props.stopGame}>Stop</Button>
+            <Button className="button" onClick={props.startGame}>Pause</Button>
+            <Button className="button" onClick={props.stopGame}>Stop</Button>
           </>
         }
       </div>}

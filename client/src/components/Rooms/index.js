@@ -1,81 +1,73 @@
-import React, { useEffect, useState } from "react";
-import { CentralBlock } from "../common";
+import React, { useState } from "react";
+import {CentralBlock, ButtonRef, Title} from "../common";
 import { connect } from "react-redux";
-import { getRooms, createRoom } from "../../actions"
-import { Link, withRouter, Redirect } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import {Button, Form, FormControl, Modal} from "react-bootstrap";
+import { configAxios } from "../../axios";
+import { API, METHODS } from "../../constants";
 
-const RoomsList = ({ getRooms, createRoom, createdRoom, rooms }) => {
-    useEffect(() => {
-      getRooms();
-    }, []);
+const RoomsList = ({ allRooms, history }) => {
+  const [show, setShow] = useState(false);
+  const [name, setName] = useState("");
+  const [multi, setMulti] = useState(false);
 
-    const [show, setShow] = useState(false);
-    const [name, setName] = useState("");
-    const [multi, setMulti] = useState(false);
+  const onChange = event => setName(event.target.value);
+  const onCheck = () => setMulti(!multi);
+  const onSubmit = () => {
+    const newRoom = { name, multi };
+    configAxios(METHODS.POST, API.POST_ROOM, newRoom)
+    .then((response) => {
+      const createdRoom = response.data.data;
+      history.push(`/${createdRoom.id}[<${createdRoom.lid.name}>]`);
+    })
+    .catch((err) => console.log(err))
+  };
 
-    const onChange = event => setName(event.target.value);
-    const onCheck = () => setMulti(!multi);
-    const onSubmit = (event) => {
-        const newRoom = {
-            name,
-            multi
-        };
-        event.preventDefault();
-        createRoom(newRoom);
-        setName("");
-        setMulti(false);
-        setShow(false);
-    };
+  const onClick = () => setShow(true);
 
-    const onClick = () => setShow(true);
+  const roomsList = allRooms.filter((room) => (room.multi && !room.status));
+  const randomRoom = roomsList[Math.floor(Math.random() * Math.floor(allRooms.length))];
 
   return (
-    <>
-      {createdRoom
-        ? <Redirect to={`/${createdRoom.id}[<${createdRoom.lid.name}>]`} />
-        : <CentralBlock title="Choose the room or create a new one" close={true}>
-            <div className="room-list">
-                <ul>
-                    {rooms.map((room) => {
-                        return (
-                          <Link key={room.id} to={`/${room.id}[<${room.lid.name}>]`}>
-                              <li>{room.name}</li>
-                          </Link>
-                        )
-                    })}
-                </ul>
+    <CentralBlock title="Choose the room or create a new one" close={true}>
+      <div className="room--list">
+        <ul>
+          {roomsList.map((room) => (
+            <Link key={room.id} to={`/${room.id}[<${room.lid.name}>]`}>
+              <li className="room--item"><span className="room--id">{room.id}</span><span className="room--name">{room.name}</span></li>
+            </Link>
+          ))}
+        </ul>
+        <div className="buttons justify-content-end">
+          <Button className="button" type="submit" onClick={onClick}>Create</Button>
+          {randomRoom && <ButtonRef className="button" to={`/${randomRoom.id}[<${randomRoom.lid.name}>]`}>Start</ButtonRef>}
+          <Modal show={show}>
+            <Modal.Body>
+              <Title title="Create new room"/>
+              <Button className="close-button" onClick={() => setShow(false)}/>
+              <Form onSubmit={onSubmit} className="create-room">
+                <Form.Label column={false}>Room name</Form.Label>
+                <FormControl value={name} type="text" onChange={onChange}/>
+                <Form.Check
+                  type="checkbox"
+                  label="Multi player mode"
+                  value={multi}
+                  onChange={onCheck}
+                />
                 <div className="buttons justify-content-center">
-                    <Button type="submit" onClick={onClick}>Create</Button>
-                    <Modal show={show} onHide={() => setShow(false)} >
-                        <Modal.Header closeButton={true}>Create new room</Modal.Header>
-                        <Modal.Body>
-                            <Form onSubmit={onSubmit} className="create-room">
-                              <Form.Label>Room name</Form.Label>
-                              <FormControl value={name} type="text" onChange={onChange}/>
-                              <Form.Check
-                                type="checkbox"
-                                label="Multi player mode"
-                                value={multi}
-                                onChange={onCheck}
-                              />
-                              <div className="buttons justify-content-center">
-                                  <Button disabled={!name} type="submit">Create</Button>
-                              </div>
-                            </Form>
-                        </Modal.Body>
-                    </Modal>
+                  <Button className="button" disabled={!name} type="submit">Create</Button>
                 </div>
-            </div>
-          </CentralBlock>
-      }
-    </>
+              </Form>
+            </Modal.Body>
+          </Modal>
+        </div>
+      </div>
+    </CentralBlock>
   );
 };
 
 const mapStateToProps = (state) => ({
-    rooms: state.rooms.rooms,
-    createdRoom: state.rooms.createdRoom,
+  allRooms: state.rooms.allRooms,
 });
 
-export default withRouter(connect(mapStateToProps, { getRooms, createRoom })(RoomsList));
+export default withRouter(connect(mapStateToProps)(RoomsList));

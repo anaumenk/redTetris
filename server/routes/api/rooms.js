@@ -60,7 +60,7 @@ router.post('/delete/player', async(req, res) => {
       response.data = {};
         const newRoom = index.deletePlayer(roomId, player.id);
         console.log("newRoom:" + newRoom.players);
-        if (!newRoom.players) {
+        if (newRoom.players.length === 0) {
           console.log('delete:' + await models.Room.deleteOne({_id: roomId}));
           index.deleteRoom(roomId);
         }
@@ -74,7 +74,7 @@ router.post('/delete/player', async(req, res) => {
   res.send(response);
 });
 
-router.post('/score', (req, res) => {
+router.post('/score', async (req, res) => {
   const token = req.body.token;
   const score = req.body.score;
   const roomId = req.body.roomId;
@@ -82,21 +82,17 @@ router.post('/score', (req, res) => {
     data: null,
     error: null
   };
-  if (index.checkToken(token)) {
-    const player = index.getPlayerInfo(token);
-    if (player) {
-      response.data = {};
-      const room = index.updateRoomScore(roomId, player.id, score);
-      if (room) {
-        response.data.room = room;
-      } else {
-        response.error = "Score update error."
-      }
+  const player = await models.User.findOne({token: token});
+  if (player) {
+    response.data = {};
+    const room = index.updateRoomScore(roomId, player.id, score);
+    if (room) {
+      response.data.room = room;
     } else {
-      response.error = "No such player."
+      response.error = "Score update error.";
     }
   } else {
-    response.error = "No such user."
+    response.error = "No such player.";
   }
   res.send(response);
 });

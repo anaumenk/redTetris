@@ -16,5 +16,6 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^4.1.2"
-  }
+  },
+  "comment": "Оставляю ссылку на установку mongoDb https://docs.mongodb.com/manual/installation/, выберешь для своей ос и по установишь. В консоле пишешь команду: mongo. Mongo стартанет и больше ниче не надо, базу и табл создаст mongoose."
 }

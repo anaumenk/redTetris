@@ -26,12 +26,12 @@ const Player = () => {
         {!error ? (
           <div className="player-info">
             <Row>
-              <Col sm="6">Name</Col>
-              <Col sm="6">{player.name}</Col>
+              <Col sm="6" className="player-info--name">Name</Col>
+              <Col sm="6" className="player-info--number">{player.name}</Col>
             </Row>
             <Row>
-              <Col sm="6">Score</Col>
-              <Col sm="6">{player.score}</Col>
+              <Col sm="6" className="player-info--name">Score</Col>
+              <Col sm="6" className="player-info--number">{player.score}</Col>
             </Row>
           </div>
         ) : (

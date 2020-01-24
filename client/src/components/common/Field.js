@@ -2,34 +2,36 @@ import React from "react";
 import { createField } from "../../utility";
 import { NO_COLOR } from "../../constants";
 
-const Field = ({ fieldHeight, fieldWidth, fill, width, height, color, border, inverted }) => (
+const Field = ({ fieldHeight, fieldWidth, fill, width, height, border, inverted, stars, starsRow }) => (
   <div
     className="field"
     style={{
-        backgroundColor: color || NO_COLOR,
-        borderColor: border || NO_COLOR,
-        transform: inverted ? "rotate(180deg)" : "none"
+      borderColor: border || NO_COLOR,
+      transform: inverted ? "rotate(180deg)" : "none"
     }}
   >
-      {createField(fieldHeight, fieldWidth, fill).map((row, y) => {
-          return (
-            <div key={y}>
-                {row.map((square, x) => {
-                    return (
-                      <div
-                        className="piece"
-                        style={{
-                          width: width,
-                          height: height,
-                          backgroundColor: square.color
-                        }}
-                        key={x}
-                      />
-                    )
-                })}
-            </div>
-          )
-      })}
+    {createField(fieldHeight, fieldWidth, fill).map((row, y) => (
+      <div key={y}>
+        {row.map((square, x) => (
+          <div
+            className="piece"
+            style={{
+              width: width,
+              height: height,
+              backgroundColor: square.color
+            }}
+            key={x}
+          >
+            {stars && [1, 2].map((star) => (
+                <div
+                  key={`star-${star}`}
+                  className={`star star-${star} ${starsRow.includes(y) ? "show" : ""}`}
+                />
+            ))}
+          </div>
+        ))}
+      </div>
+    ))}
   </div>
 );
 

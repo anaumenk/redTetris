@@ -55,8 +55,8 @@ const EnterForm = ({ action, history }) => {
         <Input title="Player name" type="text" value={name} onChange={onChange} name="name" />
         <Input title="Password" type="password" value={password} onChange={onChange} name="password" />
         {!!error && <div className="error">{error}</div>}
-        <div className="buttons justify-content-center">
-          <Button disabled={!name || !password} type="submit">{action}</Button>
+        <div className="buttons">
+          <Button className="button" disabled={!name || !password} type="submit">{action}</Button>
         </div>
       </Form>
     </CentralBlock>

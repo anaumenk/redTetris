@@ -8,6 +8,7 @@ const config = require('./config');
 const autoIncrement = require('mongoose-auto-increment');
 const app = express();
 const port = config.PORT || 8000;
+const models = require('./models');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -87,8 +88,12 @@ const getRoom = (id, name, player) => {
 
 const checkLid = (playerId, token) => !!players.find((player) => player.token === token && player.id === playerId);
 
-const deleteRoom = (id) => {
+const deleteRoom = async (id) => {
+  console.log('deleteRoom');
+  //const room = await models.Score.findOne({owner: player.id});
+  await models.Room.deleteOne({ id: id });
   rooms = rooms.filter((room) => room.id !== id);
+
 };
 
 const deletePlayer = (roomId, playerId) => {
@@ -112,8 +117,10 @@ const updateRoomScore = (roomId, playerId, score) => {
 const stopGame = (roomId) => {
   const room = rooms.findIndex((room) => room.id === roomId);
   if (rooms[room]) {
-    rooms[room].players.forEach((player) => {
-      players[players.findIndex((p) => p.id === player.id)];/*.updateScore(player.score);*/
+    rooms[room].players.forEach(async (player) => {
+      const scorePlayer = await models.Score.findOne({owner: player.id});
+      scorePlayer.score = Number(scorePlayer.score) + Number(player.score);
+      await scorePlayer.save();
     });
   }
   return rooms[room];
