@@ -83,12 +83,9 @@ const Game = (props) => {
   useEffect(() => {
     props.setRoom(roomId, playerName);
     window.addEventListener("keydown", handleUserKeyPress);
-    window.addEventListener("beforeunload", (e) => {
-      e.preventDefault();
-      return removePlayerFromRoom(roomId);
-    });
     return () => {
-      window.removeEventListener("keydown", handleUserKeyPress)
+      removePlayerFromRoom(roomId);
+      window.removeEventListener("keydown", handleUserKeyPress);
     }
   }, []);
 
