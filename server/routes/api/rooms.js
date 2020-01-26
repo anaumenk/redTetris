@@ -30,11 +30,11 @@ router.post('/lid', async (req, res) => {
   };
   const player = await models.User.findOne({token: token});
   if (player) {
-    if(await models.Room.findOne({lid: player.id})) lid = true;
+    if(await models.Room.findOne({lid: player.id}))
+      lid = true;
     const room = index.getRoom(req.body.id, req.body.name, player);
     if (room) {
       response.data = {};
-      console.log(lid);
       response.data.lid = lid;
     } else {
       response.error = "No such room."
@@ -57,10 +57,11 @@ router.post('/delete/player', async(req, res) => {
     const room = index.stopGame(roomId);
     console.log("tytroom: "+room);
     if (room) {
+      index.setGameStatus(roomId, 'STOP');
       response.data = {};
         const newRoom = index.deletePlayer(roomId, player.id);
         console.log("newRoom:" + newRoom.players);
-        if (newRoom.players.length === 0) {
+        if (await models.Room.findOne({lid: player.id})) {
           console.log('delete:' + await models.Room.deleteOne({_id: roomId}));
           index.deleteRoom(roomId);
         }

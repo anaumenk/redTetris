@@ -3,6 +3,7 @@ const Player = require("../../classes/Player");
 const index = require("../../index");
 const models = require('../../models');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 router.post('/token', (req, res) => {
   const token = req.body.token;
@@ -27,6 +28,8 @@ router.post('/register', async (req, res) => {
   };
   try {
     const player = await models.User.create({name: name, password: password});
+    player.token = jwt.sign({id: player.id}, "SECRET");
+    player.save();
     if (player){
       await models.Score.create({owner: player.id});
       response.data = { token: player.token };

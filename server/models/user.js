@@ -15,7 +15,9 @@ const schema = new Schema({
     },
     token: {
         type: String,
-        default: jwt.sign({id: this.id}, "SECRET")
+        //unique: true,
+        default: 0
+        //default: jwt.sign({id: this.name}, "SECRET")
     },
     score: {
         type: Schema.Types.ObjectId,
@@ -43,7 +45,7 @@ schema.pre('save', function(next) {
 // schema.methods.comparePassword = (candidatePassword, cb) => {
 //     console.log('pass: ' + candidatePassword);
 //     console.log('thispass: ' + cb);
-//    return bcrypt.compareSync(password, this.password);
+//   r eturn bcrypt.compareSync(password, this.password);
 //     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
 //         if (err) return cb(err);
 //         cb(null, isMatch);
