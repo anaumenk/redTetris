@@ -1,7 +1,7 @@
 import { Button, Modal } from "react-bootstrap";
 import { AsideInfo, PlayerInfo } from "../common";
 import React from "react";
-import { GAME_STATUS, ROUTES } from "../../constants";
+import { GAME_STATUS, ROUTES, PLAYER_STATUS } from "../../constants";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { setGameStatus, cleanTheRoom } from "../../actions";
@@ -11,7 +11,8 @@ window.soundManager.setup({debugMode: false});
 
 const Total = ({ total, restartGame, status, lid, history, match, setGameStatus, cleanTheRoom }) => {
   const roomId = parseInt(match.params.room);
-  const playersInfo = total ? total.map((player, index) => <PlayerInfo player={player} key={index}/>) : null;
+  const playersInfo = total ? total.filter((player) => player.status !== PLAYER_STATUS.DELETED)
+    .map((player, index) => <PlayerInfo player={player} key={index}/>) : null;
   const exit = () => {
     setGameStatus(roomId, null);
     cleanTheRoom();

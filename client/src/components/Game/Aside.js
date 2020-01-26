@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Field, AsideInfo, PlayerInfo } from "../common";
 import { Button, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
-import { GAME_MODES, GAME_STATUS, PIECES } from "../../constants";
+import { GAME_MODES, GAME_STATUS, PIECES, PLAYER_STATUS } from "../../constants";
 import { isRoomLid } from "../../actions";
 import { changeGameMode } from "../../utility"
 import { withRouter } from "react-router-dom";
@@ -14,7 +14,9 @@ const Aside = (props) => {
     props.isRoomLid(roomId, props.match.params.player)
   }, []);
 
-  const playersInfo = props.players.map((player, index) => <PlayerInfo key={index} player={player} />);
+  const playersInfo = props.players
+    .filter((player) => player.status === PLAYER_STATUS.GAME)
+    .map((player, index) => <PlayerInfo key={index} player={player} />);
 
   const nextPiece = <Field
     fieldWidth={4}
