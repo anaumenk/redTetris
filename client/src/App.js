@@ -13,11 +13,15 @@ import Enter from "./components/Enter";
 import { EnterForm } from "./components/common";
 import Menu from "./components/Menu";
 import { getRooms } from "./actions"
+import auth from "./utility/authentificate";
 
 const App = ({ getRooms }) => {
     useEffect(() => {
         getRooms();
+        auth.checkToken();
     }, []);
+
+    // auth.checkToken();
 
     return (
       <HashRouter>

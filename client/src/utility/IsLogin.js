@@ -15,6 +15,7 @@ const Logout = ({ children, goToMenu, history }) => (
 const IsLogin = ({ children, goToMenu, history, ...rest }) => {
   // const [auth, setAuth] = useState(null);
   // auth.isAuthenticated.then((response) => console.log(res));
+  auth.checkToken();
   console.log(auth.isAuthenticated)
   return (
     <Route
