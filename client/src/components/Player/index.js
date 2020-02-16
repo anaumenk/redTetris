@@ -11,12 +11,14 @@ const Player = () => {
     useEffect(() => {
       configAxios(METHODS.POST, API.GET_PLAYER)
         .then((response) => {
-          const data = response.data;
-          if (!data.error) {
-            setPlayer(data.data.player);
-          }
-          else {
-            setError(data.error);
+          if (response) {
+            const data = response.data;
+            if (!data.error) {
+              setPlayer(data.data.player);
+            }
+            else {
+              setError(data.error);
+            }
           }
       });
     }, []);

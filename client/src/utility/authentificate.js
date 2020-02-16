@@ -1,12 +1,16 @@
 import { localStorageKeys, localStorageService } from "../store";
+import { configAxios } from "../axios";
+import { METHODS, API } from "../constants";
+
+const checkToken = () => {
+  const token = localStorageService.readItem(localStorageKeys.TOKEN);
+  configAxios(METHODS.POST, API.CHECK_TOKEN, { token }).then((res) => {
+    auth.isAuthenticated = res.data;
+  })
+};
 
 const auth = {
-  isAuthenticated: !!localStorageService.readItem(localStorageKeys.TOKEN),
-  // async checkToken() {
-  //   const token = localStorageService.readItem(localStorageKeys.TOKEN);
-  //   const response = await configAxios(METHODS.POST, API.CHECK_TOKEN, { token });
-  //   auth.isAuthenticated = response.data.player;
-  // },
+  isAuthenticated: checkToken(),
   authenticate(token) {
     localStorageService.createOrUpdateItem(localStorageKeys.TOKEN, token);
     auth.isAuthenticated = !!token;

@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState} from "react"
 import { ROUTES } from "../constants";
 import { Redirect, Route } from "react-router-dom";
 import { auth } from "./";
@@ -12,14 +12,19 @@ const Logout = ({ children, goToMenu, history }) => (
   </>
 );
 
-const IsLogin = ({ children, goToMenu, history, ...rest }) => (
-  <Route
-    {...rest}
-    render={() => auth.isAuthenticated
-      ? <Logout goToMenu={goToMenu} history={history}>{children}</Logout>
-      : <Redirect to={ROUTES.ENTER} />
-    }
-  />
-);
+const IsLogin = ({ children, goToMenu, history, ...rest }) => {
+  // const [auth, setAuth] = useState(null);
+  // auth.isAuthenticated.then((response) => console.log(res));
+  console.log(auth.isAuthenticated)
+  return (
+    <Route
+      {...rest}
+      render={() => auth.isAuthenticated
+        ? <Logout goToMenu={goToMenu} history={history}>{children}</Logout>
+        : <Redirect to={ROUTES.ENTER} />
+      }
+    />
+  );
+}
 
 export default withRouter(IsLogin);
