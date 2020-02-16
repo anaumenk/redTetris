@@ -1,41 +1,48 @@
 const router = require('express').Router();
-const Player = require("../../classes/Player");
 const index = require("../../index");
 const models = require('../../models');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
-router.post('/token', (req, res) => {
-  const token = req.body.token;
-  const response = {
-    data: null,
-    error: null
-  };
-  const player = index.checkToken(token);
-  if (player) {
-    response.data = { player }
-  } else {
-    response.error = "No such user."
-  }
-  res.send(response);
-});
+// router.post('/token', (req, res) => {
+//   const token = req.body.token;
+//   const response = {
+//     data: null,
+//     error: null
+//   };
+//   const player = index.checkToken(token);
+//   console.log('/token: ' + player);
+//   if (player) {
+//     response.data = { player }
+//   } else {
+//     response.error = "No such user."
+//   }
+//   res.send(response);
+// });
 
 router.post('/register', async (req, res) => {
-  const { name, password } = req.body;
+  let { name, password } = req.body;
   const response = {
     data: null,
     error: null
   };
-  try {
-    const player = await models.User.create({name: name, password: password});
-    player.token = jwt.sign({id: player.id}, "SECRET");
-    player.save();
-    if (player){
-      await models.Score.create({owner: player.id});
-      response.data = { token: player.token };
+  if (typeof(name) === "undefined" || typeof(password) === "undefined"){
+    response.error = 'Name or password is empty';
+    res.status(400);
+  } else {
+    try {
+      const checkPlayer = await models.User.findOne({name: name});
+      if(checkPlayer){
+        response.error = 'User already exist';
+        res.status(400);
+      } else {
+        const player = await models.User.create({name: name, password: password});
+        await models.Score.create({owner: player.id});
+        response.data = { name: player.name, token: player.token };
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
     }
-  } catch (error) {
-     response.error = error;
   }
   res.send(response);
 });
@@ -46,15 +53,22 @@ router.post('/login', async (req, res) => {
     data: null,
     error: null
   };
-  const player = await models.User.findOne({name: name});
-  if(player){
-    if(bcrypt.compareSync(password, player.password)){
-      response.data = { token: player.token };
-    }else{
-      response.error = "No such user or wrong password.";
+  if (typeof(name) === "undefined" || typeof(password) === "undefined"){
+    response.error = 'Name or password is empty';
+    res.status(400);
+  } else {
+    try {
+      const player = await models.User.findOne({name: name});
+      if(!player || !bcrypt.compareSync(password, player.password)) {
+        response.error = "No such user or wrong password.";
+        res.status(400);
+      } else {
+        response.data = { name: player.name, token: player.token };
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
     }
-  }else{
-    response.error = "No such user or wrong password.";
   }
   res.send(response);
 });
@@ -65,14 +79,27 @@ router.post('/info', async (req, res) => {
     data: null,
     error: null
   };
-  const user = await models.User.findOne({token: token});
-  const score = await models.Score.findOne({owner: user.id});
-  let player = {name: user.name, score: score.score};
-  console.log(player);
-  if (player) {
-    response.data = {player};
+  
+  if (typeof(token) === "undefined" || !token){
+    response.error = 'Token undefined';
+    res.status(400);
   } else {
-    response.error = "Something went wrong.";
+    try {
+      const user = await models.User.findOne({token: token});
+      let score = await models.Score.findOne({owner: user.id});
+      if(!user) {
+        response.error = "Something went wrong.";
+        res.status(400);
+      } else if(!score) {
+        score = await models.Score.create({owner: user.id});
+      } else {
+        const player = {name: user.name, score: score.score};
+        response.data = {player};
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
+    }
   }
   res.send(response);
 });

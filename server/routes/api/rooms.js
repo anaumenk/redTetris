@@ -5,43 +5,100 @@ const models = require('../../models');
 
 router.post('/', async (req, res) => {
   const token = req.body.token;
+  const roomName = req.body.name;
+  const roomMulti = req.body.multi;
   const response = {
     data: null,
     error: null
   };
-  const player = await models.User.findOne({token: token});
-  if (player) {
-    const roomDb = await models.Room.create({name: req.body.name, lid: player.id});
-    const newRoom = new Room(req.body.name, player, req.body.multi, Number(roomDb.id));
-    index.addNewRoom(newRoom);
-    response.data = newRoom;
+  if (!token){
+    response.error = 'Token undefined';
+    res.status(400);
+  } else if (!roomName){
+    response.error = 'Room name undefined';
+    res.status(400);
+  } else if (!roomMulti){
+    response.error = 'Room multi undefined';
+    res.status(400);
   } else {
-    response.error = "No such user."
+    try {
+      const player = await models.User.findOne({token: token});
+      const existRoom = await models.Room.findOne({name: roomName});
+      if(!player) {
+        response.error = "No such user"
+        res.status(400);
+      } else if (existRoom){
+        response.error = "Room already exist"
+        res.status(400);
+      } else {
+        const roomDb = await models.Room.create({name: roomName, lid: player.id});
+        const newRoom = new Room(roomName, player, roomMulti, Number(roomDb.id));
+        index.addNewRoom(newRoom);
+        response.data = newRoom;
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
+    }
   }
   res.send(response);
 });
 
 router.post('/lid', async (req, res) => {
   const token = req.body.token;
+  const playerName = req.body.name;
+  const roomId = req.body.id;
   let lid = false;
   const response = {
     data: null,
     error: null
   };
-  const player = await models.User.findOne({token: token});
-  if (player) {
-    if(await models.Room.findOne({lid: player.id}))
-      lid = true;
-    const room = index.getRoom(req.body.id, req.body.name, player);
-    if (room) {
-      response.data = {};
-      response.data.lid = lid;
-    } else {
-      response.error = "No such room."
-    }
+  if (typeof(token) === "undefined" || !token){
+    response.error = 'Token undefined';
+    res.status(400);
+  } else if (!playerName){
+    response.error = 'Palyer name undefined';
+    res.status(400);
+  } else if (!roomId){
+    response.error = 'Room id undefined';
+    res.status(400);
   } else {
-    response.error = "No such user."
+    try {
+      const player = await models.User.findOne({token: token});
+      const existRoom = await models.Room.findOne({_id: roomId});
+      if(!player) {
+        response.error = "No such user";
+        res.status(400);
+      } else if (!existRoom){
+        response.error = "No such room";
+        res.status(406);
+      } else {
+        if(String(existRoom.lid) === player.id){
+          lid = true;
+        }
+        index.getRoom(roomId, playerName, player);
+        response.data = {};
+        response.data.lid = lid;
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
+    }
   }
+  // const player = await models.User.findOne({token: token});
+  // if (player) {
+  //   if(await models.Room.findOne({lid: player.id}))
+  //     lid = true;
+  //   const room = index.getRoom(req.body.id, req.body.name, player);
+  //   if (room) {
+  //     response.data = {};
+  //     response.data.lid = lid;
+  //   } else {
+  //     response.error = "No such room."
+  //   }
+  // } else {
+  //   response.error = "No such user."
+  // }
   res.send(response);
 });
 
@@ -52,28 +109,59 @@ router.post('/delete/player', async(req, res) => {
     data: null,
     error: null
   };
-  const player = await models.User.findOne({token: token});
-  if (player) {
-    const room = index.stopGame(roomId);
-    console.log("tytroom: "+room);
-    if (room) {
-      if (room.status) {
-        index.setGameStatus(roomId, 'STOP');
-      }
-      response.data = {};
-        const newRoom = index.deletePlayer(roomId, player.id);
-        console.log("newRoom:" + newRoom.players);
-        if (await models.Room.findOne({lid: player.id})) {
-          console.log('delete:' + await models.Room.deleteOne({_id: roomId}));
-          index.deleteRoom(roomId);
-        }
-        response.data.room = newRoom;
-    } else {
-      response.error = "No such room."
-    }
+
+  if (typeof(token) === "undefined" || !token){
+    response.error = 'Token undefined';
+    res.status(400);
+  } else if (!roomId) {
+    response.error = 'Room id undefined';
+    res.status(400);
   } else {
-    response.error = "No such user."
+    try {
+      const player = await models.User.findOne({token: token});
+      const existRoom = await models.Room.findOne({_id: roomId});
+      if(!player) {
+        response.error = "No such user";
+        res.status(400);
+      } else if (!existRoom){
+        response.error = "No such room";
+        res.status(406);
+      } else {
+        const room = index.stopGame(roomId);
+        const newRoom = index.deletePlayer(roomId, player.id);
+        if (room.status) {index.setGameStatus(roomId, 'STOP');}
+        if (String(existRoom.lid) === player.id) { index.deleteRoom(roomId);}
+        response.data = {};
+        response.data.room = newRoom;
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
+    }
   }
+
+  // const player = await models.User.findOne({token: token});
+  // if (player) {
+  //   const room = index.stopGame(roomId);
+  //   console.log("tytroom: "+room);
+  //   if (room) {
+  //     if (room.status) {
+  //       index.setGameStatus(roomId, 'STOP');
+  //     }
+  //     response.data = {};
+  //       const newRoom = index.deletePlayer(roomId, player.id);
+  //       console.log("newRoom:" + newRoom.players);
+  //       if (await models.Room.findOne({lid: player.id})) {
+  //         console.log('delete:' + await models.Room.deleteOne({_id: roomId}));
+  //         index.deleteRoom(roomId);
+  //       }
+  //       response.data.room = newRoom;
+  //   } else {
+  //     response.error = "No such room."
+  //   }
+  // } else {
+  //   response.error = "No such user."
+  // }
   res.send(response);
 });
 

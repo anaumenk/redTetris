@@ -10,6 +10,7 @@ class Room {
         id: lid.id,
         name: lid.name,
         score: 0,
+        status: 'game'
       }
     ];
     this.multi = multi;
@@ -28,6 +29,7 @@ class Room {
           id: player.id,
           name: player.name,
           score: 0,
+          status: 'game'
         }
       ];
     }

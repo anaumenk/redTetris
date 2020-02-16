@@ -76,7 +76,7 @@ const getPlayerInfo = (token) => {
   return player ? player.getInfo : null;
 };
 
-const getPlayerByToken = (token) => players.find((player) => player.getToken === token);
+//const getPlayerByToken = (token) => players.find((player) => player.getToken === token);
 
 const getRoom = (id, name, player) => {
   const room = rooms.find((room) => room.id === id && room.lid.name === name);
@@ -89,7 +89,6 @@ const getRoom = (id, name, player) => {
 const checkLid = (playerId, token) => !!players.find((player) => player.token === token && player.id === playerId);
 
 const deleteRoom = async (id) => {
-  console.log('deleteRoom');
   //const room = await models.Score.findOne({owner: player.id});
   await models.Room.deleteOne({ id: id });
   rooms = rooms.filter((room) => room.id !== id);
@@ -98,7 +97,14 @@ const deleteRoom = async (id) => {
 
 const deletePlayer = (roomId, playerId) => {
   const room = rooms.findIndex((room) => room.id === roomId);
-  rooms[room].players = rooms[room].players.filter((player) => player.id !== playerId);
+  rooms[room].players = rooms[room].players.map((player) => {
+    if (player.id === playerId && !rooms[room].status) {
+      player.status = 'exit';
+    }else if(player.id === playerId && rooms[room].status === "START"){
+      player.status = 'delete';
+    }
+    return player;
+});
   return rooms[room];
 };
 
@@ -160,3 +166,4 @@ module.exports.setGameStatus = setGameStatus;
 module.exports.restartGame = restartGame;
 module.exports.deletePlayer = deletePlayer;
 module.exports.changeGameMode = changeGameMode;
+module.exports.server = server;

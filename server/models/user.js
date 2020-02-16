@@ -15,9 +15,7 @@ const schema = new Schema({
     },
     token: {
         type: String,
-        //unique: true,
-        default: 0
-        //default: jwt.sign({id: this.name}, "SECRET")
+        unique: true,
     },
     score: {
         type: Schema.Types.ObjectId,
@@ -34,11 +32,11 @@ schema.set('toJson', {
 
 schema.pre('save', function(next) {
     const user = this;
-    console.log(user);
+    //console.log(user);
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
-
     user.password = bcrypt.hashSync(user.password, 10);
+    user.token = jwt.sign({id: user.name}, "SECRET");
     next();
 });
 
