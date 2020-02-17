@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
   } else if (!roomName){
     response.error = 'Room name undefined';
     res.status(400);
-  } else if (!roomMulti){
+  } else if (roomMulti === null || typeof(roomMulti) === "undefined" || roomMulti === ''){
     response.error = 'Room multi undefined';
     res.status(400);
   } else {
@@ -25,10 +25,10 @@ router.post('/', async (req, res) => {
       const player = await models.User.findOne({token: token});
       const existRoom = await models.Room.findOne({name: roomName});
       if(!player) {
-        response.error = "No such user"
+        response.error = "No such user";
         res.status(400);
       } else if (existRoom){
-        response.error = "Room already exist"
+        response.error = "Room already exist";
         res.status(400);
       } else {
         const roomDb = await models.Room.create({name: roomName, lid: player.id});

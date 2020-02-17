@@ -90,7 +90,7 @@ const checkLid = (playerId, token) => !!players.find((player) => player.token ==
 
 const deleteRoom = async (id) => {
   //const room = await models.Score.findOne({owner: player.id});
-  await models.Room.deleteOne({ id: id });
+  await models.Room.remove({_id: id});
   rooms = rooms.filter((room) => room.id !== id);
 
 };
