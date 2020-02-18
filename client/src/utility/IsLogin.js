@@ -6,13 +6,14 @@ import { withRouter } from "react-router-dom";
 import {connect} from "react-redux";
 import {logOut, checkAuthentication} from "./../actions"
 
-const IsLogin = ({ children, isAuthenticated, history, goToMenu, logOutAction, checkAuth }) => {
+const IsLogin = ({ children, isAuthenticated, history, goToMenu, logOutAction, checkAuth, ...rest }) => {
     if (!isAuthenticated) {
       checkAuth(history)
     }
 
     return (
         <Route
+          {...rest}
             render={() => (
                 <>
                     <div className="logout" onClick={() => goToMenu ? history.push(ROUTES.MENU) : logOutAction()}>
