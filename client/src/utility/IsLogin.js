@@ -4,13 +4,13 @@ import { Route } from "react-router-dom";
 import { IoMdExit } from "react-icons/io";
 import { withRouter } from "react-router-dom";
 import {connect} from "react-redux";
-import {logOut} from "./../actions"
+import {logOut, checkAuthentication} from "./../actions"
 
-const IsLogin = ({ children, isAuthenticated, history, goToMenu, logOutAction }) => {
-
+const IsLogin = ({ children, isAuthenticated, history, goToMenu, logOutAction, checkAuth }) => {
     if (!isAuthenticated) {
-        history.push(ROUTES.ENTER);
+      checkAuth(history)
     }
+
     return (
         <Route
             render={() => (
@@ -29,4 +29,4 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated
 });
 
-export default withRouter(connect(mapStateToProps, {logOutAction: logOut})(IsLogin));
+export default withRouter(connect(mapStateToProps, {logOutAction: logOut, checkAuth: checkAuthentication})(IsLogin));

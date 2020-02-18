@@ -1,7 +1,7 @@
 import {AUTHENTICATE, UNAUTHENTICATE} from "./index";
 import {localStorageKeys, localStorageService} from "../store";
 import {configAxios} from "../axios";
-import {API, METHODS} from "../constants";
+import {API, METHODS, ROUTES} from "../constants";
 
 export const authenticate = () => dispatch => {
     dispatch({
@@ -27,15 +27,15 @@ export function logOut() {
         dispatch(unauthenticate());
     };
 }
-export function checkAuthentication() {
+export function checkAuthentication(history) {
     return async (dispatch) => {
         configAxios(METHODS.POST, API.CHECK_TOKEN).then((res) => {
-            dispatch(!res.error ? authenticate(): unauthenticate());
+            if (!res.data.error){
+                dispatch(authenticate());
+            } else {
+                history && history.push(ROUTES.ENTER);
+                dispatch(unauthenticate());
+            }
         })
-        // console.log(auth)
-        // const formattedAuth = typeof auth === "string" ?
-        //     JSON.parse(auth) :
-        //     null;
-        // formattedAuth ? dispatch(authenticate()) : dispatch(unauthenticate());
     };
 }

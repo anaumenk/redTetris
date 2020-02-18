@@ -3,15 +3,15 @@ const index = require("../../index");
 const models = require('../../models');
 const bcrypt = require('bcrypt');
 
-router.post('/token', (req, res) => {
+router.post('/token', async (req, res) => {
   const token = req.body.token;
   const response = {
     data: null,
     error: null
   };
-  const player = index.checkToken(token);
+  const player = await models.User.findOne({token});
   if (player) {
-    response.data = { player }
+    response.data = { name: player.name, token: player.token };
   } else {
     response.error = "No such user."
   }
@@ -78,7 +78,7 @@ router.post('/info', async (req, res) => {
     data: null,
     error: null
   };
-  
+
   if (typeof(token) === "undefined" || !token){
     response.error = 'Token undefined';
     res.status(400);
