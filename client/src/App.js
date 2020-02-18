@@ -12,29 +12,26 @@ import { IsLogin } from "./utility";
 import Enter from "./components/Enter";
 import { EnterForm } from "./components/common";
 import Menu from "./components/Menu";
-import { getRooms } from "./actions"
-import auth from "./utility/authentificate";
+import { getRooms, checkAuthentication } from "./actions"
 
-const App = ({ getRooms }) => {
+const App = ({ getRooms, checkAuthenticationAction }) => {
     useEffect(() => {
         getRooms();
-        auth.checkToken();
+        checkAuthenticationAction();
     }, []);
-
-    // auth.checkToken();
 
     return (
       <HashRouter>
           <Container>
               <Switch>
                   <Route path={ROUTES.ROOT} exact={true} component={Homepage} />
-                  <Route path={ROUTES.ENTER} component={Enter}/>
-                  <Route path={ROUTES.LOGIN}><EnterForm action={ENTER_ACTIONS.LOGIN}/></Route>
-                  <Route path={ROUTES.REGISTER}><EnterForm action={ENTER_ACTIONS.REGISTER}/></Route>
-                  <IsLogin path={ROUTES.MENU}><Menu /></IsLogin>
-                  <IsLogin path={ROUTES.ROOMS}><RoomsList /></IsLogin>
-                  <IsLogin path={ROUTES.PLAYER}><Player /></IsLogin>
-                  <IsLogin goToMenu={true} path={ROUTES.ROOM}><Game /></IsLogin>
+                  <Route path={ROUTES.ENTER} exact={true} component={Enter}/>
+                  <Route path={ROUTES.LOGIN} exact={true} component={() => <EnterForm action={ENTER_ACTIONS.LOGIN}/>}/>
+                  <Route path={ROUTES.REGISTER} exact={true} component={() => <EnterForm action={ENTER_ACTIONS.REGISTER}/>}/>
+                  <IsLogin path={ROUTES.MENU} exact={true}><Menu/></IsLogin>
+                  <IsLogin path={ROUTES.ROOMS} exact={true}><RoomsList/></IsLogin>
+                  <IsLogin path={ROUTES.PLAYER} exact={true}><Player/></IsLogin>
+                  <IsLogin goToMenu={true} path={ROUTES.ROOM}><Game/></IsLogin>
                   <Redirect to={ROUTES.ROOT} />
               </Switch>
           </Container>
@@ -42,4 +39,4 @@ const App = ({ getRooms }) => {
     );
 };
 
-export default connect(null, { getRooms })(App);
+export default connect(null, { getRooms, checkAuthenticationAction: checkAuthentication })(App);

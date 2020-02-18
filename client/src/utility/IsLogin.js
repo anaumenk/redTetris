@@ -1,31 +1,32 @@
-import React, {useState} from "react"
+import React from "react"
 import { ROUTES } from "../constants";
-import { Redirect, Route } from "react-router-dom";
-import { auth } from "./";
+import { Route } from "react-router-dom";
 import { IoMdExit } from "react-icons/io";
 import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {logOut} from "./../actions"
 
-const Logout = ({ children, goToMenu, history }) => (
-  <>
-    <div className="logout" onClick={goToMenu ? () => history.push(ROUTES.MENU) : auth.logout}><IoMdExit/></div>
-    {children}
-  </>
-);
+const IsLogin = ({ children, isAuthenticated, history, goToMenu, logOutAction }) => {
 
-const IsLogin = ({ children, goToMenu, history, ...rest }) => {
-  // const [auth, setAuth] = useState(null);
-  // auth.isAuthenticated.then((response) => console.log(res));
-  auth.checkToken();
-  console.log(auth.isAuthenticated)
-  return (
-    <Route
-      {...rest}
-      render={() => auth.isAuthenticated
-        ? <Logout goToMenu={goToMenu} history={history}>{children}</Logout>
-        : <Redirect to={ROUTES.ENTER} />
-      }
-    />
-  );
-}
+    if (!isAuthenticated) {
+        history.push(ROUTES.ENTER);
+    }
+    return (
+        <Route
+            render={() => (
+                <>
+                    <div className="logout" onClick={() => goToMenu ? history.push(ROUTES.MENU) : logOutAction()}>
+                        <IoMdExit/>
+                    </div>
+                    {children}
+                </>)
+            }
+        />
+    );
+};
 
-export default withRouter(IsLogin);
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default withRouter(connect(mapStateToProps, {logOutAction: logOut})(IsLogin));
