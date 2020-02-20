@@ -17,6 +17,9 @@ router.post('/', async (req, res) => {
   } else if (!roomName){
     response.error = 'Room name undefined';
     res.status(400);
+  } else if (/^([A-Za-z0-9_\-\.])/.test(roomName) === false){
+    response.error = 'Room name uncorrect';
+    res.status(400);
   } else if (roomMulti === null || typeof(roomMulti) === "undefined" || roomMulti === ''){
     response.error = 'Room multi undefined';
     res.status(400);

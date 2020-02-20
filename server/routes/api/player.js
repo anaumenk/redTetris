@@ -3,21 +3,21 @@ const index = require("../../index");
 const models = require('../../models');
 const bcrypt = require('bcrypt');
 
-// router.post('/token', (req, res) => {
-//   const token = req.body.token;
-//   const response = {
-//     data: null,
-//     error: null
-//   };
-//   const player = index.checkToken(token);
-//   console.log('/token: ' + player);
-//   if (player) {
-//     response.data = { player }
-//   } else {
-//     response.error = "No such user."
-//   }
-//   res.send(response);
-// });
+router.post('/token', (req, res) => {
+  const token = req.body.token;
+  const response = {
+    data: null,
+    error: null
+  };
+  const player = index.checkToken(token);
+  console.log('/token: ' + player);
+  if (player) {
+    response.data = { player }
+  } else {
+    response.error = "No such user."
+  }
+  res.send(response);
+});
 
 router.post('/register', async (req, res) => {
   let { name, password } = req.body;
@@ -27,6 +27,12 @@ router.post('/register', async (req, res) => {
   };
   if (typeof(name) === "undefined" || typeof(password) === "undefined"){
     response.error = 'Name or password is empty';
+    res.status(400);
+  } else if (/^([A-Za-z0-9_\-\.])/.test(name) === false) {
+    response.error = 'Login uncorrect';
+    res.status(400);
+  } else if (/^([A-Za-z0-9_\-\.])/.test(password) === false){
+    response.error = 'Password uncorrect';
     res.status(400);
   } else {
     try {
