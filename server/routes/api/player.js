@@ -3,26 +3,15 @@ const index = require("../../index");
 const models = require('../../models');
 const bcrypt = require('bcrypt');
 
-<<<<<<< HEAD
-router.post('/token', (req, res) => {
-=======
 router.post('/token', async (req, res) => {
->>>>>>> 809707b3e4506e2b4cfd313e1e50fec35fcb073a
   const token = req.body.token;
   const response = {
     data: null,
     error: null
   };
-<<<<<<< HEAD
-  const player = index.checkToken(token);
-  console.log('/token: ' + player);
-  if (player) {
-    response.data = { player }
-=======
   const player = await models.User.findOne({token});
   if (player) {
     response.data = { name: player.name, token: player.token };
->>>>>>> 809707b3e4506e2b4cfd313e1e50fec35fcb073a
   } else {
     response.error = "No such user."
   }
