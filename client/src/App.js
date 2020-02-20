@@ -24,6 +24,7 @@ const App = ({ getRooms, checkAuthenticationAction }) => {
       <HashRouter>
           <Container>
               <Switch>
+                  <Route path={ROUTES.ROOT} exact={true} component={Homepage}/>
                   <Route path={ROUTES.ENTER} component={Enter}/>
                   <Route path={ROUTES.LOGIN} component={() => <EnterForm action={ENTER_ACTIONS.LOGIN}/>}/>
                   <Route path={ROUTES.REGISTER} component={() => <EnterForm action={ENTER_ACTIONS.REGISTER}/>}/>
@@ -31,7 +32,7 @@ const App = ({ getRooms, checkAuthenticationAction }) => {
                   <IsLogin path={ROUTES.ROOMS}><RoomsList/></IsLogin>
                   <IsLogin path={ROUTES.PLAYER}><Player/></IsLogin>
                   <IsLogin goToMenu={true} path={ROUTES.ROOM}><Game/></IsLogin>
-                  <Route path={ROUTES.ROOT} exact={true} component={Homepage} />
+                  <Redirect to={ROUTES.ROOT} component={Homepage} />
               </Switch>
           </Container>
       </HashRouter>

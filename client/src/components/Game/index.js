@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { setNextPiece, setNextTurn, setGameStatus, setRoom } from "../../actions"
-import { Field } from "../common";
+import {ButtonRef, Field} from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
-import { PIECES_DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, GAME_STATUS, PIECES, UNSENT_INT, TIMEOUT } from "../../constants";
+import {
+  PIECES_DIRECTION,
+  FIELD_HEIGHT,
+  FIELD_WIDTH,
+  GAME_STATUS,
+  PIECES,
+  UNSENT_INT,
+  TIMEOUT,
+  ROUTES
+} from "../../constants";
 import {
   stopGame as stopGameApi, restartGame as restartGameApi, checkFieldFill,
   noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, mathSum,
@@ -26,6 +35,16 @@ const Game = (props) => {
   const [key, setKey] = useState(UNSENT_INT);
   const [starsRow, setStarsRow] = useState([]);
   const [sound, setSoundPlay] = useState(false);
+  const [spinner, changeSpinner] = useState(<Spinner animation="border" role="status" />);
+
+  setTimeout(() => {
+    changeSpinner(
+      <>
+        <h1 className="spinner__title">Ooooops no such room</h1>
+        <ButtonRef to={ROUTES.ROOMS} className="button">Go to the room list</ButtonRef>
+      </>
+    );
+  }, 3000);
 
   useEffect(() => {
     const stars = starsRow;
@@ -223,7 +242,7 @@ const Game = (props) => {
         </Row>
         <Total restartGame={restartGame} total={sortPlayers}/>
     </>
-    ) : <div className="spinner"><Spinner animation="border" role="status" /></div>;
+    ) : <div className="spinner">{spinner}</div>;
 };
 
 const mapStateToProps = (state) => ({

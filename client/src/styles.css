@@ -38,6 +38,11 @@ ul a:hover {
   justify-content: center;
   align-items: center;
   display: flex;
+  flex-direction: column;
+}
+
+.spinner__title {
+  z-index: 1;
 }
 
 .title {
