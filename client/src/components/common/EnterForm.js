@@ -3,10 +3,11 @@ import { CentralBlock, Input } from "../common";
 import { Button, Form } from "react-bootstrap";
 import { configAxios } from "../../axios";
 import { API, ENTER_ACTIONS, METHODS, ROUTES } from "../../constants";
-import { auth } from "../../utility";
 import { withRouter } from "react-router-dom";
+import {connect} from "react-redux";
+import {logIn} from "../../actions"
 
-const EnterForm = ({ action, history }) => {
+const EnterForm = ({ action, history, logInAction }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -41,7 +42,7 @@ const EnterForm = ({ action, history }) => {
     configAxios(METHODS.POST, api, { name, password }).then((response) => {
       const data = response.data;
       if (!data.error) {
-        auth.authenticate(data.data.token);
+        logInAction(data.data.token);
         history.push(ROUTES.MENU);
       } else {
         setError(data.error)
@@ -63,4 +64,4 @@ const EnterForm = ({ action, history }) => {
   )
 };
 
-export default withRouter(EnterForm);
+export default withRouter(connect(null, {logInAction: logIn})(EnterForm));
