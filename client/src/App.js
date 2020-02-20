@@ -24,15 +24,14 @@ const App = ({ getRooms, checkAuthenticationAction }) => {
       <HashRouter>
           <Container>
               <Switch>
-                  <Route path={ROUTES.ROOT} exact={true} component={Homepage} />
-                  <Route path={ROUTES.ENTER} exact={true} component={Enter}/>
-                  <Route path={ROUTES.LOGIN} exact={true} component={() => <EnterForm action={ENTER_ACTIONS.LOGIN}/>}/>
-                  <Route path={ROUTES.REGISTER} exact={true} component={() => <EnterForm action={ENTER_ACTIONS.REGISTER}/>}/>
-                  <IsLogin path={ROUTES.MENU} exact={true}><Menu/></IsLogin>
-                  <IsLogin path={ROUTES.ROOMS} exact={true}><RoomsList/></IsLogin>
-                  <IsLogin path={ROUTES.PLAYER} exact={true}><Player/></IsLogin>
+                  <Route path={ROUTES.ENTER} component={Enter}/>
+                  <Route path={ROUTES.LOGIN} component={() => <EnterForm action={ENTER_ACTIONS.LOGIN}/>}/>
+                  <Route path={ROUTES.REGISTER} component={() => <EnterForm action={ENTER_ACTIONS.REGISTER}/>}/>
+                  <IsLogin path={ROUTES.MENU}><Menu/></IsLogin>
+                  <IsLogin path={ROUTES.ROOMS}><RoomsList/></IsLogin>
+                  <IsLogin path={ROUTES.PLAYER}><Player/></IsLogin>
                   <IsLogin goToMenu={true} path={ROUTES.ROOM}><Game/></IsLogin>
-                  <Redirect to={ROUTES.ROOT} />
+                  <Route path={ROUTES.ROOT} exact={true} component={Homepage} />
               </Switch>
           </Container>
       </HashRouter>

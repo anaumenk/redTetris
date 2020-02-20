@@ -5,9 +5,9 @@ export const GAME_STATUS = {
 };
 
 export const PLAYER_STATUS = {
-  GAME: "GAME",
-  DELETED: "DELETED",
-  EXIT: "EXIT"
+  GAME: "game",
+  DELETED: "deleted",
+  EXIT: "exit"
 };
 
 export const GAME_MODES = {

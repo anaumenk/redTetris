@@ -10,15 +10,23 @@ const RoomsList = ({ allRooms, history }) => {
   const [show, setShow] = useState(false);
   const [name, setName] = useState("");
   const [multi, setMulti] = useState(false);
+  const [error, setError] = useState("");
 
-  const onChange = event => setName(event.target.value);
+  const onChange = event => {
+    setError("");
+    setName(event.target.value);
+  };
   const onCheck = () => setMulti(!multi);
   const onSubmit = () => {
     const newRoom = { name, multi };
     configAxios(METHODS.POST, API.POST_ROOM, newRoom)
     .then((response) => {
-      const createdRoom = response.data.data;
-      history.push(`/${createdRoom.id}[<${createdRoom.lid.name}>]`);
+      if (!response.data.error) {
+        const createdRoom = response.data.data;
+        history.push(`/${createdRoom.id}[<${createdRoom.lid.name}>]`);
+      } else {
+        setError(response.data.error);
+      }
     })
     .catch((err) => console.log(err))
   };
@@ -54,6 +62,7 @@ const RoomsList = ({ allRooms, history }) => {
                   value={multi}
                   onChange={onCheck}
                 />
+                {!!error && <div className="error">{error}</div>}
                 <div className="buttons justify-content-center">
                   <Button className="button" disabled={!name} type="submit">Create</Button>
                 </div>

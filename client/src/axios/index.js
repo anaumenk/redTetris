@@ -13,10 +13,20 @@ export const configAxios = (method, url, data = {}) => {
     data.token = localStorageService.readItem(localStorageKeys.TOKEN);
     switch (method) {
         case METHODS.GET:
-            response = axios.get(url, config).catch(err => console.log(err));
+            response = axios.get(url, config).catch(err => {
+                if (err.response.status === 400 || err.response.status === 404 || err.response.status === 406) {
+                    return err.response;
+                }
+                console.log(err);
+            });
             break;
         case METHODS.POST:
-            response = axios.post(url, data, config).catch(err => console.log(err)) || [];
+            response = axios.post(url, data, config).catch(err => {
+                if (err.response.status === 400 || err.response.status === 404 || err.response.status === 406) {
+                    return err.response;
+                }
+                console.log(err);
+            }) || [];
             break;
         default:
             response = [];
