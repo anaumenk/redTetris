@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import {CentralBlock, ButtonRef, Title} from "../common";
+import { ButtonRef, CentralBlock, Title } from "../common";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import {Button, Form, FormControl, Modal} from "react-bootstrap";
+import { Button, Form, FormControl, Modal } from "react-bootstrap";
 import { configAxios } from "../../axios";
 import { API, METHODS } from "../../constants";
 
 const RoomsList = ({ allRooms, history }) => {
-  const [show, setShow] = useState(false);
-  const [name, setName] = useState("");
-  const [multi, setMulti] = useState(false);
-  const [error, setError] = useState("");
+  const [ show, setShow ] = useState(false);
+  const [ name, setName ] = useState("");
+  const [ multi, setMulti ] = useState(false);
+  const [ error, setError ] = useState("");
 
   const onChange = event => {
     setError("");
@@ -31,7 +31,7 @@ const RoomsList = ({ allRooms, history }) => {
         setError(response.data.error);
       }
     })
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err));
   };
 
   const onClick = () => setShow(true);

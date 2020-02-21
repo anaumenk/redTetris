@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { setNextPiece, setNextTurn, setGameStatus, setRoom } from "../../actions"
-import {ButtonRef, Field} from "../common";
+import { setGameStatus, setNextPiece, setNextTurn, setRoom, isRoomLid } from "../../actions";
+import { ButtonRef, Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
 import {
-  PIECES_DIRECTION,
   FIELD_HEIGHT,
   FIELD_WIDTH,
   GAME_STATUS,
   PIECES,
-  UNSENT_INT,
+  PIECES_DIRECTION,
+  ROUTES,
   TIMEOUT,
-  ROUTES
+  UNSENT_INT
 } from "../../constants";
 import {
-  stopGame as stopGameApi, restartGame as restartGameApi, checkFieldFill,
-  noMoreSpace, pieceMoving, getPieceTurn, scoreUpdate, mathSum,
-  removePlayerFromRoom
+  checkFieldFill, getPieceTurn, mathSum,
+  noMoreSpace, pieceMoving, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate,
+  stopGame as stopGameApi
 } from "../../utility";
 import Total from "./Total";
 import Sound from 'react-sound';
 import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
 import starsSound from '../../sounds/magic.mp3';
-window.soundManager.setup({debugMode: false});
+window.soundManager.setup({ debugMode: false });
 
 const Game = (props) => {
   const roomId = parseInt(props.match.params.room);
   const playerName = props.match.params.player;
-  const [pieceId, setPieceId] = useState(UNSENT_INT);
-  const [field, setField] = useState([]);
-  const [intervalId, setIntervalId] = useState(UNSENT_INT);
-  const [key, setKey] = useState(UNSENT_INT);
-  const [starsRow, setStarsRow] = useState([]);
-  const [sound, setSoundPlay] = useState(false);
-  const [spinner, changeSpinner] = useState(<Spinner animation="border" role="status" />);
+  const [ pieceId, setPieceId ] = useState(UNSENT_INT);
+  const [ field, setField ] = useState([]);
+  const [ intervalId, setIntervalId ] = useState(UNSENT_INT);
+  const [ key, setKey ] = useState(UNSENT_INT);
+  const [ starsRow, setStarsRow ] = useState([]);
+  const [ sound, setSoundPlay ] = useState(false);
+  const [ spinner, changeSpinner ] = useState(<Spinner animation="border" role="status" />);
 
   if (!props.room) {
     setTimeout(() => {
@@ -56,9 +56,9 @@ const Game = (props) => {
         pieceMoving.moveAll(field, setField, stars);
         getPieceAndStartMoving();
         setStarsRow([]);
-      }, 500)
+      }, 500);
     }
-  }, [starsRow]);
+  }, [ starsRow ]);
 
   useEffect(() => {
     if (props.status === GAME_STATUS.START) {
@@ -95,7 +95,7 @@ const Game = (props) => {
       }
       setKey(UNSENT_INT);
     }
-  }, [key]);
+  }, [ key ]);
 
   const handleUserKeyPress = event => {
     setKey(event.keyCode);
@@ -103,11 +103,12 @@ const Game = (props) => {
 
   useEffect(() => {
     props.setRoom(roomId, playerName);
+    props.isRoomLid(roomId, playerName)
     window.addEventListener("keydown", handleUserKeyPress);
     return () => {
       removePlayerFromRoom(roomId);
       window.removeEventListener("keydown", handleUserKeyPress);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -117,7 +118,7 @@ const Game = (props) => {
       }, TIMEOUT - Object.keys(field).length * 10);
       setIntervalId(newIntervalId);
     }
-  }, [pieceId]);
+  }, [ pieceId ]);
 
   useEffect(() => {
     switch (props.status) {
@@ -148,15 +149,15 @@ const Game = (props) => {
         break;
       }
     }
-  }, [props.status]);
+  }, [ props.status ]);
 
   const sortPlayers = props.room && props.room.players ? Object.values(props.room.players).sort((a, b) => {
     return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
   }) : [];
 
   const addPieceToField = (piece) => {
-    if (!noMoreSpace([...field], PIECES_DIRECTION.CURRENT, piece)) {
-      setField([...field, piece]);
+    if (!noMoreSpace([ ...field ], PIECES_DIRECTION.CURRENT, piece)) {
+      setField([ ...field, piece ]);
       setPieceId(piece.id);
     } else {
       scoreUpdate(-10, roomId);
@@ -173,7 +174,7 @@ const Game = (props) => {
     const stars = checkFieldFill(field);
     if (stars.length > 0) {
       setStarsRow(stars);
-      scoreUpdate(mathSum(stars.length, i), roomId)
+      scoreUpdate(mathSum(stars.length, i), roomId);
     } else {
       const piece = {
         id: field.length,
@@ -202,9 +203,9 @@ const Game = (props) => {
 
   const handleSongFinishedPlaying = () => {
     setSoundPlay(false);
-  };
+  }
 
-  return props.room ? (
+  return props.room && (!props.room.multi && props.lid) ? (
     <>
       <Sound
         autoLoad={true}
@@ -226,8 +227,8 @@ const Game = (props) => {
             <Field
               fieldWidth={FIELD_WIDTH}
               fieldHeight={FIELD_HEIGHT}
-              width={45}
-              height={45}
+              width={30}
+              height={30}
               border="#989898b5"
               fill={field}
               inverted={props.room.mode.inverted}
@@ -255,13 +256,15 @@ const mapStateToProps = (state) => ({
   nextPieceColor: state.game.nextPieceColor,
   currentPieceTurn: state.game.currentPieceTurn,
   currentPieceFigure: state.game.currentPieceFigure,
+  lid: state.rooms.lid
 });
 
 const mapDispatchToProps = {
   setNextPiece,
   setNextTurn,
   setGameStatus,
-  setRoom
+  setRoom,
+  isRoomLid
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

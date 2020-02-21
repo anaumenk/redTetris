@@ -1,5 +1,5 @@
 import React from "react";
-import { CentralBlock, ButtonRef } from "../";
+import { ButtonRef, CentralBlock } from "../";
 import { ROUTES } from "../../constants";
 
 const Homepage = () => (

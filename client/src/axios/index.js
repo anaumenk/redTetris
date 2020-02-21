@@ -1,6 +1,6 @@
 import axios from "axios";
 import { METHODS } from "../constants";
-import {localStorageKeys, localStorageService} from "../store";
+import { localStorageKeys, localStorageService } from "../store";
 
 export const configAxios = (method, url, data = {}) => {
     let response;

@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
-import { Field, AsideInfo, PlayerInfo } from "../common";
+import React  from "react";
+import { AsideInfo, Field, PlayerInfo } from "../common";
 import { Button, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { GAME_MODES, GAME_STATUS, PIECES, PLAYER_STATUS } from "../../constants";
-import { isRoomLid } from "../../actions";
-import { changeGameMode } from "../../utility"
+import { changeGameMode } from "../../utility";
 import { withRouter } from "react-router-dom";
 
 const Aside = (props) => {
   const roomId = parseInt(props.match.params.room);
-
-  useEffect(()=> {
-    props.isRoomLid(roomId, props.match.params.player)
-  }, []);
 
   const playersInfo = props.players
     .filter((player) => player.status === PLAYER_STATUS.GAME)
@@ -89,13 +84,13 @@ const Aside = (props) => {
           </>
         }
       </div>}
-      <AsideInfo title={["Modes"]} info={gameModes}/>
+      <AsideInfo title={[ "Modes" ]} info={gameModes}/>
       <AsideInfo
-        title={["Next piece"]}
+        title={[ "Next piece" ]}
         info={nextPiece}
       />
       <AsideInfo
-        title={["Players", "Score"]}
+        title={[ "Players", "Score" ]}
         info={playersInfo}
       />
     </div>
@@ -111,4 +106,4 @@ const mapStateToProps = (state) => ({
   mode: state.rooms.room.mode,
 });
 
-export default withRouter(connect(mapStateToProps, { isRoomLid })(Aside));
+export default withRouter(connect(mapStateToProps)(Aside));

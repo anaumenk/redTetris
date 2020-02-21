@@ -1,0 +1,19 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "semi": "error",
+    "no-duplicate-imports": "error",
+    "no-dupe-args": "error",
+    "sort-imports": "warn",
+    "lines-between-class-members": "warn",
+    "array-bracket-spacing": ["warn", "always"],
+    "brace-style": "warn",
+    "object-curly-spacing": ["warn", "always"]
+  }
+}
