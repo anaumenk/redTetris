@@ -37,14 +37,16 @@ const Game = (props) => {
   const [sound, setSoundPlay] = useState(false);
   const [spinner, changeSpinner] = useState(<Spinner animation="border" role="status" />);
 
-  setTimeout(() => {
-    changeSpinner(
-      <>
-        <h1 className="spinner__title">Ooooops no such room</h1>
-        <ButtonRef to={ROUTES.ROOMS} className="button">Go to the room list</ButtonRef>
-      </>
-    );
-  }, 3000);
+  if (!props.room) {
+    setTimeout(() => {
+      changeSpinner(
+          <>
+            <h1 className="spinner__title">Ooooops no such room</h1>
+            <ButtonRef to={ROUTES.ROOMS} className="button">Go to the room list</ButtonRef>
+          </>
+      );
+    }, 3000);
+  }
 
   useEffect(() => {
     const stars = starsRow;
@@ -148,7 +150,7 @@ const Game = (props) => {
     }
   }, [props.status]);
 
-  const sortPlayers = props.room ? Object.values(props.room.players).sort((a, b) => {
+  const sortPlayers = props.room && props.room.players ? Object.values(props.room.players).sort((a, b) => {
     return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
   }) : [];
 
