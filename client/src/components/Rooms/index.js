@@ -16,8 +16,11 @@ const RoomsList = ({ allRooms, history }) => {
     setError("");
     setName(event.target.value);
   };
+
   const onCheck = () => setMulti(!multi);
-  const onSubmit = () => {
+
+  const onSubmit = (e) => {
+    e.preventDefault();
     const newRoom = { name, multi };
     configAxios(METHODS.POST, API.POST_ROOM, newRoom)
     .then((response) => {
