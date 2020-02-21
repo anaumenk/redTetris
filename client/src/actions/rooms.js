@@ -27,14 +27,15 @@ export const getRooms = () => dispatch => {
           allRooms: allRooms.length === data.length ? allRooms : data
         }
       })
-    } else {
-      dispatch({
-        type: GET_ROOMS,
-        payload: {
-          allRooms: allRooms.length === data.length ? allRooms : data
-        }
-      })
     }
+    // else {
+    //   dispatch({
+    //     type: GET_ROOMS,
+    //     payload: {
+    //       allRooms: allRooms.length === data.length ? allRooms : data
+    //     }
+    //   })
+    // }
   });
 };
 
