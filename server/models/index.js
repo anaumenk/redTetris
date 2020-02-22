@@ -4,4 +4,4 @@ const Room = require('./room');
 
 const Score = require('./score');
 
-module.exports = {User, Room, Score};
+module.exports = { User, Room, Score };

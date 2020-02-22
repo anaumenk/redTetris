@@ -6,7 +6,7 @@ class Player {
     this.id = Player.incrementId();
     this.name = name;
     this.password = bcrypt.hashSync(password, 10);
-    this.token = jwt.sign({id: this.id}, "SECRET");
+    this.token = jwt.sign({ id: this.id }, "SECRET");
     this.score = 0;
   }
 
@@ -22,6 +22,7 @@ class Player {
   get getToken() {
       return this.token;
   }
+
   get getInfo() {
       return {
         id: this.id,

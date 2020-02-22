@@ -1,4 +1,4 @@
-import { PIECES_COLORS, PIECES_DIRECTION, FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR, PIECES } from "../constants";
+import { FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR, PIECES, PIECES_COLORS, PIECES_DIRECTION } from "../constants";
 import { createField } from "./field";
 
 export function getNextPieceFigure() {
@@ -9,7 +9,7 @@ export function getNextPieceFigure() {
 export function getPieceTurn(random = true, i, figure) {
   return random
     ? Math.floor(Math.random() * Math.floor(PIECES[figure].length))
-    : i === PIECES[figure].length - 1 ? 0 : i + 1;
+    : i >= PIECES[figure].length - 1 ? 0 : i + 1;
 }
 
 export function getColor() {
@@ -36,7 +36,7 @@ export function noMoreSpace(allPieces, direction, piece) {
     case PIECES_DIRECTION.ROTATE: {
       const res = piece.map((line) => {
         return line[0] < FIELD_WIDTH && line[1] < FIELD_HEIGHT
-          && field[line[1]][line[0]].color === NO_COLOR
+          && field[line[1]][line[0]].color === NO_COLOR;
       });
       return !res.every((line) => line);
     }
@@ -47,14 +47,14 @@ export function noMoreSpace(allPieces, direction, piece) {
 
 export const pieceMoving = {
   downInterval(field, pieceId, intervalId, start, setField) {
-    if (noMoreSpace([...field], PIECES_DIRECTION.DOWN)) {
+    if (noMoreSpace([ ...field ], PIECES_DIRECTION.DOWN)) {
         clearInterval(intervalId);
         start();
       } else {
         setField(field.map((piece) => {
           if (piece.id === pieceId) {
             piece.place = piece.place.map((line) => {
-              let newLine = [...line];
+              let newLine = [ ...line ];
               newLine[1]++;
               return newLine;
             });
@@ -64,11 +64,11 @@ export const pieceMoving = {
       }
   },
   left(field, pieceId, setField) {
-    if (!noMoreSpace([...field], PIECES_DIRECTION.LEFT)) {
+    if (!noMoreSpace([ ...field ], PIECES_DIRECTION.LEFT)) {
       setField(field.map((piece) => {
         if (piece.id === pieceId) {
           piece.place = piece.place.map((line) => {
-            let newLine = [...line];
+            let newLine = [ ...line ];
             newLine[0]--;
             return newLine;
           });
@@ -78,11 +78,11 @@ export const pieceMoving = {
     }
   },
   right(field, pieceId, setField) {
-    if (!noMoreSpace([...field], PIECES_DIRECTION.RIGHT)) {
+    if (!noMoreSpace([ ...field ], PIECES_DIRECTION.RIGHT)) {
       setField(field.map((piece) => {
         if (piece.id === pieceId) {
           piece.place = piece.place.map((line) => {
-            let newLine = [...line];
+            let newLine = [ ...line ];
             newLine[0]++;
             return newLine;
           });
@@ -92,11 +92,11 @@ export const pieceMoving = {
     }
   },
   down(field, pieceId, setField) {
-    if (!noMoreSpace([...field], PIECES_DIRECTION.DOWN)) {
+    if (!noMoreSpace([ ...field ], PIECES_DIRECTION.DOWN)) {
       setField(field.map((piece) => {
         if (piece.id === pieceId) {
           piece.place = piece.place.map((line) => {
-            let newLine = [...line];
+            let newLine = [ ...line ];
             newLine[1]++;
             return newLine;
           });
@@ -106,15 +106,15 @@ export const pieceMoving = {
     }
   },
   downBottom(field, pieceId, setField) {
-    if (!noMoreSpace([...field], PIECES_DIRECTION.DOWN)) {
-      let newField = [...field];
+    if (!noMoreSpace([ ...field ], PIECES_DIRECTION.DOWN)) {
+      let newField = [ ...field ];
       const id = newField.findIndex((piece) => piece.id === pieceId);
-      while (!noMoreSpace([...newField], PIECES_DIRECTION.DOWN)) {
+      while (!noMoreSpace([ ...newField ], PIECES_DIRECTION.DOWN)) {
         newField[id].place = newField[id].place.map((line) => {
-          let newLine = [...line];
+          let newLine = [ ...line ];
           newLine[1]++;
           return newLine;
-        })
+        });
       }
       setField(newField);
     }
@@ -124,12 +124,14 @@ export const pieceMoving = {
       field = field.map((piece) => {
         piece.place = piece.place.filter((line) => line[1] !== stars[i]);
           piece.place = piece.place.map((line) => {
-            let newLine = [...line];
-            if (line[1] < stars[i]) { newLine[1]++; }
+            let newLine = [ ...line ];
+            if (line[1] < stars[i]) {
+ newLine[1]++; 
+}
             return newLine;
           });
           return piece;
-      })
+      });
     }
     setField(field);
   },
@@ -137,12 +139,12 @@ export const pieceMoving = {
     setField(field.map((piece) => {
       if (piece.id === pieceId) {
         newPiecePlace = newPiecePlace.map((line) => {
-          let newLine = [...line];
+          let newLine = [ ...line ];
           newLine[0] += piece.place[0][0];
           newLine[1] += piece.place[0][1];
           return newLine;
         });
-        const fieldCopy = [...field];
+        const fieldCopy = [ ...field ];
         if (fieldCopy.length > 0) {
           fieldCopy.pop();
         }
@@ -151,7 +153,7 @@ export const pieceMoving = {
           piece.place = newPiecePlace;
         }
       }
-      return piece
-    }))
+      return piece;
+    }));
   }
 };

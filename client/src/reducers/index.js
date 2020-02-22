@@ -7,4 +7,4 @@ export default combineReducers({
     rooms,
     game,
     auth
-})
+});

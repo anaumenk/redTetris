@@ -8,4 +8,4 @@ const Input = ({ title, type, onChange, name }) => (
   </Form.Group>
 );
 
-export default Input
+export default Input;

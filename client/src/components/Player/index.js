@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { CentralBlock } from "../common";
-import { Col, Row} from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { API, METHODS } from "../../constants";
 import { configAxios } from "../../axios";
 
 const Player = () => {
-    const [player, setPlayer] = useState("");
-    const [error, setError] = useState("");
+    const [ player, setPlayer ] = useState("");
+    const [ error, setError ] = useState("");
 
     useEffect(() => {
       configAxios(METHODS.POST, API.GET_PLAYER)
@@ -15,8 +15,7 @@ const Player = () => {
             const data = response.data;
             if (!data.error) {
               setPlayer(data.data.player);
-            }
-            else {
+            } else {
               setError(data.error);
             }
           }

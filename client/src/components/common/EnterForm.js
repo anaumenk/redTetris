@@ -4,13 +4,13 @@ import { Button, Form } from "react-bootstrap";
 import { configAxios } from "../../axios";
 import { API, ENTER_ACTIONS, METHODS, ROUTES } from "../../constants";
 import { withRouter } from "react-router-dom";
-import {connect} from "react-redux";
-import {logIn} from "../../actions"
+import { connect } from "react-redux";
+import { logIn } from "../../actions";
 
 const EnterForm = ({ action, history, logInAction }) => {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [ name, setName ] = useState("");
+  const [ password, setPassword ] = useState("");
+  const [ error, setError ] = useState("");
 
   const onChange = event => {
     setError("");
@@ -45,7 +45,7 @@ const EnterForm = ({ action, history, logInAction }) => {
         logInAction(data.data.token);
         history.push(ROUTES.MENU);
       } else {
-        setError(data.error)
+        setError(data.error);
       }
     }).catch((err) => console.log(err));
   };
@@ -61,7 +61,7 @@ const EnterForm = ({ action, history, logInAction }) => {
         </div>
       </Form>
     </CentralBlock>
-  )
+  );
 };
 
-export default withRouter(connect(null, {logInAction: logIn})(EnterForm));
+export default withRouter(connect(null, { logInAction: logIn })(EnterForm));

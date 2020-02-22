@@ -25,27 +25,13 @@ const io = socketIo(server);
 let rooms = [];
 const players = [];
 
-const getMultiRooms = () => {
-  return rooms.filter((room) => {
-    if (room.multi && !room.status) {
-      return room;
-    }
-  });
-};
-
 const getRooms = socket => {
-  socket.emit("/api/rooms/get/multi", getMultiRooms());
+  socket.emit("/api/rooms/get/all", rooms);
 };
 
 io.sockets.on("connection", socket => {
   console.log("New client connected");
-  setInterval(
-    () => {
-      getRooms(socket);
-      socket.emit("/api/rooms/get/all", rooms);
-    },
-    1000
-  );
+  setInterval(() => getRooms(socket), 1000);
   getRooms(socket);
   socket.on("disconnect", () => console.log("Client disconnected"));
 });

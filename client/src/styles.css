@@ -291,10 +291,11 @@ form.enter {
 .room-name {
   padding: 15px 0;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .field {
-  /*background-color: #e7f3f8;*/
+  margin: auto;
   border: 1px solid transparent;
   width: fit-content;
 }
@@ -367,14 +368,4 @@ form.enter {
 .create-room .form-check{
   margin-top: 10px;
   padding: 10px 10px 10px 25px;
-}
-
-@media (max-width: 991px) {
-  .field {
-    margin:auto;
-  }
-
-  .room-name {
-    text-align: center;
-  }
 }

@@ -22,7 +22,7 @@ const Field = ({ fieldHeight, fieldWidth, fill, width, height, border, inverted,
             }}
             key={x}
           >
-            {stars && [1, 2].map((star) => (
+            {stars && [ 1, 2 ].map((star) => (
                 <div
                   key={`star-${star}`}
                   className={`star star-${star} ${starsRow.includes(y) ? "show" : ""}`}
