@@ -51,6 +51,7 @@ router.post('/lid', async (req, res) => {
   const token = req.body.token;
   const playerName = req.body.name;
   const roomId = req.body.id;
+  const multi = req.multi.multi;
   let lid = false;
   const response = {
     data: null,
@@ -79,7 +80,7 @@ router.post('/lid', async (req, res) => {
         if(String(existRoom.lid) === player.id){
           lid = true;
         }
-        index.getRoom(roomId, playerName, player);
+        index.getRoom(roomId, playerName, player, multi);
         response.data = {};
         response.data.lid = lid;
       }
