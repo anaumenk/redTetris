@@ -36,6 +36,13 @@ const RoomsList = ({ allRooms, history }) => {
 
   const onClick = () => setShow(true);
 
+  const onHide = () => {
+    setShow(false);
+    setName("");
+    setMulti(false);
+    setError("");
+  };
+
   const roomsList = allRooms.filter((room) => (room.multi && !room.status));
   const randomRoom = roomsList[Math.floor(Math.random() * Math.floor(allRooms.length))];
 
@@ -52,7 +59,7 @@ const RoomsList = ({ allRooms, history }) => {
         <div className="buttons justify-content-end">
           <Button className="button" type="submit" onClick={onClick}>Create</Button>
           {randomRoom && <ButtonRef className="button" to={`/${randomRoom.id}[<${randomRoom.lid.name}>]`}>Start</ButtonRef>}
-          <Modal show={show}>
+          <Modal show={show} onHide={onHide}>
             <Modal.Body>
               <Title title="Create new room"/>
               <Button className="close-button" onClick={() => setShow(false)}/>

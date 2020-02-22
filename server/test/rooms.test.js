@@ -273,12 +273,12 @@ let roomId = '';
         .send(sendObj)
         .expect(200)
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
         done();
         })
     })
-   
+
     it('Check score bad token', (done) => {
 
       let sendObj = {
@@ -292,7 +292,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -305,13 +305,13 @@ let roomId = '';
         score: 10,
         roomId: ''
       };
-        
+
       request(app) // 7
         .post('/api/rooms/score')
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -330,7 +330,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -350,7 +350,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -370,7 +370,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -389,12 +389,12 @@ let roomId = '';
         .send(sendObj)
         .expect(200)
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
           done();
         })
     })
-   
+
     it('Check stop bad token', (done) => {
 
       let sendObj = {
@@ -407,7 +407,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -419,13 +419,13 @@ let roomId = '';
         token: existUser.token,
         roomId: ''
       };
-        
+
       request(app) // 7
         .post('/api/rooms/stop')
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -443,7 +443,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -462,7 +462,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -483,12 +483,12 @@ let roomId = '';
         .send(sendObj)
         .expect(200)
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
           done();
         })
     })
-   
+
     it('Check restart bad token', (done) => {
 
       let sendObj = {
@@ -501,7 +501,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -513,13 +513,13 @@ let roomId = '';
         token: existUser.token,
         roomId: ''
       };
-        
+
       request(app) // 7
         .post('/api/rooms/restart')
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -537,7 +537,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -556,7 +556,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -578,12 +578,12 @@ let roomId = '';
         .send(sendObj)
         .expect(200)
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
           done();
         })
     })
-   
+
     it('Check status bad token', (done) => {
 
       let sendObj = {
@@ -597,7 +597,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -610,13 +610,13 @@ let roomId = '';
         status: "START",
         roomId: ''
       };
-        
+
       request(app) // 7
         .post('/api/rooms/status')
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -635,7 +635,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -655,7 +655,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -674,7 +674,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -696,12 +696,12 @@ let roomId = '';
         .send(sendObj)
         .expect(200)
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
           done();
         })
     })
-   
+
     it('Check mode bad token', (done) => {
 
       let sendObj = {
@@ -716,7 +716,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -730,13 +730,13 @@ let roomId = '';
         mode: "inverted",
         roomId: ''
       };
-        
+
       request(app) // 7
         .post('/api/rooms/mode')
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -756,7 +756,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -777,7 +777,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -797,7 +797,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -817,7 +817,7 @@ let roomId = '';
         .send(sendObj)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -834,12 +834,12 @@ let roomId = '';
         .send(newRoom)
         .expect(200)
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
         done();
         })
     })
-   
+
     it('Check delete player bad token', (done) => {
 
         let testRoomLidName = {
@@ -852,7 +852,7 @@ let roomId = '';
         .send(testRoomLidName)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -864,13 +864,13 @@ let roomId = '';
             token: existUser.token,
             roomId: ''
         };
-        
+
       request(app) // 7
         .post('/api/rooms/delete/player')
         .send(testRoomLidName)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -888,7 +888,7 @@ let roomId = '';
         .send(testRoomLidToken)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -907,7 +907,7 @@ let roomId = '';
         .send(testRoomLidToken)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })

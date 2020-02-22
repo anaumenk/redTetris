@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { setGameStatus, setNextPiece, setNextTurn, setRoom, isRoomLid } from "../../actions";
+import { isRoomLid, setGameStatus, setNextPiece, setNextTurn, setRoom } from "../../actions";
 import { ButtonRef, Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
@@ -103,10 +103,12 @@ const Game = (props) => {
 
   useEffect(() => {
     props.setRoom(roomId, playerName);
-    props.isRoomLid(roomId, playerName)
+    props.isRoomLid(roomId, playerName);
     window.addEventListener("keydown", handleUserKeyPress);
     return () => {
-      removePlayerFromRoom(roomId);
+      if (props.inGame) {
+        removePlayerFromRoom(roomId);
+      }
       window.removeEventListener("keydown", handleUserKeyPress);
     };
   }, []);
@@ -115,7 +117,7 @@ const Game = (props) => {
     if (pieceId !== UNSENT_INT) {
       const newIntervalId = setInterval(() => {
         return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
-      }, 1000);
+      }, TIMEOUT - Object.keys(field).length * 10);
       setIntervalId(newIntervalId);
     }
   }, [ pieceId ]);
@@ -187,25 +189,31 @@ const Game = (props) => {
   };
 
   const startGame = () => {
-    const status = !props.status || props.status === GAME_STATUS.PAUSE ? GAME_STATUS.START : GAME_STATUS.PAUSE;
-    props.setGameStatus(roomId, status);
+    if (props.inGame) {
+      const status = !props.status || props.status === GAME_STATUS.PAUSE ? GAME_STATUS.START : GAME_STATUS.PAUSE;
+      props.setGameStatus(roomId, status);
+    }
   };
 
   const stopGame = () => {
-    stopGameApi(roomId);
-    props.setGameStatus(roomId, GAME_STATUS.STOP);
+    if (props.inGame) {
+      stopGameApi(roomId);
+      props.setGameStatus(roomId, GAME_STATUS.STOP);
+    }
   };
 
   const restartGame = () => {
-    restartGameApi(roomId);
-    props.setGameStatus(roomId, null);
+    if (props.inGame) {
+      restartGameApi(roomId);
+      props.setGameStatus(roomId, null);
+    }
   };
 
   const handleSongFinishedPlaying = () => {
     setSoundPlay(false);
-  }
+  };
 
-  return props.room && (!props.room.multi && props.lid) ? (
+  return props.room && props.inGame ? (
     <>
       <Sound
         autoLoad={true}
@@ -256,7 +264,8 @@ const mapStateToProps = (state) => ({
   nextPieceColor: state.game.nextPieceColor,
   currentPieceTurn: state.game.currentPieceTurn,
   currentPieceFigure: state.game.currentPieceFigure,
-  lid: state.rooms.lid
+  lid: state.rooms.lid,
+  inGame: state.rooms.inGame,
 });
 
 const mapDispatchToProps = {

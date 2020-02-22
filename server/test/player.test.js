@@ -68,7 +68,7 @@ const users = [{
         .send(regPlayer)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -83,7 +83,7 @@ const users = [{
         .send(user)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -116,7 +116,7 @@ const users = [{
             .send(logPlayer)
             .expect(400)
             .end((err, res) => {
-              if (err) 
+              if (err)
                 return done(err)
               done();
             })
@@ -130,7 +130,7 @@ const users = [{
             .send(logPlayer)
             .expect(400)
             .end((err, res) => {
-              if (err) 
+              if (err)
                 return done(err)
               done();
             })
@@ -144,7 +144,7 @@ const users = [{
             .send(logPlayer)
             .expect(400)
             .end((err, res) => {
-              if (err) 
+              if (err)
                 return done(err)
               done();
             })
@@ -158,12 +158,12 @@ const users = [{
             .send(logPlayer)
             .expect(400)
             .end((err, res) => {
-              if (err) 
+              if (err)
                 return done(err)
               done();
             })
         })
-    
+
    
     it('should not login with buzy body data', (done) => { // 6
    
@@ -187,10 +187,10 @@ const users = [{
         .send(regPlayer)
         .expect(200)
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
           done();
-  
+
         })
     })
 
@@ -203,7 +203,7 @@ const users = [{
         .send(token)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -218,7 +218,7 @@ const users = [{
         .send(token)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -253,7 +253,7 @@ const users = [{
         .send(token)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -268,7 +268,7 @@ const users = [{
         .send(token)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })

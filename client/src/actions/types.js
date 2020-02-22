@@ -1,4 +1,3 @@
-export const GET_ROOMS = "GET_ROOMS";
 export const GET_ROOM = "GET_ROOM";
 export const GET_ROOM_LID = "GET_ROOM_LID";
 export const SET_NEXT_PIECE = "SET_NEXT_PIECE";

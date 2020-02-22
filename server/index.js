@@ -65,12 +65,15 @@ const getPlayerInfo = (token) => {
 //const getPlayerByToken = (token) => players.find((player) => player.getToken === token);
 
 const getRoom = (id, name, player) => {
+  let inGame = false;
   const room = rooms.find((room) => room.id === id && room.lid.name === name);
   if (room) {
-    if(room.status === "START" || (!multi && room.players.length === 0))
+    if (room.status !== "START" && room.multi) {
       room.addPlayer(player);
+      inGame = true;
+    }
   }
-  return room;
+  return inGame;
 };
 
 const checkLid = (playerId, token) => !!players.find((player) => player.token === token && player.id === playerId);

@@ -1,4 +1,4 @@
-import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOMS, GET_ROOM_LID, SET_GAME_STATUS, SET_ROOM } from "./";
+import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOM_LID, SET_GAME_STATUS, SET_ROOM } from "./";
 import { configAxios } from "../axios";
 import { API, METHODS } from "../constants";
 import socketIOClient from "socket.io-client";
@@ -9,7 +9,6 @@ const socket = socketIOClient(`${process.env.HOST || "http://localhost"}:${proce
 export const getRooms = () => dispatch => {
   socket.on(API.GET_ROOMS, data => {
     const prevState = store.getState().rooms;
-    const allRooms = prevState.allRooms;
     const prevRoom = prevState.room;
     const roomInfo = prevState.roomInfo;
     const room = data.find((room) => room.id === roomInfo.id && room.lid.name === roomInfo.lid);
@@ -18,24 +17,17 @@ export const getRooms = () => dispatch => {
       || !Object.keys(room.mode).every((item) => room.mode[item] === prevRoom.mode[item])
       || room.players.length !== prevRoom.players.length
       || !room.players.every((p, i) => p.score === prevRoom.players[i].score)
+      || !room.players.every((p, i) => p.status === prevRoom.players[i].status)
       || room.status !== prevRoom.status) {
       dispatch({
         type: GET_ROOM,
         payload: {
           room,
           status: room ? room.status : null,
-          allRooms: allRooms.length === data.length ? allRooms : data
+          allRooms: data
         }
       });
     }
-    // else {
-    //   dispatch({
-    //     type: GET_ROOMS,
-    //     payload: {
-    //       allRooms: allRooms.length === data.length ? allRooms : data
-    //     }
-    //   })
-    // }
   });
 };
 
@@ -56,10 +48,12 @@ export const isRoomLid = (roomId, playerName) => dispatch => {
       const data = response.data.data;
       if (data) {
         const lid = data.lid;
+        const inGame = data.inGame;
         dispatch({
           type: GET_ROOM_LID,
           payload: {
-            lid
+            lid,
+            inGame
           }
         });
       }

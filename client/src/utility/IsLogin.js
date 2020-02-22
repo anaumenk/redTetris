@@ -1,5 +1,5 @@
 import React from "react"
-import { ROUTES } from "../constants";
+import { ROUTES} from "../constants";
 import { Route } from "react-router-dom";
 import { IoMdExit } from "react-icons/io";
 import { withRouter } from "react-router-dom";
@@ -27,7 +27,7 @@ const IsLogin = ({ children, isAuthenticated, history, goToMenu, logOutAction, c
 };
 
 const mapStateToProps = (state) => ({
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default withRouter(connect(mapStateToProps, {logOutAction: logOut, checkAuth: checkAuthentication})(IsLogin));

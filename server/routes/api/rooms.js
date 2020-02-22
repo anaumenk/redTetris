@@ -51,7 +51,6 @@ router.post('/lid', async (req, res) => {
   const token = req.body.token;
   const playerName = req.body.name;
   const roomId = req.body.id;
-  const multi = req.multi.multi;
   let lid = false;
   const response = {
     data: null,
@@ -77,18 +76,34 @@ router.post('/lid', async (req, res) => {
         response.error = "No such room";
         res.status(400);
       } else {
+        let inGame = index.getRoom(roomId, playerName, player);
         if(String(existRoom.lid) === player.id){
           lid = true;
+          inGame = true;
         }
-        index.getRoom(roomId, playerName, player, multi);
         response.data = {};
         response.data.lid = lid;
+        response.data.inGame = inGame;
       }
     } catch (error) {
         response.error = 'Server error';
         res.status(404);
     }
   }
+  // const player = await models.User.findOne({token: token});
+  // if (player) {
+  //   if(await models.Room.findOne({lid: player.id}))
+  //     lid = true;
+  //   const room = index.getRoom(req.body.id, req.body.name, player);
+  //   if (room) {
+  //     response.data = {};
+  //     response.data.lid = lid;
+  //   } else {
+  //     response.error = "No such room."
+  //   }
+  // } else {
+  //   response.error = "No such user."
+  // }
   res.send(response);
 });
 
@@ -129,6 +144,29 @@ router.post('/delete/player', async(req, res) => {
         res.status(404);
     }
   }
+
+  // const player = await models.User.findOne({token: token});
+  // if (player) {
+  //   const room = index.stopGame(roomId);
+  //   console.log("tytroom: "+room);
+  //   if (room) {
+  //     if (room.status) {
+  //       index.setGameStatus(roomId, 'STOP');
+  //     }
+  //     response.data = {};
+  //       const newRoom = index.deletePlayer(roomId, player.id);
+  //       console.log("newRoom:" + newRoom.players);
+  //       if (await models.Room.findOne({lid: player.id})) {
+  //         console.log('delete:' + await models.Room.deleteOne({_id: roomId}));
+  //         index.deleteRoom(roomId);
+  //       }
+  //       response.data.room = newRoom;
+  //   } else {
+  //     response.error = "No such room."
+  //   }
+  // } else {
+  //   response.error = "No such user."
+  // }
   res.send(response);
 });
 
@@ -221,9 +259,9 @@ router.post('/status', async (req, res) => {
   } else if (!roomId) {
     response.error = 'Room id undefined';
     res.status(400);
-  } else if (!status) {
-    response.error = 'Status undefined';
-    res.status(400);
+  // } else if (!status) {
+  //   response.error = 'Status undefined';
+  //   res.status(400);
   } else {
     try {
       const player = await models.User.findOne({token: token});
@@ -243,14 +281,6 @@ router.post('/status', async (req, res) => {
         res.status(404);
     }
   }
-  // const player = await models.User.findOne({token: token});
-  // if (player) {
-  //   const room = index.setGameStatus(roomId, status);
-  //   response.data = {};
-  //   response.data.status = room.status;
-  // } else {
-  //   response.error = "No such user."
-  // }
   res.send(response);
 });
 
@@ -261,7 +291,7 @@ router.post('/restart', async(req, res) => {
     data: null,
     error: null
   };
-  
+
   if (typeof(token) === "undefined" || !token){
     response.error = 'Token undefined';
     res.status(400);
@@ -331,14 +361,6 @@ router.post('/mode', async(req, res) => {
         res.status(404);
     }
   }
-  // const player = await models.User.findOne({token: token});
-  // if (player) {
-  //     const room = index.changeGameMode(roomId, mode, status);
-  //     response.data = {};
-  //     response.data.mode = room.mode;
-  // } else {
-  //   response.error = "No such user."
-  // }
   res.send(response);
 });
 

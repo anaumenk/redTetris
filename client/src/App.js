@@ -9,7 +9,7 @@ import Homepage from "./components/Homepage";
 import RoomsList from "./components/Rooms";
 import Game from "./components/Game";
 import Player from "./components/Player";
-import {getPieceTurn, IsLogin} from "./utility";
+import { IsLogin } from "./utility";
 import Enter from "./components/Enter";
 import { EnterForm } from "./components/common";
 import Menu from "./components/Menu";
