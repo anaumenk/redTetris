@@ -18,7 +18,7 @@ class Room {
     this.mode = {
       rotation: true,
       inverted: false,
-    }
+    };
   }
 
   addPlayer(player) {

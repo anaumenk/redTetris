@@ -36,7 +36,7 @@ schema.pre('save', function(next) {
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
     user.password = bcrypt.hashSync(user.password, 10);
-    user.token = jwt.sign({id: user.name}, "SECRET");
+    user.token = jwt.sign({ id: user.name }, "SECRET");
     next();
 });
 

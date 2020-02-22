@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
-import { connect } from "react-redux";
-import { Switch, Route, Redirect, HashRouter} from "react-router-dom";
-import Homepage from "./components/Homepage";
-import { Container } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import RoomsList from "./components/Rooms";
+import { checkAuthentication, getRooms } from "./actions";
 import { ENTER_ACTIONS, ROUTES } from "./constants";
+import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { Container } from "react-bootstrap";
+import { connect } from "react-redux";
+import Homepage from "./components/Homepage";
+import RoomsList from "./components/Rooms";
 import Game from "./components/Game";
 import Player from "./components/Player";
-import { IsLogin } from "./utility";
+import {getPieceTurn, IsLogin} from "./utility";
 import Enter from "./components/Enter";
 import { EnterForm } from "./components/common";
 import Menu from "./components/Menu";
-import { getRooms, checkAuthentication } from "./actions"
 
 const App = ({ getRooms, checkAuthenticationAction }) => {
     useEffect(() => {
