@@ -9,11 +9,22 @@ router.post('/token', async (req, res) => {
     data: null,
     error: null
   };
-  const player = await models.User.findOne({token});
-  if (player) {
-    response.data = { name: player.name, token: player.token };
-  } else {
-    response.error = "No such user."
+  if (!token){
+    response.error = 'Token undefined';
+    res.status(400);
+  }else {
+    try {
+      const player = await models.User.findOne({token: token});
+      if(!player) {
+        response.error = "No such user";
+        res.status(400);
+      } else {
+        response.data = { name: player.name, token: player.token };
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
+    }
   }
   res.send(response);
 });
@@ -24,7 +35,7 @@ router.post('/register', async (req, res) => {
     data: null,
     error: null
   };
-  if (typeof(name) === "undefined" || typeof(password) === "undefined"){
+  if (!name || !password){
     response.error = 'Name or password is empty';
     res.status(400);
   } else if (/^([A-Za-z0-9_\-\.])/.test(name) === false) {
@@ -58,7 +69,7 @@ router.post('/login', async (req, res) => {
     data: null,
     error: null
   };
-  if (typeof(name) === "undefined" || typeof(password) === "undefined"){
+  if (!name || !password){
     response.error = 'Name or password is empty';
     res.status(400);
   } else {
@@ -85,7 +96,7 @@ router.post('/info', async (req, res) => {
     error: null
   };
 
-  if (typeof(token) === "undefined" || !token){
+  if (!token){
     response.error = 'Token undefined';
     res.status(400);
   } else {

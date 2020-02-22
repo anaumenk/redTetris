@@ -114,7 +114,7 @@ const Game = (props) => {
     if (pieceId !== UNSENT_INT) {
       const newIntervalId = setInterval(() => {
         return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
-      }, TIMEOUT - Object.keys(field).length * 10);
+      }, 1000);
       setIntervalId(newIntervalId);
     }
   }, [pieceId]);
