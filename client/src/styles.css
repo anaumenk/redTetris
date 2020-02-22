@@ -368,3 +368,13 @@ form.enter {
   margin-top: 10px;
   padding: 10px 10px 10px 25px;
 }
+
+@media (max-width: 991px) {
+  .field {
+    margin:auto;
+  }
+
+  .room-name {
+    text-align: center;
+  }
+}

@@ -25,7 +25,7 @@ const Player = () => {
 
     return (
       <CentralBlock title="Player" close={true}>
-        {!error ? (
+        {!error && player ? (
           <div className="player-info">
             <Row>
               <Col sm="6" className="player-info--name">Name</Col>

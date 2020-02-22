@@ -30,11 +30,13 @@ export function logOut() {
 export function checkAuthentication(history) {
     return async (dispatch) => {
         configAxios(METHODS.POST, API.CHECK_TOKEN).then((res) => {
-            if (!res.data.error){
-                dispatch(authenticate());
-            } else {
-                history && history.push(ROUTES.ENTER);
-                dispatch(unauthenticate());
+            if (res && res.data) {
+                if (!res.data.error){
+                    dispatch(authenticate());
+                } else {
+                    history && history.push(ROUTES.ENTER);
+                    dispatch(unauthenticate());
+                }
             }
         })
     };
