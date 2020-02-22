@@ -60,6 +60,34 @@ const users = [{
           done();
         })
     })
+
+    it('Create user already exist', (done) => {
+
+      request(app) // 7
+        .post('/api/player/register')
+        .send(regPlayer)
+        .expect(400)
+        .end((err, res) => {
+          if (err) 
+            return done(err)
+          done();
+        })
+    })
+
+    it('Unvalid login', (done) => {
+
+      let user = {login: 'Вася', password: 'qwersfa'};
+
+      request(app) // 7
+        .post('/api/player/register')
+        .send(user)
+        .expect(400)
+        .end((err, res) => {
+          if (err) 
+            return done(err)
+          done();
+        })
+    })
   })
 
   describe('POST /login', async() => { // 1
@@ -77,9 +105,65 @@ const users = [{
           if (err) 
             return done(err);
           done();
-          
         })
-    })
+        })
+
+        it('Empty login', (done) => {
+          let logPlayer = {name: "", password: "test"};
+
+          request(app) // 7
+            .post('/api/player/login')
+            .send(logPlayer)
+            .expect(400)
+            .end((err, res) => {
+              if (err) 
+                return done(err)
+              done();
+            })
+        })
+
+        it('Empty password', (done) => {
+          let logPlayer = {name: "test", password: ""};
+
+          request(app) // 7
+            .post('/api/player/login')
+            .send(logPlayer)
+            .expect(400)
+            .end((err, res) => {
+              if (err) 
+                return done(err)
+              done();
+            })
+        })
+
+        it('No such user', (done) => {
+          let logPlayer = {name: "rewfdsvs", password: "test"};
+
+          request(app) // 7
+            .post('/api/player/login')
+            .send(logPlayer)
+            .expect(400)
+            .end((err, res) => {
+              if (err) 
+                return done(err)
+              done();
+            })
+        })
+
+        it('No such password', (done) => {
+          let logPlayer = {name: "test", password: "ewqdsxdc"};
+
+          request(app) // 7
+            .post('/api/player/login')
+            .send(logPlayer)
+            .expect(400)
+            .end((err, res) => {
+              if (err) 
+                return done(err)
+              done();
+            })
+        })
+    
    
     it('should not login with buzy body data', (done) => { // 6
    
@@ -93,6 +177,53 @@ const users = [{
           done();
         })
     })
+  })
+
+  describe('POST /token', async() => { // 1
+    it('Check valid token', (done) => {
+
+      request(app) // 3
+        .post('/api/player/token')
+        .send(regPlayer)
+        .expect(200)
+        .end((err, res) => { // 4
+          if (err) 
+            return done(err);
+          done();
+  
+        })
+    })
+
+    it('Token undefine', (done) => { // 6
+
+      let token = '';
+
+      request(app) // 7
+        .post('/api/player/token')
+        .send(token)
+        .expect(400)
+        .end((err, res) => {
+          if (err) 
+            return done(err)
+          done();
+        })
+    })
+
+    it('Token unvalid', (done) => { // 6
+
+      let token = 'jjjkjhijgfrtd';
+
+      request(app) // 7
+        .post('/api/player/token')
+        .send(token)
+        .expect(400)
+        .end((err, res) => {
+          if (err) 
+            return done(err)
+          done();
+        })
+    })
+
   })
 
   describe('POST /info', async() => { // 1
@@ -112,6 +243,37 @@ const users = [{
   
         })
     })
+
+    it('Token undefine', (done) => { // 6
+
+      let token = '';
+
+      request(app) // 7
+        .post('/api/player/login')
+        .send(token)
+        .expect(400)
+        .end((err, res) => {
+          if (err) 
+            return done(err)
+          done();
+        })
+    })
+
+    it('Token unvalid', (done) => { // 6
+
+      let token = 'jjjkjhijgfrtd';
+
+      request(app) // 7
+        .post('/api/player/login')
+        .send(token)
+        .expect(400)
+        .end((err, res) => {
+          if (err) 
+            return done(err)
+          done();
+        })
+    })
+
   })
 
   module.exports.regPlayer = regPlayer;

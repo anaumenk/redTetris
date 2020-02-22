@@ -81,7 +81,8 @@ const getPlayerInfo = (token) => {
 const getRoom = (id, name, player) => {
   const room = rooms.find((room) => room.id === id && room.lid.name === name);
   if (room) {
-    room.addPlayer(player);
+    if(room.status === "START" || (!multi && room.players.length === 0))
+      room.addPlayer(player);
   }
   return room;
 };
