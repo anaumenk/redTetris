@@ -342,7 +342,7 @@ form.enter {
   padding-top: 10px;
 }
 
-.aside-content .player-game-info > div:last-child:not(:first-child) {
+.aside-content .player-game-info > div:not(:first-child) {
   border-left: 1px solid #989898b5;
 }
 

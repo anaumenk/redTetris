@@ -4,7 +4,7 @@ import { API, METHODS } from "../constants";
 import socketIOClient from "socket.io-client";
 import { store } from "../store";
 
-const socket = socketIOClient(`${process.env.HOST || "http://localhost"}:${process.env.PORT || 8000}`);
+const socket = socketIOClient(`${process.env.HOST || "http://localhost"}:${process.env.NODE_PORT || 8000}`);
 
 export const getRooms = () => dispatch => {
   socket.on(API.GET_ROOMS, data => {

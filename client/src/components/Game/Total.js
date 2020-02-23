@@ -12,7 +12,7 @@ window.soundManager.setup({ debugMode: false });
 const Total = ({ total, restartGame, status, lid, history, match, setGameStatus, cleanTheRoom }) => {
   const roomId = parseInt(match.params.room);
   const playersInfo = total ? total.filter((player) => player.status !== PLAYER_STATUS.DELETED)
-    .map((player, index) => <PlayerInfo player={player} key={index}/>) : null;
+    .map((player, index) => <PlayerInfo player={player} key={index} total={true}/>) : null;
   const exit = () => {
     setGameStatus(roomId, null);
     cleanTheRoom();

@@ -321,4 +321,44 @@ router.post('/mode', async(req, res) => {
   res.send(response);
 });
 
+router.post('/field', async(req, res) => {
+  const token = req.body.token;
+  const roomId = req.body.roomId;
+  const field = req.body.field;
+  const response = {
+    data: null,
+    error: null
+  };
+  if (typeof(token) === "undefined" || !token){
+    response.error = 'Token undefined';
+    res.status(400);
+  } else if (!field) {
+    response.error = 'Mode undefined';
+    res.status(400);
+  } else if (!roomId) {
+    response.error = 'Room id undefined';
+    res.status(400);
+  } else {
+    try {
+      const player = await models.User.findOne({token: token});
+      if(!player) {
+        response.error = "No such user";
+        res.status(400);
+      } else if (!room) {
+        response.error = "No such room";
+        res.status(400);
+      } else {
+      //   console.log(player)
+        // const room = index.changePlayerField(roomId, player);
+        // response.data = {};
+        // response.data.mode = room.mode;
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
+    }
+  }
+  res.send(response);
+});
+
 module.exports = router;

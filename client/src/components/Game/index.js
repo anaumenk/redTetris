@@ -18,7 +18,7 @@ import {
 import {
   checkFieldFill, getPieceTurn, mathSum,
   noMoreSpace, pieceMoving, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate,
-  stopGame as stopGameApi
+  stopGame as stopGameApi, sendField
 } from "../../utility";
 import Total from "./Total";
 import Sound from 'react-sound';
@@ -108,6 +108,10 @@ const Game = (props) => {
       setIntervalId(newIntervalId);
     }
   }, [ pieceId ]);
+
+  useEffect(() => {
+    sendField(roomId, field);
+  }, [ field ]);
 
   useEffect(() => {
     switch (props.status) {

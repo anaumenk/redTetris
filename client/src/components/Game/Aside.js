@@ -90,7 +90,7 @@ const Aside = (props) => {
         info={nextPiece}
       />
       <AsideInfo
-        title={[ "Players", "Score" ]}
+        title={[ "Players", "Score", "Field" ]}
         info={playersInfo}
       />
     </div>
