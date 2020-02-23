@@ -1,7 +1,7 @@
 const expect = require('expect');
 const request = require('supertest');
 const {ObjectId} = require('mongodb');
- 
+
 const app = require('../index.js').server;
 const models = require('../models');
 const existUser = require('./player.test').regPlayer;
@@ -29,7 +29,7 @@ let roomId = '';
             newRoom.id = roomId = res.body.data.id;
         })
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
 
           models.Room.find({name: newRoom.name}).then(rooms => {
@@ -39,7 +39,7 @@ let roomId = '';
           }).catch((e) => done(e))
         })
     })
-   
+
     it('Create a new room without name', (done) => {
 
         let testRoomName = {
@@ -53,7 +53,7 @@ let roomId = '';
         .send(testRoomName)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -72,7 +72,7 @@ let roomId = '';
         .send(testRoomMulti)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -91,7 +91,7 @@ let roomId = '';
         .send(testRoomToken)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -110,8 +110,8 @@ let roomId = '';
         .send(testRoomToken)
         .expect(400)
         .end((err, res) => {
-          if (err) 
-            return done(err)  
+          if (err)
+            return done(err)
           done();
         })
     })
@@ -129,7 +129,7 @@ let roomId = '';
         .send(testRoomDup)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -150,7 +150,7 @@ let roomId = '';
             expect(res.body.data.lid).toBe(true);
         })
         .end((err, res) => { // 4
-          if (err) 
+          if (err)
             return done(err);
           models.Room.find({_id: newRoom.id}).then(rooms => {
             expect(rooms.length).toBe(1);
@@ -158,7 +158,7 @@ let roomId = '';
           }).catch((e) => done(e))
         })
     })
-   
+
     it('Cheak lid without name', (done) => {
 
         let testRoomLidName = {
@@ -173,7 +173,7 @@ let roomId = '';
         .send(testRoomLidName)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -187,13 +187,13 @@ let roomId = '';
             multi: true,
             id: ''
         };
-        
+
       request(app) // 7
         .post('/api/rooms/lid')
         .send(testRoomLidName)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -213,7 +213,7 @@ let roomId = '';
         .send(testRoomLidToken)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -233,8 +233,8 @@ let roomId = '';
         .send(testRoomLidToken)
         .expect(400)
         .end((err, res) => {
-          if (err) 
-            return done(err)  
+          if (err)
+            return done(err)
           done();
         })
     })
@@ -253,7 +253,7 @@ let roomId = '';
         .send(testRoomLidToken)
         .expect(400)
         .end((err, res) => {
-          if (err) 
+          if (err)
             return done(err)
           done();
         })
@@ -770,26 +770,6 @@ let roomId = '';
         status: true,
         mode: "inverted",
         roomId: ''
-      };
-
-      request(app) // 7
-        .post('/api/rooms/mode')
-        .send(sendObj)
-        .expect(400)
-        .end((err, res) => {
-          if (err)
-            return done(err)
-          done();
-        })
-    })
-
-    it('Check mode without status', (done) => {
-
-      let sendObj = {
-        token: existUser.token,
-        status: '',
-        mode: "inverted",
-        roomId: roomId
       };
 
       request(app) // 7

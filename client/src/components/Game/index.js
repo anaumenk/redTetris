@@ -37,16 +37,15 @@ const Game = (props) => {
   const [ sound, setSoundPlay ] = useState(false);
   const [ spinner, changeSpinner ] = useState(<Spinner animation="border" role="status" />);
 
-  if (!props.room) {
-    setTimeout(() => {
-      changeSpinner(
-          <>
-            <h1 className="spinner__title">Ooooops no such room</h1>
-            <ButtonRef to={ROUTES.ROOMS} className="button">Go to the room list</ButtonRef>
-          </>
-      );
-    }, 3000);
-  }
+  useEffect(() => {
+    props.setRoom(roomId, playerName);
+    props.isRoomLid(roomId, playerName);
+    window.addEventListener("keydown", handleUserKeyPress);
+    return () => {
+      removePlayerFromRoom(roomId);
+      window.removeEventListener("keydown", handleUserKeyPress);
+    };
+  }, []);
 
   useEffect(() => {
     const stars = starsRow;
@@ -102,18 +101,6 @@ const Game = (props) => {
   };
 
   useEffect(() => {
-    props.setRoom(roomId, playerName);
-    props.isRoomLid(roomId, playerName);
-    window.addEventListener("keydown", handleUserKeyPress);
-    return () => {
-      if (props.inGame) {
-        removePlayerFromRoom(roomId);
-      }
-      window.removeEventListener("keydown", handleUserKeyPress);
-    };
-  }, []);
-
-  useEffect(() => {
     if (pieceId !== UNSENT_INT) {
       const newIntervalId = setInterval(() => {
         return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
@@ -152,6 +139,17 @@ const Game = (props) => {
       }
     }
   }, [ props.status ]);
+
+  if (!props.room) {
+    setTimeout(() => {
+      changeSpinner(
+          <>
+            <h1 className="spinner__title">Ooooops no such room</h1>
+            <ButtonRef to={ROUTES.ROOMS} className="button">Go to the room list</ButtonRef>
+          </>
+      );
+    }, 3000);
+  }
 
   const sortPlayers = props.room && props.room.players ? Object.values(props.room.players).sort((a, b) => {
     return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;

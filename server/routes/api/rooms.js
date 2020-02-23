@@ -90,20 +90,6 @@ router.post('/lid', async (req, res) => {
         res.status(404);
     }
   }
-  // const player = await models.User.findOne({token: token});
-  // if (player) {
-  //   if(await models.Room.findOne({lid: player.id}))
-  //     lid = true;
-  //   const room = index.getRoom(req.body.id, req.body.name, player);
-  //   if (room) {
-  //     response.data = {};
-  //     response.data.lid = lid;
-  //   } else {
-  //     response.error = "No such room."
-  //   }
-  // } else {
-  //   response.error = "No such user."
-  // }
   res.send(response);
 });
 
@@ -144,29 +130,6 @@ router.post('/delete/player', async(req, res) => {
         res.status(404);
     }
   }
-
-  // const player = await models.User.findOne({token: token});
-  // if (player) {
-  //   const room = index.stopGame(roomId);
-  //   console.log("tytroom: "+room);
-  //   if (room) {
-  //     if (room.status) {
-  //       index.setGameStatus(roomId, 'STOP');
-  //     }
-  //     response.data = {};
-  //       const newRoom = index.deletePlayer(roomId, player.id);
-  //       console.log("newRoom:" + newRoom.players);
-  //       if (await models.Room.findOne({lid: player.id})) {
-  //         console.log('delete:' + await models.Room.deleteOne({_id: roomId}));
-  //         index.deleteRoom(roomId);
-  //       }
-  //       response.data.room = newRoom;
-  //   } else {
-  //     response.error = "No such room."
-  //   }
-  // } else {
-  //   response.error = "No such user."
-  // }
   res.send(response);
 });
 
@@ -259,9 +222,6 @@ router.post('/status', async (req, res) => {
   } else if (!roomId) {
     response.error = 'Room id undefined';
     res.status(400);
-  // } else if (!status) {
-  //   response.error = 'Status undefined';
-  //   res.status(400);
   } else {
     try {
       const player = await models.User.findOne({token: token});
@@ -334,9 +294,6 @@ router.post('/mode', async(req, res) => {
     res.status(400);
   } else if (!mode) {
     response.error = 'Mode undefined';
-    res.status(400);
-  } else if (!status) {
-    response.error = 'Status undefined';
     res.status(400);
   } else if (!roomId) {
     response.error = 'Room id undefined';

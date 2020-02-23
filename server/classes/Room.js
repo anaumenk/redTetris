@@ -32,6 +32,12 @@ class Room {
           status: 'game'
         }
       ];
+    } else {
+      this.players.forEach((oldPlayer) => {
+        if (oldPlayer.id === player.id) {
+          oldPlayer.status = "game";
+        }
+      });
     }
   }
 

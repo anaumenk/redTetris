@@ -39,7 +39,7 @@ io.sockets.on("connection", socket => {
 server.listen(port, () => console.log(`Listening on port ${port}`));
 
 const addNewRoom = (newRoom) => {
-  rooms.push(newRoom);
+    rooms.push(newRoom);
 };
 
 const addNewPlayer = (player) => {
@@ -124,6 +124,7 @@ const stopGame = (roomId) => {
 
 const restartGame = (roomId) => {
   const room = rooms.findIndex((room) => room.id === roomId);
+  rooms[room].players = rooms[room].players.filter((player) => player.status === "game");
   rooms[room].players.forEach((player) => {
     player.score = 0;
   });

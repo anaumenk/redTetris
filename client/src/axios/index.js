@@ -14,7 +14,7 @@ export const configAxios = (method, url, data = {}) => {
     switch (method) {
         case METHODS.GET:
             response = axios.get(url, config).catch(err => {
-                if (err.response.status === 400 || err.response.status === 404 || err.response.status === 406) {
+                if (err.response.status === 400 || err.response.status === 404) {
                     return err.response;
                 }
                 console.log(err);
@@ -22,7 +22,7 @@ export const configAxios = (method, url, data = {}) => {
             break;
         case METHODS.POST:
             response = axios.post(url, data, config).catch(err => {
-                if (err.response.status === 400 || err.response.status === 404 || err.response.status === 406) {
+                if (err.response.status === 400 || err.response.status === 404) {
                     return err.response;
                 }
                 console.log(err);
