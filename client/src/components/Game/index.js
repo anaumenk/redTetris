@@ -18,7 +18,7 @@ import {
 import {
   checkFieldFill, getPieceTurn, mathSum,
   noMoreSpace, pieceMoving, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate,
-  stopGame as stopGameApi, sendField
+  sendField, sort, stopGame as stopGameApi
 } from "../../utility";
 import Total from "./Total";
 import Sound from 'react-sound';
@@ -155,10 +155,6 @@ const Game = (props) => {
     }, 3000);
   }
 
-  const sortPlayers = props.room && props.room.players ? Object.values(props.room.players).sort((a, b) => {
-    return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
-  }) : [];
-
   const addPieceToField = (piece) => {
     if (!noMoreSpace([ ...field ], PIECES_DIRECTION.CURRENT, piece)) {
       setField([ ...field, piece ]);
@@ -217,12 +213,13 @@ const Game = (props) => {
 
   return props.room && props.inGame ? (
     <>
-      <Sound
-        autoLoad={true}
-        url={gameSound}
-        playStatus={props.room.status === GAME_STATUS.START ? Sound.status.PLAYING : Sound.status.STOPPED}
-        loop={true}
-      />
+      {/*<Sound*/}
+      {/*  autoLoad={true}*/}
+      {/*  url={gameSound}*/}
+      {/*  playStatus={props.room.status === GAME_STATUS.START ? Sound.status.PLAYING : Sound.status.STOPPED}*/}
+      {/* loop={true}*/}
+      {/*/>*/}
+      {/*Some problem with play() pause()*/}
       <Sound
         autoLoad={true}
         url={starsSound}
@@ -250,10 +247,9 @@ const Game = (props) => {
             <Aside
               startGame={startGame}
               stopGame={stopGame}
-              players={sortPlayers}
             /></Col>
         </Row>
-        <Total restartGame={restartGame} total={sortPlayers}/>
+        <Total restartGame={restartGame} total={sort(props.room)}/>
     </>
     ) : <div className="spinner">{spinner}</div>;
 };

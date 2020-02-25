@@ -3,15 +3,24 @@ import { AsideInfo, Field, PlayerInfo } from "../common";
 import { Button, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { GAME_MODES, GAME_STATUS, PIECES, PLAYER_STATUS } from "../../constants";
-import { changeGameMode } from "../../utility";
+import { changeGameMode, sort } from "../../utility";
 import { withRouter } from "react-router-dom";
 
 const Aside = (props) => {
   const roomId = parseInt(props.match.params.room);
 
-  const playersInfo = props.players
+  const sortPlayers = sort(props.room);
+
+  const playersInfo = sortPlayers
     .filter((player) => player.status === PLAYER_STATUS.GAME)
-    .map((player, index) => <PlayerInfo key={index} player={player} />);
+    .map((player, index) => {
+        return (<PlayerInfo
+            key={index}
+            player={player}
+            show={true}
+            currentPlayer={false} // set condition
+        />);
+    });
 
   const nextPiece = <Field
     fieldWidth={4}
@@ -104,6 +113,7 @@ const mapStateToProps = (state) => ({
   nextPieceTurn: state.game.nextPieceTurn,
   nextPieceColor: state.game.nextPieceColor,
   mode: state.rooms.room.mode,
+  room: state.rooms.room
 });
 
 export default withRouter(connect(mapStateToProps)(Aside));

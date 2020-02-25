@@ -9,16 +9,8 @@ const socket = socketIOClient(`${process.env.HOST || "http://localhost"}:${proce
 export const getRooms = () => dispatch => {
   socket.on(API.GET_ROOMS, data => {
     const prevState = store.getState().rooms;
-    const prevRoom = prevState.room;
     const roomInfo = prevState.roomInfo;
     const room = data.find((room) => room.id === roomInfo.id && room.lid.name === roomInfo.lid);
-    if (!room || !prevRoom || (room && !prevRoom) || (room.players && !prevRoom.players)
-      || room.id !== prevRoom.id
-      || !Object.keys(room.mode).every((item) => room.mode[item] === prevRoom.mode[item])
-      || room.players.length !== prevRoom.players.length
-      || !room.players.every((p, i) => p.score === prevRoom.players[i].score)
-      || !room.players.every((p, i) => p.status === prevRoom.players[i].status)
-      || room.status !== prevRoom.status) {
       dispatch({
         type: GET_ROOM,
         payload: {
@@ -27,7 +19,6 @@ export const getRooms = () => dispatch => {
           allRooms: data
         }
       });
-    }
   });
 };
 

@@ -341,6 +341,7 @@ router.post('/field', async(req, res) => {
   } else {
     try {
       const player = await models.User.findOne({token: token});
+      const room = index.changePlayerField(roomId, player.id, field)
       if(!player) {
         response.error = "No such user";
         res.status(400);
@@ -348,10 +349,8 @@ router.post('/field', async(req, res) => {
         response.error = "No such room";
         res.status(400);
       } else {
-      //   console.log(player)
-        // const room = index.changePlayerField(roomId, player);
-        // response.data = {};
-        // response.data.mode = room.mode;
+        response.data = {};
+        response.data.room = room;
       }
     } catch (error) {
         response.error = 'Server error';

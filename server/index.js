@@ -143,6 +143,15 @@ const changeGameMode = (roomId, mode, status) => {
   return rooms[room];
 };
 
+const changePlayerField = (roomId, playerId, field) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  const player = rooms[room].players.findIndex((player) => player.id === playerId)
+  if (rooms[room].players[player]) {
+    rooms[room].players[player].field = field;
+  }
+  return rooms[room];
+};
+
 module.exports.addNewRoom = addNewRoom;
 module.exports.checkToken = checkToken;
 module.exports.addNewPlayer = addNewPlayer;
@@ -157,4 +166,5 @@ module.exports.setGameStatus = setGameStatus;
 module.exports.restartGame = restartGame;
 module.exports.deletePlayer = deletePlayer;
 module.exports.changeGameMode = changeGameMode;
+module.exports.changePlayerField = changePlayerField;
 module.exports.server = server;

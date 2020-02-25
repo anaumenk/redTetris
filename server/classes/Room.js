@@ -10,7 +10,8 @@ class Room {
         id: lid.id,
         name: lid.name,
         score: 0,
-        status: 'game'
+        status: 'game',
+        field: []
       }
     ];
     this.multi = multi;
@@ -29,13 +30,15 @@ class Room {
           id: player.id,
           name: player.name,
           score: 0,
-          status: 'game'
+          status: 'game',
+          field: []
         }
       ];
     } else {
       this.players.forEach((oldPlayer) => {
         if (oldPlayer.id === player.id) {
           oldPlayer.status = "game";
+          oldPlayer.field = [];
         }
       });
     }
