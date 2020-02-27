@@ -1,7 +1,9 @@
 import { AUTHENTICATE, UNAUTHENTICATE } from '../actions';
+import {UNSENT_INT} from "../constants";
 
 const initialState = {
     isAuthenticated: false,
+    user: UNSENT_INT
 };
 
 export default function (state = initialState, action) {
@@ -9,10 +11,15 @@ export default function (state = initialState, action) {
         case AUTHENTICATE:
             return {
                 ...state,
-                isAuthenticated: true
+                isAuthenticated: true,
+                user: action.payload.userId
             };
         case UNAUTHENTICATE:
-            return { isAuthenticated: false };
+            return {
+                ...state,
+                isAuthenticated: false,
+                user: UNSENT_INT,
+            };
         default:
             return state;
     }

@@ -126,8 +126,8 @@ export const pieceMoving = {
           piece.place = piece.place.map((line) => {
             let newLine = [ ...line ];
             if (line[1] < stars[i]) {
- newLine[1]++; 
-}
+              newLine[1]++;
+            }
             return newLine;
           });
           return piece;

@@ -1,4 +1,4 @@
-import { GET_ROOM, GET_ROOM_LID, SET_GAME_STATUS, CLEAN_THE_ROOM, SET_ROOM } from '../actions';
+import { GET_ROOM, GET_ROOM_LID, CLEAN_THE_ROOM, SET_ROOM } from '../actions';
 import { UNSENT_INT } from "../constants";
 
 const initialState = {
@@ -27,11 +27,6 @@ export default function (state = initialState, action) {
         ...state,
         lid: action.payload.lid,
         inGame: action.payload.inGame,
-      };
-    case SET_GAME_STATUS:
-      return {
-        ...state,
-        status: action.payload.status,
       };
     case CLEAN_THE_ROOM:
       return {

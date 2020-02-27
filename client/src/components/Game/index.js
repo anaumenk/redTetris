@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { isRoomLid, setGameStatus, setNextPiece, setNextTurn, setRoom } from "../../actions";
+import { isRoomLid, setNextPiece, setNextTurn, setRoom } from "../../actions";
 import { ButtonRef, Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
@@ -18,7 +18,7 @@ import {
 import {
   checkFieldFill, getPieceTurn, mathSum,
   noMoreSpace, pieceMoving, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate,
-  sendField, sort, stopGame as stopGameApi
+  sendField, setGameStatus, sort, stopGame as stopGameApi
 } from "../../utility";
 import Total from "./Total";
 import Sound from 'react-sound';
@@ -34,7 +34,7 @@ const Game = (props) => {
   const [ intervalId, setIntervalId ] = useState(UNSENT_INT);
   const [ key, setKey ] = useState(UNSENT_INT);
   const [ starsRow, setStarsRow ] = useState([]);
-  const [ sound, setSoundPlay ] = useState(false);
+  // const [ sound, setSoundPlay ] = useState(false);
   const [ spinner, changeSpinner ] = useState(<Spinner animation="border" role="status" />);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const Game = (props) => {
   useEffect(() => {
     const stars = starsRow;
     if (stars.length > 0) {
-      setSoundPlay(true);
+      // setSoundPlay(true);
       setTimeout(() => {
         pieceMoving.moveAll(field, setField, stars);
         getPieceAndStartMoving();
@@ -189,27 +189,27 @@ const Game = (props) => {
   const startGame = () => {
     if (props.inGame) {
       const status = !props.status || props.status === GAME_STATUS.PAUSE ? GAME_STATUS.START : GAME_STATUS.PAUSE;
-      props.setGameStatus(roomId, status);
+      setGameStatus(roomId, status);
     }
   };
 
   const stopGame = () => {
     if (props.inGame) {
       stopGameApi(roomId);
-      props.setGameStatus(roomId, GAME_STATUS.STOP);
+      setGameStatus(roomId, GAME_STATUS.STOP);
     }
   };
 
   const restartGame = () => {
     if (props.inGame) {
       restartGameApi(roomId);
-      props.setGameStatus(roomId, null);
+      setGameStatus(roomId, null);
     }
   };
 
-  const handleSongFinishedPlaying = () => {
-    setSoundPlay(false);
-  };
+  // const handleSongFinishedPlaying = () => {
+  //   setSoundPlay(false);
+  // };
 
   return props.room && props.inGame ? (
     <>
@@ -220,12 +220,12 @@ const Game = (props) => {
       {/* loop={true}*/}
       {/*/>*/}
       {/*Some problem with play() pause()*/}
-      <Sound
-        autoLoad={true}
-        url={starsSound}
-        playStatus={sound ? Sound.status.PLAYING : Sound.status.STOPPED}
-        onFinishedPlaying={handleSongFinishedPlaying}
-      />
+      {/*<Sound*/}
+      {/*  autoLoad={true}*/}
+      {/*  url={starsSound}*/}
+      {/*  playStatus={sound ? Sound.status.PLAYING : Sound.status.STOPPED}*/}
+      {/*  onFinishedPlaying={handleSongFinishedPlaying}*/}
+      {/*/>*/}
       <div className="room-name">
         <h1>Room {props.room.name}</h1>
       </div>
@@ -264,12 +264,12 @@ const mapStateToProps = (state) => ({
   currentPieceFigure: state.game.currentPieceFigure,
   lid: state.rooms.lid,
   inGame: state.rooms.inGame,
+  indestruct: state.rooms.indestruct
 });
 
 const mapDispatchToProps = {
   setNextPiece,
   setNextTurn,
-  setGameStatus,
   setRoom,
   isRoomLid
 };

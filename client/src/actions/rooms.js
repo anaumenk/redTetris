@@ -1,4 +1,4 @@
-import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOM_LID, SET_GAME_STATUS, SET_ROOM } from "./";
+import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOM_LID, SET_ROOM } from "./";
 import { configAxios } from "../axios";
 import { API, METHODS } from "../constants";
 import socketIOClient from "socket.io-client";
@@ -16,7 +16,10 @@ export const getRooms = () => dispatch => {
         payload: {
           room,
           status: room ? room.status : null,
-          allRooms: data
+          allRooms: data,
+          // indestruct: (room && room.players)
+          //     ? room.players[room.players.findIndex((player) => player.id === store.getState().auth.user)].indestruct
+          //     : 0
         }
       });
   });
@@ -49,22 +52,6 @@ export const isRoomLid = (roomId, playerName) => dispatch => {
         });
       }
     })
-    .catch((err) => console.log(err));
-};
-
-export const setGameStatus = (roomId, status) => dispatch => {
-  configAxios(METHODS.POST, API.SET_GAME_STATUS, { roomId, status }).then((response) => {
-    const data = response.data.data;
-    if (data) {
-      const status = data.status;
-      dispatch({
-        type: SET_GAME_STATUS,
-        payload: {
-          status
-        }
-      });
-    }
-  })
     .catch((err) => console.log(err));
 };
 

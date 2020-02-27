@@ -18,7 +18,7 @@ const Aside = (props) => {
             key={index}
             player={player}
             show={true}
-            currentPlayer={false} // set condition
+            currentPlayer={player.id === props.user}
         />);
     });
 
@@ -113,7 +113,8 @@ const mapStateToProps = (state) => ({
   nextPieceTurn: state.game.nextPieceTurn,
   nextPieceColor: state.game.nextPieceColor,
   mode: state.rooms.room.mode,
-  room: state.rooms.room
+  room: state.rooms.room,
+  user: state.auth.user
 });
 
 export default withRouter(connect(mapStateToProps)(Aside));
