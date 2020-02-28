@@ -105,6 +105,9 @@ const updateRoomScore = (roomId, playerId, score) => {
       player.score += score;
     } else {
       player.score -= score;
+      if (score > 0) {
+        player.indestruct += 1;
+      }
     }
   });
   return rooms[room];

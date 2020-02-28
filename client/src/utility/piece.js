@@ -40,6 +40,9 @@ export function noMoreSpace(allPieces, direction, piece) {
       });
       return !res.every((line) => line);
     }
+    case PIECES_DIRECTION.UP: {
+      return !field && !field.every((piece) => piece.place.every((line) => line[1] > 0));
+    }
     default:
       return true;
   }
@@ -155,5 +158,26 @@ export const pieceMoving = {
       }
       return piece;
     }));
-  }
+  },
+  up(field, setField) {
+    if (!noMoreSpace([ ...field ], PIECES_DIRECTION.UP)) {
+      const newField = field.map((piece) => {
+          piece.place = piece.place.map((line) => {
+            let newLine = [ ...line ];
+            newLine[1]--;
+            return newLine;
+          });
+        return piece;
+      });
+        newField.push({
+          id: field.length,
+          color: NO_COLOR,
+          place: createField(1, FIELD_WIDTH, [])
+        });
+        setField(newField);
+        return true;
+    } else {
+      return false;
+    }
+  },
 };

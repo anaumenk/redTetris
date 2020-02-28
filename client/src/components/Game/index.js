@@ -144,6 +144,14 @@ const Game = (props) => {
     }
   }, [ props.status ]);
 
+  useEffect(() => {
+    if (props.indestruct > 0) {
+      if (!pieceMoving.up(field, setField)) {
+        loseGame();
+      }
+    }
+  }, [ props.indestruct ]);
+
   if (!props.room) {
     setTimeout(() => {
       changeSpinner(
@@ -155,13 +163,17 @@ const Game = (props) => {
     }, 3000);
   }
 
+  const loseGame = () => {
+    scoreUpdate(-10, roomId);
+    stopGame();
+  };
+
   const addPieceToField = (piece) => {
     if (!noMoreSpace([ ...field ], PIECES_DIRECTION.CURRENT, piece)) {
       setField([ ...field, piece ]);
       setPieceId(piece.id);
     } else {
-      scoreUpdate(-10, roomId);
-      stopGame();
+      loseGame();
     }
   };
 
@@ -210,6 +222,7 @@ const Game = (props) => {
   // const handleSongFinishedPlaying = () => {
   //   setSoundPlay(false);
   // };
+
 
   return props.room && props.inGame ? (
     <>

@@ -10,7 +10,8 @@ const initialState = {
     id: UNSENT_INT,
     lid: null,
     multi: false,
-  }
+  },
+  indestruct: 0
 };
 
 export default function (state = initialState, action) {
@@ -20,7 +21,8 @@ export default function (state = initialState, action) {
         ...state,
         room: action.payload.room,
         status: action.payload.status,
-        allRooms: action.payload.allRooms
+        allRooms: action.payload.allRooms,
+        indestruct: action.payload.indestruct
       };
     case GET_ROOM_LID:
       return {

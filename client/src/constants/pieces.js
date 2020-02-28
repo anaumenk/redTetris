@@ -192,4 +192,5 @@ export const PIECES_DIRECTION = {
   LEFT: "LEFT",
   CURRENT: "CURRENT",
   ROTATE: "ROTATE",
+  UP: "UP",
 };

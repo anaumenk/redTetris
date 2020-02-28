@@ -11,7 +11,8 @@ class Room {
         name: lid.name,
         score: 0,
         status: 'game',
-        field: []
+        field: [],
+        indestruct: 0
       }
     ];
     this.multi = multi;
@@ -31,7 +32,8 @@ class Room {
           name: player.name,
           score: 0,
           status: 'game',
-          field: []
+          field: [],
+          indestruct: 0
         }
       ];
     } else {
@@ -39,6 +41,7 @@ class Room {
         if (oldPlayer.id === player.id) {
           oldPlayer.status = "game";
           oldPlayer.field = [];
+          oldPlayer.indestruct = 0;
         }
       });
     }
