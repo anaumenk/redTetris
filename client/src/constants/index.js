@@ -8,4 +8,5 @@ export const FIELD_HEIGHT = 20;
 export const FIELD_WIDTH = 10;
 export const UNSENT_INT = -1;
 export const NO_COLOR = "transparent";
+export const GREY_COLOR = "#989898b5";
 export const TIMEOUT = 1000;

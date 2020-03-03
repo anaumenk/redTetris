@@ -1,6 +1,6 @@
 import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOM_LID, SET_ROOM } from "./";
 import { configAxios } from "../axios";
-import {API, METHODS, UNSENT_INT} from "../constants";
+import { API, METHODS, UNSENT_INT } from "../constants";
 import socketIOClient from "socket.io-client";
 import { store } from "../store";
 
@@ -11,14 +11,14 @@ export const getRooms = () => dispatch => {
     const prevState = store.getState().rooms;
     const roomInfo = prevState.roomInfo;
     const room = data.find((room) => room.id === roomInfo.id && room.lid.name === roomInfo.lid);
-    const playerId = room && room.players ? room.players.findIndex((player) => player.id === store.getState().auth.user) : UNSENT_INT
+    const playerId = room && room.players ? room.players.findIndex((player) => player.id === store.getState().auth.user) : UNSENT_INT;
       dispatch({
         type: GET_ROOM,
         payload: {
           room,
           status: room ? room.status : null,
           allRooms: data,
-          indestruct: (room && room.players && room.players.length > 0)
+          indestruct: (room && room.players && room.players[playerId])
               ? room.players[playerId].indestruct
               : 0
         }

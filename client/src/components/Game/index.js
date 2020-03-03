@@ -6,13 +6,10 @@ import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
 import {
-  FIELD_HEIGHT,
-  FIELD_WIDTH,
-  GAME_STATUS,
-  PIECES,
-  PIECES_DIRECTION,
-  ROUTES,
-  TIMEOUT,
+  FIELD_HEIGHT, FIELD_WIDTH,
+  GAME_STATUS, GREY_COLOR,
+  PIECES, PIECES_DIRECTION,
+  ROUTES, TIMEOUT,
   UNSENT_INT
 } from "../../constants";
 import {
@@ -110,10 +107,6 @@ const Game = (props) => {
   }, [ pieceId ]);
 
   useEffect(() => {
-    sendField(roomId, field);
-  }, [ field ]);
-
-  useEffect(() => {
     switch (props.status) {
       case null:
       case GAME_STATUS.STOP: {
@@ -146,11 +139,49 @@ const Game = (props) => {
 
   useEffect(() => {
     if (props.indestruct > 0) {
-      if (!pieceMoving.up(field, setField)) {
+      if (!noMoreSpace([ ...field ], PIECES_DIRECTION.UP)) {
+        clearInterval(intervalId);
+        const newField = field.map((piece) => {
+            piece.place = piece.place.map((line) => {
+              let newLine = [ ...line ];
+              newLine[1]--;
+              return newLine;
+            });
+          return piece;
+        });
+        newField.unshift({
+          id: field.length,
+          color: GREY_COLOR,
+          place: Array(FIELD_WIDTH).fill(1).map((row, i) => [ i, FIELD_HEIGHT - 1 ])
+        });
+        setField(newField);
+        const newIntervalId = setInterval(() => {
+          if (noMoreSpace([ ...newField ], PIECES_DIRECTION.DOWN)) {
+            clearInterval(newIntervalId);
+            getPieceAndStartMoving(newField);
+          } else {
+            setField(newField.map((piece) => {
+              if (piece.id === pieceId) {
+                piece.place = piece.place.map((line) => {
+                  let newLine = [ ...line ];
+                  newLine[1]++;
+                  return newLine;
+                });
+              }
+              return piece;
+            }));
+          }
+        }, 1000);
+        setIntervalId(newIntervalId);
+      } else {
         loseGame();
       }
     }
   }, [ props.indestruct ]);
+
+  useEffect(() => {
+    sendField(roomId, field);
+  }, [ field ]);
 
   if (!props.room) {
     setTimeout(() => {
@@ -168,7 +199,7 @@ const Game = (props) => {
     stopGame();
   };
 
-  const addPieceToField = (piece) => {
+  const addPieceToField = (piece, field) => {
     if (!noMoreSpace([ ...field ], PIECES_DIRECTION.CURRENT, piece)) {
       setField([ ...field, piece ]);
       setPieceId(piece.id);
@@ -177,24 +208,24 @@ const Game = (props) => {
     }
   };
 
-  const getPieceAndStartMoving = () => {
+  const getPieceAndStartMoving = (newField = field) => {
     let i = !props.room.mode.rotation && props.room.mode.inverted
       ? 100
       : (!props.room.mode.rotation || props.room.mode.inverted)
         ? 50
         : 10;
-    const stars = checkFieldFill(field);
+    const stars = checkFieldFill(newField);
     if (stars.length > 0) {
       setStarsRow(stars);
       scoreUpdate(mathSum(stars.length, i), roomId);
     } else {
       const piece = {
-        id: field.length,
+        id: newField.length,
         color: props.nextPieceColor,
         place: PIECES[props.nextPieceFigure][props.nextPieceTurn]
       };
       props.setNextPiece();
-      addPieceToField(piece);
+      addPieceToField(piece, newField);
     }
   };
 
@@ -249,7 +280,7 @@ const Game = (props) => {
               fieldHeight={FIELD_HEIGHT}
               width={30}
               height={30}
-              border="#989898b5"
+              border={GREY_COLOR}
               fill={field}
               inverted={props.room.mode.inverted}
               stars={true}

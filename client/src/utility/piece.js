@@ -1,4 +1,4 @@
-import { FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR, PIECES, PIECES_COLORS, PIECES_DIRECTION } from "../constants";
+import { FIELD_HEIGHT, FIELD_WIDTH, GREY_COLOR, NO_COLOR, PIECES, PIECES_COLORS, PIECES_DIRECTION } from "../constants";
 import { createField } from "./field";
 
 export function getNextPieceFigure() {
@@ -171,8 +171,8 @@ export const pieceMoving = {
       });
         newField.push({
           id: field.length,
-          color: NO_COLOR,
-          place: createField(1, FIELD_WIDTH, [])
+          color: GREY_COLOR,
+          place: Array(FIELD_WIDTH).fill(1).map((row, i) => [ i, FIELD_HEIGHT ])
         });
         setField(newField);
         return true;
