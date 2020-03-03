@@ -159,23 +159,42 @@ export const pieceMoving = {
       return piece;
     }));
   },
-  up(field, setField) {
+  up(field, setField, intervalId, start, pieceId, setIntervalId) {
     if (!noMoreSpace([ ...field ], PIECES_DIRECTION.UP)) {
+      clearInterval(intervalId);
       const newField = field.map((piece) => {
-          piece.place = piece.place.map((line) => {
-            let newLine = [ ...line ];
-            newLine[1]--;
-            return newLine;
-          });
+        piece.place = piece.place.map((line) => {
+          let newLine = [ ...line ];
+          newLine[1]--;
+          return newLine;
+        });
         return piece;
       });
-        newField.push({
-          id: field.length,
-          color: GREY_COLOR,
-          place: Array(FIELD_WIDTH).fill(1).map((row, i) => [ i, FIELD_HEIGHT ])
-        });
-        setField(newField);
-        return true;
+      newField.unshift({
+        id: field.length,
+        color: GREY_COLOR,
+        place: Array(FIELD_WIDTH).fill(1).map((row, i) => [ i, FIELD_HEIGHT - 1 ])
+      });
+      setField(newField);
+      const newIntervalId = setInterval(() => {
+        if (noMoreSpace([ ...newField ], PIECES_DIRECTION.DOWN)) {
+          clearInterval(newIntervalId);
+          start(newField);
+        } else {
+          setField(newField.map((piece) => {
+            if (piece.id === pieceId) {
+              piece.place = piece.place.map((line) => {
+                let newLine = [ ...line ];
+                newLine[1]++;
+                return newLine;
+              });
+            }
+            return piece;
+          }));
+        }
+      }, 1000);
+      setIntervalId(newIntervalId);
+      return true;
     } else {
       return false;
     }

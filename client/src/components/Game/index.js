@@ -18,9 +18,9 @@ import {
   sendField, setGameStatus, sort, stopGame as stopGameApi
 } from "../../utility";
 import Total from "./Total";
-import Sound from 'react-sound';
-import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
-import starsSound from '../../sounds/magic.mp3';
+// import Sound from 'react-sound';
+// import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
+// import starsSound from '../../sounds/magic.mp3';
 window.soundManager.setup({ debugMode: false });
 
 const Game = (props) => {
@@ -94,16 +94,21 @@ const Game = (props) => {
   }, [ key ]);
 
   const handleUserKeyPress = event => {
+    event.preventDefault()
     setKey(event.keyCode);
   };
 
   useEffect(() => {
+    let newIntervalId = UNSENT_INT;
     if (pieceId !== UNSENT_INT) {
-      const newIntervalId = setInterval(() => {
+      newIntervalId = setInterval(() => {
         return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
       }, TIMEOUT - Object.keys(field).length * 10);
       setIntervalId(newIntervalId);
     }
+    return () => {
+      clearInterval(newIntervalId);
+    };
   }, [ pieceId ]);
 
   useEffect(() => {
@@ -139,41 +144,7 @@ const Game = (props) => {
 
   useEffect(() => {
     if (props.indestruct > 0) {
-      if (!noMoreSpace([ ...field ], PIECES_DIRECTION.UP)) {
-        clearInterval(intervalId);
-        const newField = field.map((piece) => {
-            piece.place = piece.place.map((line) => {
-              let newLine = [ ...line ];
-              newLine[1]--;
-              return newLine;
-            });
-          return piece;
-        });
-        newField.unshift({
-          id: field.length,
-          color: GREY_COLOR,
-          place: Array(FIELD_WIDTH).fill(1).map((row, i) => [ i, FIELD_HEIGHT - 1 ])
-        });
-        setField(newField);
-        const newIntervalId = setInterval(() => {
-          if (noMoreSpace([ ...newField ], PIECES_DIRECTION.DOWN)) {
-            clearInterval(newIntervalId);
-            getPieceAndStartMoving(newField);
-          } else {
-            setField(newField.map((piece) => {
-              if (piece.id === pieceId) {
-                piece.place = piece.place.map((line) => {
-                  let newLine = [ ...line ];
-                  newLine[1]++;
-                  return newLine;
-                });
-              }
-              return piece;
-            }));
-          }
-        }, 1000);
-        setIntervalId(newIntervalId);
-      } else {
+      if (!pieceMoving.up(field, setField, intervalId, getPieceAndStartMoving, pieceId, setIntervalId)) {
         loseGame();
       }
     }

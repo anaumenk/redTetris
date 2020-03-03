@@ -184,10 +184,6 @@ input.form-control:focus {
   transform: translateY(calc(-50% + 3px)) rotate(-45deg);
 }
 
-.form-check:hover label:after {
-  opacity: 0.5;
-}
-
 .form-check input[type=checkbox] {
   width: 18px;
   top: 50%;
