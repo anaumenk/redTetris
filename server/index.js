@@ -79,9 +79,14 @@ const getRoom = (id, name, player) => {
 const checkLid = (playerId, token) => !!players.find((player) => player.token === token && player.id === playerId);
 
 const deleteRoom = async (id) => {
+  const room = rooms.findIndex((room) => room.id === id);
+  console.log(rooms[room]);
+  rooms[room].lid = rooms[room].players[1];
+  console.log(rooms[room]);
+  //rooms[room].players
   //const room = await models.Score.findOne({owner: player.id});
-  await models.Room.remove({_id: id});
-  rooms = rooms.filter((room) => room.id !== id);
+  // await models.Room.remove({_id: id});
+  // rooms = rooms.filter((room) => room.id !== id);
 
 };
 

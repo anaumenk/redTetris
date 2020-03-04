@@ -1,0 +1,1 @@
+{"parent":null,"pid":5080,"argv":["/usr/local/bin/node","/usr/local/bin/npm","run","test-ci"],"execArgv":[],"cwd":"/Users/skorotko/Desktop/redTetris","time":1582903727958,"ppid":5079,"coverageFilename":"/Users/skorotko/Desktop/redTetris/.nyc_output/ef9774ce-e6c4-4e05-b30e-1df7a924876e.json","externalId":"","uuid":"ef9774ce-e6c4-4e05-b30e-1df7a924876e","files":[]}
