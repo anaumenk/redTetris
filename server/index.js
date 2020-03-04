@@ -80,14 +80,29 @@ const checkLid = (playerId, token) => !!players.find((player) => player.token ==
 
 const deleteRoom = async (id) => {
   const room = rooms.findIndex((room) => room.id === id);
-  console.log(rooms[room]);
-  rooms[room].lid = rooms[room].players[1];
-  console.log(rooms[room]);
-  //rooms[room].players
-  //const room = await models.Score.findOne({owner: player.id});
-  // await models.Room.remove({_id: id});
-  // rooms = rooms.filter((room) => room.id !== id);
+  if(!rooms[room].lid) {
+    await models.Room.remove({_id: id});
+    rooms = rooms.filter((room) => room.id !== id);
+  }
+};
 
+const changeLid = async (id) => {
+  const room = rooms.findIndex((room) => room.id === id);
+  const newLid = rooms[room].players.find((player) => {
+    if (player.status === 'game') {
+      return player;
+    }
+  });
+  rooms[room].lid = newLid || null;
+  console.log(rooms[room].lid)
+  // rooms[room].lid = rooms[room].players.map((player) => {
+  //   if(player.status === 'game' && rooms[room].status === "START") {
+  //     rooms[room].lid = null;
+  //     return player;
+  //   }
+  // });
+  // return rooms[room];
+  await deleteRoom(id);
 };
 
 const deletePlayer = (roomId, playerId) => {
@@ -175,4 +190,5 @@ module.exports.restartGame = restartGame;
 module.exports.deletePlayer = deletePlayer;
 module.exports.changeGameMode = changeGameMode;
 module.exports.changePlayerField = changePlayerField;
+module.exports.changeLid = changeLid;
 module.exports.server = server;

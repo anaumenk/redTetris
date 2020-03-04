@@ -10,9 +10,13 @@ export const getRooms = () => dispatch => {
   socket.on(API.GET_ROOMS, data => {
     const prevState = store.getState().rooms;
     const roomInfo = prevState.roomInfo;
-    const room = data.find((room) => room.id === roomInfo.id && room.lid.name === roomInfo.lid);
+    // const room = data.find((room) => room.id === roomInfo.id && room.lid.name === roomInfo.lid);
+    const room = data.find((room) => room.id === roomInfo.id);
     const playerId = room && room.players ? room.players.findIndex((player) => player.id === store.getState().auth.user) : UNSENT_INT;
-      dispatch({
+    if (prevState.room && room && prevState.room.lid._id !== room.lid._id) {
+      isRoomLid(room.id, store.getState().auth.user);
+    }
+    dispatch({
         type: GET_ROOM,
         payload: {
           room,

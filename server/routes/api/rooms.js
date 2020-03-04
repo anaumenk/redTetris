@@ -121,7 +121,9 @@ router.post('/delete/player', async(req, res) => {
         const room = index.stopGame(roomId);
         const newRoom = index.deletePlayer(roomId, player.id);
         if (room.status) {index.setGameStatus(roomId, 'STOP');}
-        if (String(existRoom.lid) === player.id) { index.deleteRoom(roomId);}
+        if (String(existRoom.lid) === player.id) {
+          await index.changeLid(roomId);
+        }
         response.data = {};
         response.data.room = newRoom;
       }
