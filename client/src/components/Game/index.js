@@ -143,7 +143,7 @@ const Game = (props) => {
   }, [ props.status ]);
 
   useEffect(() => {
-    if (props.indestruct > 0) {
+    if (props.indestruct > 0 && props.room.status !== GAME_STATUS.STOP) {
       if (!pieceMoving.up(field, setField, intervalId, getPieceAndStartMoving, pieceId, setIntervalId)) {
         loseGame();
       }
