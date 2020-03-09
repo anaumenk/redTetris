@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "npm run set-host-var && react-scripts start",
-    "set-host-var": "echo \nREACT_APP_HOST=$(ipconfig getifaddr en0) >> .env",
+    "set-host-var": "echo REACT_APP_HOST=$(ipconfig getifaddr en0) >> .env",
     "build": "react-scripts build",
     "test": "react-scripts test"
   },

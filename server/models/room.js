@@ -15,8 +15,7 @@ const schema = new Schema({
         default: true
     },
     lid: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
+        type: String
     }
 },
 {

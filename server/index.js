@@ -82,7 +82,7 @@ const deleteRoom = async (id) => {
   const room = rooms.findIndex((room) => room.id === id);
   if(!rooms[room].lid) {
     await models.Room.remove({_id: id});
-    rooms = rooms.filter((room) => room.id !== id);
+    rooms.filter((room) => room.id !== id);
   }
 };
 
@@ -94,15 +94,14 @@ const changeLid = async (id) => {
     }
   });
   rooms[room].lid = newLid || null;
-  console.log(rooms[room].lid)
-  // rooms[room].lid = rooms[room].players.map((player) => {
-  //   if(player.status === 'game' && rooms[room].status === "START") {
-  //     rooms[room].lid = null;
-  //     return player;
-  //   }
-  // });
-  // return rooms[room];
-  await deleteRoom(id);
+  const roomBd = await models.Room.findOne({_id: id});
+  if(!newLid){
+      await models.Room.remove({_id: id});
+      rooms = rooms.filter((room) => room.id !== id);
+  } else {
+      roomBd.lid = String(newLid.id);
+      await roomBd.save();
+  }
 };
 
 const deletePlayer = (roomId, playerId) => {
