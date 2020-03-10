@@ -22,7 +22,9 @@ export default function (state = initialState, action) {
         room: action.payload.room,
         status: action.payload.status,
         allRooms: action.payload.allRooms,
-        indestruct: action.payload.indestruct
+        indestruct: action.payload.indestruct,
+        lid:action.payload.lid,
+        inGame:action.payload.inGame,
       };
     case GET_ROOM_LID:
       return {

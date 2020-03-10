@@ -23,7 +23,7 @@ export const getRooms = () => dispatch => {
               : 0,
             lid: prevState.room && room && prevState.room.lid && room.lid && prevState.room.lid.id !== room.lid.id
                 ? room.lid.id === store.getState().auth.user
-                : null,
+                :  prevState.lid ?  prevState.lid : null,
             inGame: playerId !== UNSENT_INT
 
         }
