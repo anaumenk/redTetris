@@ -18,9 +18,9 @@ import {
   sendField, setGameStatus, sort, stopGame as stopGameApi
 } from "../../utility";
 import Total from "./Total";
-// import Sound from 'react-sound';
-// import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
-// import starsSound from '../../sounds/magic.mp3';
+import Sound from 'react-sound';
+import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
+import starsSound from '../../sounds/magic.mp3';
 window.soundManager.setup({ debugMode: false });
 
 const Game = (props) => {
@@ -31,7 +31,7 @@ const Game = (props) => {
   const [ intervalId, setIntervalId ] = useState(UNSENT_INT);
   const [ key, setKey ] = useState(UNSENT_INT);
   const [ starsRow, setStarsRow ] = useState([]);
-  // const [ sound, setSoundPlay ] = useState(false);
+  const [ sound, setSoundPlay ] = useState(false);
   const [ spinner, changeSpinner ] = useState(<Spinner animation="border" role="status" />);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const Game = (props) => {
   useEffect(() => {
     const stars = starsRow;
     if (stars.length > 0) {
-      // setSoundPlay(true);
+      setSoundPlay(true);
       setTimeout(() => {
         pieceMoving.moveAll(field, setField, stars);
         getPieceAndStartMoving();
@@ -221,26 +221,24 @@ const Game = (props) => {
     }
   };
 
-  // const handleSongFinishedPlaying = () => {
-  //   setSoundPlay(false);
-  // };
-
+  const handleSongFinishedPlaying = () => {
+    setSoundPlay(false);
+  };
 
   return props.room && props.inGame ? (
     <>
-      {/*<Sound*/}
-      {/*  autoLoad={true}*/}
-      {/*  url={gameSound}*/}
-      {/*  playStatus={props.room.status === GAME_STATUS.START ? Sound.status.PLAYING : Sound.status.STOPPED}*/}
-      {/* loop={true}*/}
-      {/*/>*/}
-      {/*Some problem with play() pause()*/}
-      {/*<Sound*/}
-      {/*  autoLoad={true}*/}
-      {/*  url={starsSound}*/}
-      {/*  playStatus={sound ? Sound.status.PLAYING : Sound.status.STOPPED}*/}
-      {/*  onFinishedPlaying={handleSongFinishedPlaying}*/}
-      {/*/>*/}
+      <Sound
+        autoLoad={true}
+        url={gameSound}
+        playStatus={props.room.status === GAME_STATUS.START ? Sound.status.PLAYING : Sound.status.STOPPED}
+       loop={true}
+      />
+      <Sound
+        autoLoad={true}
+        url={starsSound}
+        playStatus={sound ? Sound.status.PLAYING : Sound.status.STOPPED}
+        onFinishedPlaying={handleSongFinishedPlaying}
+      />
       <div className="room-name">
         <h1>Room {props.room.name}</h1>
       </div>
