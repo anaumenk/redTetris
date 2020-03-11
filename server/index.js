@@ -104,7 +104,7 @@ const changeLid = async (id) => {
   }
 };
 
-const deletePlayer = (roomId, playerId) => {
+const deletePlayer = async(roomId, playerId) => {
   const room = rooms.findIndex((room) => room.id === roomId);
   rooms[room].players = rooms[room].players.map((player) => {
     if (player.id === playerId && !rooms[room].status) {
@@ -114,6 +114,9 @@ const deletePlayer = (roomId, playerId) => {
     }
     return player;
 });
+  const scorePlayer = await models.Score.findOne({owner: playerId});
+  scorePlayer.score = 0;
+  scorePlayer.save();
   return rooms[room];
 };
 

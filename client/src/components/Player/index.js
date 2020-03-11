@@ -13,7 +13,7 @@ const Player = () => {
         .then((response) => {
           if (response) {
             const data = response.data;
-            if (!data.error) {
+            if (!data.error && data.data) {
               setPlayer(data.data.player);
             } else {
               setError(data.error);

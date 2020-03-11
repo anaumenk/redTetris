@@ -44,6 +44,8 @@ const Game = (props) => {
     };
   }, []);
 
+  window.onbeforeunload = () => removePlayerFromRoom(roomId);
+
   useEffect(() => {
     const stars = starsRow;
     if (stars.length > 0) {
