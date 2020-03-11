@@ -11,7 +11,8 @@ export const API = {
     SET_GAME_STATUS: "/api/rooms/status",
     RESTART_GAME: "/api/rooms/restart",
     REMOVE_PLAYER: "/api/rooms/delete/player",
-    CHANGE_GAME_MODE: "/api/rooms/mode"
+    CHANGE_GAME_MODE: "/api/rooms/mode",
+    SEND_FIELD: "/api/rooms/field",
 };
 
 export const METHODS = {

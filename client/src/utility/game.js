@@ -20,3 +20,11 @@ export function removePlayerFromRoom(roomId) {
 export function changeGameMode (roomId, mode, status) {
   configAxios(METHODS.POST, API.CHANGE_GAME_MODE, { roomId, mode, status });
 }
+
+export function sendField (roomId, field) {
+  configAxios(METHODS.POST, API.SEND_FIELD, { roomId, field });
+}
+
+export function setGameStatus (roomId, status) {
+  configAxios(METHODS.POST, API.SET_GAME_STATUS, { roomId, status });
+};

@@ -79,10 +79,29 @@ const getRoom = (id, name, player) => {
 const checkLid = (playerId, token) => !!players.find((player) => player.token === token && player.id === playerId);
 
 const deleteRoom = async (id) => {
-  //const room = await models.Score.findOne({owner: player.id});
-  await models.Room.remove({_id: id});
-  rooms = rooms.filter((room) => room.id !== id);
+  const room = rooms.findIndex((room) => room.id === id);
+  if(!rooms[room].lid) {
+    await models.Room.remove({_id: id});
+    rooms.filter((room) => room.id !== id);
+  }
+};
 
+const changeLid = async (id) => {
+  const room = rooms.findIndex((room) => room.id === id);
+  const newLid = rooms[room].players.find((player) => {
+    if (player.status === 'game') {
+      return player;
+    }
+  });
+  rooms[room].lid = newLid || null;
+  const roomBd = await models.Room.findOne({_id: id});
+  if(!newLid){
+      await models.Room.remove({_id: id});
+      rooms = rooms.filter((room) => room.id !== id);
+  } else {
+      roomBd.lid = String(newLid.id);
+      await roomBd.save();
+  }
 };
 
 const deletePlayer = (roomId, playerId) => {
@@ -105,6 +124,9 @@ const updateRoomScore = (roomId, playerId, score) => {
       player.score += score;
     } else {
       player.score -= score;
+      if (score > 0) {
+        player.indestruct += 1;
+      }
     }
   });
   return rooms[room];
@@ -143,6 +165,15 @@ const changeGameMode = (roomId, mode, status) => {
   return rooms[room];
 };
 
+const changePlayerField = (roomId, playerId, field) => {
+  const room = rooms.findIndex((room) => room.id === roomId);
+  const player = rooms[room].players.findIndex((player) => player.id === playerId)
+  if (rooms[room].players[player]) {
+    rooms[room].players[player].field = field;
+  }
+  return rooms[room];
+};
+
 module.exports.addNewRoom = addNewRoom;
 module.exports.checkToken = checkToken;
 module.exports.addNewPlayer = addNewPlayer;
@@ -157,4 +188,6 @@ module.exports.setGameStatus = setGameStatus;
 module.exports.restartGame = restartGame;
 module.exports.deletePlayer = deletePlayer;
 module.exports.changeGameMode = changeGameMode;
+module.exports.changePlayerField = changePlayerField;
+module.exports.changeLid = changeLid;
 module.exports.server = server;

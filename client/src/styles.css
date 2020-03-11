@@ -184,10 +184,6 @@ input.form-control:focus {
   transform: translateY(calc(-50% + 3px)) rotate(-45deg);
 }
 
-.form-check:hover label:after {
-  opacity: 0.5;
-}
-
 .form-check input[type=checkbox] {
   width: 18px;
   top: 50%;
@@ -342,7 +338,7 @@ form.enter {
   padding-top: 10px;
 }
 
-.aside-content .player-game-info > div:last-child:not(:first-child) {
+.aside-content .player-game-info > div:not(:first-child) {
   border-left: 1px solid #989898b5;
 }
 

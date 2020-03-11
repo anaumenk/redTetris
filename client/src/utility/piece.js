@@ -1,4 +1,4 @@
-import { FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR, PIECES, PIECES_COLORS, PIECES_DIRECTION } from "../constants";
+import { FIELD_HEIGHT, FIELD_WIDTH, GREY_COLOR, NO_COLOR, PIECES, PIECES_COLORS, PIECES_DIRECTION } from "../constants";
 import { createField } from "./field";
 
 export function getNextPieceFigure() {
@@ -39,6 +39,9 @@ export function noMoreSpace(allPieces, direction, piece) {
           && field[line[1]][line[0]].color === NO_COLOR;
       });
       return !res.every((line) => line);
+    }
+    case PIECES_DIRECTION.UP: {
+      return !field && !field.every((piece) => piece.place.every((line) => line[1] > 0));
     }
     default:
       return true;
@@ -126,8 +129,8 @@ export const pieceMoving = {
           piece.place = piece.place.map((line) => {
             let newLine = [ ...line ];
             if (line[1] < stars[i]) {
- newLine[1]++; 
-}
+              newLine[1]++;
+            }
             return newLine;
           });
           return piece;
@@ -155,5 +158,45 @@ export const pieceMoving = {
       }
       return piece;
     }));
-  }
+  },
+  up(field, setField, intervalId, start, pieceId, setIntervalId) {
+    if (!noMoreSpace([ ...field ], PIECES_DIRECTION.UP)) {
+      clearInterval(intervalId);
+      const newField = field.map((piece) => {
+        piece.place = piece.place.map((line) => {
+          let newLine = [ ...line ];
+          newLine[1]--;
+          return newLine;
+        });
+        return piece;
+      });
+      newField.unshift({
+        id: field.length,
+        color: GREY_COLOR,
+        place: Array(FIELD_WIDTH).fill(1).map((row, i) => [ i, FIELD_HEIGHT - 1 ])
+      });
+      setField(newField);
+      const newIntervalId = setInterval(() => {
+        if (noMoreSpace([ ...newField ], PIECES_DIRECTION.DOWN)) {
+          clearInterval(newIntervalId);
+          start(newField);
+        } else {
+          setField(newField.map((piece) => {
+            if (piece.id === pieceId) {
+              piece.place = piece.place.map((line) => {
+                let newLine = [ ...line ];
+                newLine[1]++;
+                return newLine;
+              });
+            }
+            return piece;
+          }));
+        }
+      }, 1000);
+      setIntervalId(newIntervalId);
+      return true;
+    } else {
+      return false;
+    }
+  },
 };

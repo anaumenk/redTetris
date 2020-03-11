@@ -1,33 +1,33 @@
-import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOM_LID, SET_GAME_STATUS, SET_ROOM } from "./";
+import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOM_LID, SET_ROOM } from "./";
 import { configAxios } from "../axios";
-import { API, METHODS } from "../constants";
+import { API, METHODS, UNSENT_INT } from "../constants";
 import socketIOClient from "socket.io-client";
 import { store } from "../store";
 
-const socket = socketIOClient(`${process.env.HOST || "http://localhost"}:${process.env.PORT || 8000}`);
+const socket = socketIOClient(`${process.env.REACT_APP_HOST}:${process.env.REACT_APP_SERVER_PORT}`);
 
 export const getRooms = () => dispatch => {
   socket.on(API.GET_ROOMS, data => {
     const prevState = store.getState().rooms;
-    const prevRoom = prevState.room;
     const roomInfo = prevState.roomInfo;
-    const room = data.find((room) => room.id === roomInfo.id && room.lid.name === roomInfo.lid);
-    if (!room || !prevRoom || (room && !prevRoom) || (room.players && !prevRoom.players)
-      || room.id !== prevRoom.id
-      || !Object.keys(room.mode).every((item) => room.mode[item] === prevRoom.mode[item])
-      || room.players.length !== prevRoom.players.length
-      || !room.players.every((p, i) => p.score === prevRoom.players[i].score)
-      || !room.players.every((p, i) => p.status === prevRoom.players[i].status)
-      || room.status !== prevRoom.status) {
-      dispatch({
+    const room = data.find((room) => room.id === roomInfo.id);
+    const playerId = room && room.players ? room.players.findIndex((player) => player.id === store.getState().auth.user) : UNSENT_INT;
+    dispatch({
         type: GET_ROOM,
         payload: {
           room,
           status: room ? room.status : null,
-          allRooms: data
+          allRooms: data,
+          indestruct: (room && room.players && room.players[playerId])
+              ? room.players[playerId].indestruct
+              : 0,
+            lid: prevState.room && room && prevState.room.lid && room.lid && prevState.room.lid.id !== room.lid.id
+                ? room.lid.id === store.getState().auth.user
+                :  prevState.lid ?  prevState.lid : null,
+            inGame: playerId !== UNSENT_INT
+
         }
       });
-    }
   });
 };
 
@@ -58,22 +58,6 @@ export const isRoomLid = (roomId, playerName) => dispatch => {
         });
       }
     })
-    .catch((err) => console.log(err));
-};
-
-export const setGameStatus = (roomId, status) => dispatch => {
-  configAxios(METHODS.POST, API.SET_GAME_STATUS, { roomId, status }).then((response) => {
-    const data = response.data.data;
-    if (data) {
-      const status = data.status;
-      dispatch({
-        type: SET_GAME_STATUS,
-        payload: {
-          status
-        }
-      });
-    }
-  })
     .catch((err) => console.log(err));
 };
 

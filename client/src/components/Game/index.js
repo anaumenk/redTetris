@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { isRoomLid, setGameStatus, setNextPiece, setNextTurn, setRoom } from "../../actions";
+import { isRoomLid, setNextPiece, setNextTurn, setRoom } from "../../actions";
 import { ButtonRef, Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
 import { withRouter } from "react-router-dom";
 import {
-  FIELD_HEIGHT,
-  FIELD_WIDTH,
-  GAME_STATUS,
-  PIECES,
-  PIECES_DIRECTION,
-  ROUTES,
-  TIMEOUT,
+  FIELD_HEIGHT, FIELD_WIDTH,
+  GAME_STATUS, GREY_COLOR,
+  PIECES, PIECES_DIRECTION,
+  ROUTES, TIMEOUT,
   UNSENT_INT
 } from "../../constants";
 import {
   checkFieldFill, getPieceTurn, mathSum,
   noMoreSpace, pieceMoving, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate,
-  stopGame as stopGameApi
+  sendField, setGameStatus, sort, stopGame as stopGameApi
 } from "../../utility";
 import Total from "./Total";
 import Sound from 'react-sound';
@@ -97,16 +94,21 @@ const Game = (props) => {
   }, [ key ]);
 
   const handleUserKeyPress = event => {
+    event.preventDefault()
     setKey(event.keyCode);
   };
 
   useEffect(() => {
+    let newIntervalId = UNSENT_INT;
     if (pieceId !== UNSENT_INT) {
-      const newIntervalId = setInterval(() => {
+      newIntervalId = setInterval(() => {
         return pieceMoving.downInterval(field, pieceId, newIntervalId, getPieceAndStartMoving, setField);
       }, TIMEOUT - Object.keys(field).length * 10);
       setIntervalId(newIntervalId);
     }
+    return () => {
+      clearInterval(newIntervalId);
+    };
   }, [ pieceId ]);
 
   useEffect(() => {
@@ -140,6 +142,18 @@ const Game = (props) => {
     }
   }, [ props.status ]);
 
+  useEffect(() => {
+    if (props.indestruct > 0 && props.room.status !== GAME_STATUS.STOP) {
+      if (!pieceMoving.up(field, setField, intervalId, getPieceAndStartMoving, pieceId, setIntervalId)) {
+        loseGame();
+      }
+    }
+  }, [ props.indestruct ]);
+
+  useEffect(() => {
+    sendField(roomId, field);
+  }, [ field ]);
+
   if (!props.room) {
     setTimeout(() => {
       changeSpinner(
@@ -151,59 +165,59 @@ const Game = (props) => {
     }, 3000);
   }
 
-  const sortPlayers = props.room && props.room.players ? Object.values(props.room.players).sort((a, b) => {
-    return a.score < b.score ? 1 : a.score > b.score ? -1 : 0;
-  }) : [];
+  const loseGame = () => {
+    scoreUpdate(-10, roomId);
+    stopGame();
+  };
 
-  const addPieceToField = (piece) => {
+  const addPieceToField = (piece, field) => {
     if (!noMoreSpace([ ...field ], PIECES_DIRECTION.CURRENT, piece)) {
       setField([ ...field, piece ]);
       setPieceId(piece.id);
     } else {
-      scoreUpdate(-10, roomId);
-      stopGame();
+      loseGame();
     }
   };
 
-  const getPieceAndStartMoving = () => {
+  const getPieceAndStartMoving = (newField = field) => {
     let i = !props.room.mode.rotation && props.room.mode.inverted
       ? 100
       : (!props.room.mode.rotation || props.room.mode.inverted)
         ? 50
         : 10;
-    const stars = checkFieldFill(field);
+    const stars = checkFieldFill(newField);
     if (stars.length > 0) {
       setStarsRow(stars);
       scoreUpdate(mathSum(stars.length, i), roomId);
     } else {
       const piece = {
-        id: field.length,
+        id: newField.length,
         color: props.nextPieceColor,
         place: PIECES[props.nextPieceFigure][props.nextPieceTurn]
       };
       props.setNextPiece();
-      addPieceToField(piece);
+      addPieceToField(piece, newField);
     }
   };
 
   const startGame = () => {
     if (props.inGame) {
       const status = !props.status || props.status === GAME_STATUS.PAUSE ? GAME_STATUS.START : GAME_STATUS.PAUSE;
-      props.setGameStatus(roomId, status);
+      setGameStatus(roomId, status);
     }
   };
 
   const stopGame = () => {
     if (props.inGame) {
       stopGameApi(roomId);
-      props.setGameStatus(roomId, GAME_STATUS.STOP);
+      setGameStatus(roomId, GAME_STATUS.STOP);
     }
   };
 
   const restartGame = () => {
     if (props.inGame) {
       restartGameApi(roomId);
-      props.setGameStatus(roomId, null);
+      setGameStatus(roomId, null);
     }
   };
 
@@ -217,7 +231,7 @@ const Game = (props) => {
         autoLoad={true}
         url={gameSound}
         playStatus={props.room.status === GAME_STATUS.START ? Sound.status.PLAYING : Sound.status.STOPPED}
-        loop={true}
+       loop={true}
       />
       <Sound
         autoLoad={true}
@@ -235,7 +249,7 @@ const Game = (props) => {
               fieldHeight={FIELD_HEIGHT}
               width={30}
               height={30}
-              border="#989898b5"
+              border={GREY_COLOR}
               fill={field}
               inverted={props.room.mode.inverted}
               stars={true}
@@ -246,10 +260,9 @@ const Game = (props) => {
             <Aside
               startGame={startGame}
               stopGame={stopGame}
-              players={sortPlayers}
             /></Col>
         </Row>
-        <Total restartGame={restartGame} total={sortPlayers}/>
+        <Total restartGame={restartGame} total={sort(props.room)}/>
     </>
     ) : <div className="spinner">{spinner}</div>;
 };
@@ -264,12 +277,12 @@ const mapStateToProps = (state) => ({
   currentPieceFigure: state.game.currentPieceFigure,
   lid: state.rooms.lid,
   inGame: state.rooms.inGame,
+  indestruct: state.rooms.indestruct
 });
 
 const mapDispatchToProps = {
   setNextPiece,
   setNextTurn,
-  setGameStatus,
   setRoom,
   isRoomLid
 };

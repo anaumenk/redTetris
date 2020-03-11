@@ -6,8 +6,8 @@ export const configAxios = (method, url, data = {}) => {
     let response;
     const config = {
         proxy: {
-            host: process.env.HOST || "http://localhost",
-            port: process.env.PORT || 8000,
+            host: process.env.REACT_APP_HOST,
+            port: process.env.REACT_APP_SERVER_PORT,
         }
     };
     data.token = localStorageService.readItem(localStorageKeys.TOKEN);

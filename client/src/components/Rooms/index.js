@@ -44,7 +44,6 @@ const RoomsList = ({ allRooms, history }) => {
   };
 
   const roomsList = allRooms.filter((room) => (room.multi && !room.status));
-  const randomRoom = roomsList[Math.floor(Math.random() * Math.floor(allRooms.length))];
 
   return (
     <CentralBlock title="Choose the room or create a new one" close={true}>
@@ -58,7 +57,6 @@ const RoomsList = ({ allRooms, history }) => {
         </ul>
         <div className="buttons justify-content-end">
           <Button className="button" type="submit" onClick={onClick}>Create</Button>
-          {randomRoom && <ButtonRef className="button" to={`/${randomRoom.id}[<${randomRoom.lid.name}>]`}>Start</ButtonRef>}
           <Modal show={show} onHide={onHide}>
             <Modal.Body>
               <Title title="Create new room"/>

@@ -1,4 +1,4 @@
-import { FIELD_HEIGHT, FIELD_WIDTH, NO_COLOR } from "../constants";
+import { FIELD_HEIGHT, FIELD_WIDTH, GREY_COLOR, NO_COLOR } from "../constants";
 
 export function createField(height, width, fill) {
   let field = Array(height).fill(Array(width).fill({ color: NO_COLOR }));
@@ -18,7 +18,7 @@ export function checkFieldFill(allPieces) {
   const field = createField(FIELD_HEIGHT, FIELD_WIDTH, allPieces);
   const filledRows = [];
   for (let i = 0; i < field.length; i++) {
-    if (field[i].every((square) => square.color !== NO_COLOR)) {
+    if (field[i].every((square) => square.color !== NO_COLOR && square.color !== GREY_COLOR)) {
       filledRows.push(i);
     }
   }

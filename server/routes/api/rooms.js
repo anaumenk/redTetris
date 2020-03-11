@@ -121,7 +121,9 @@ router.post('/delete/player', async(req, res) => {
         const room = index.stopGame(roomId);
         const newRoom = index.deletePlayer(roomId, player.id);
         if (room.status) {index.setGameStatus(roomId, 'STOP');}
-        if (String(existRoom.lid) === player.id) { index.deleteRoom(roomId);}
+        if (String(existRoom.lid) === player.id) {
+          await index.changeLid(roomId);
+        }
         response.data = {};
         response.data.room = newRoom;
       }
@@ -312,6 +314,45 @@ router.post('/mode', async(req, res) => {
         const room = index.changeGameMode(roomId, mode, status);
         response.data = {};
         response.data.mode = room.mode;
+      }
+    } catch (error) {
+        response.error = 'Server error';
+        res.status(404);
+    }
+  }
+  res.send(response);
+});
+
+router.post('/field', async(req, res) => {
+  const token = req.body.token;
+  const roomId = req.body.roomId;
+  const field = req.body.field;
+  const response = {
+    data: null,
+    error: null
+  };
+  if (typeof(token) === "undefined" || !token){
+    response.error = 'Token undefined';
+    res.status(400);
+  } else if (!field) {
+    response.error = 'Mode undefined';
+    res.status(400);
+  } else if (!roomId) {
+    response.error = 'Room id undefined';
+    res.status(400);
+  } else {
+    try {
+      const player = await models.User.findOne({token: token});
+      const room = index.changePlayerField(roomId, player.id, field)
+      if(!player) {
+        response.error = "No such user";
+        res.status(400);
+      } else if (!room) {
+        response.error = "No such room";
+        res.status(400);
+      } else {
+        response.data = {};
+        response.data.room = room;
       }
     } catch (error) {
         response.error = 'Server error';

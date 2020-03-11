@@ -3,9 +3,12 @@ import {localStorageKeys, localStorageService} from "../store";
 import {configAxios} from "../axios";
 import {API, METHODS, ROUTES} from "../constants";
 
-export const authenticate = () => dispatch => {
+export const authenticate = (userId) => dispatch => {
     dispatch({
         type: AUTHENTICATE,
+        payload: {
+            userId
+        }
     })
 };
 
@@ -15,10 +18,10 @@ export const unauthenticate = () => dispatch => {
     })
 };
 
-export function logIn(token) {
+export function logIn(token, userId) {
     return async (dispatch) => {
         await localStorageService.createOrUpdateItem(localStorageKeys.TOKEN, token);
-        dispatch(authenticate());
+        dispatch(authenticate(userId));
     };
 }
 export function logOut() {
@@ -32,7 +35,7 @@ export function checkAuthentication(history) {
         configAxios(METHODS.POST, API.CHECK_TOKEN).then((res) => {
             if (res && res.data) {
                 if (!res.data.error){
-                    dispatch(authenticate());
+                    dispatch(authenticate(res.data.data._id));
                 } else {
                     history && history.push(ROUTES.ENTER);
                     dispatch(unauthenticate());

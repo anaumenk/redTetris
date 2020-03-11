@@ -19,7 +19,8 @@ router.post('/token', async (req, res) => {
         response.error = "No such user";
         res.status(400);
       } else {
-        response.data = { name: player.name, token: player.token };
+        response.data = { name: player.name, token: player.token, id: player._id };
+        response.data = player;
       }
     } catch (error) {
         response.error = 'Server error';
@@ -53,7 +54,7 @@ router.post('/register', async (req, res) => {
       } else {
         const player = await models.User.create({name: name, password: password});
         await models.Score.create({owner: player.id});
-        response.data = { name: player.name, token: player.token };
+        response.data = { name: player.name, token: player.token, id: player._id };
       }
     } catch (error) {
         response.error = 'Server error';
@@ -79,7 +80,7 @@ router.post('/login', async (req, res) => {
         response.error = "No such user or wrong password.";
         res.status(400);
       } else {
-        response.data = { name: player.name, token: player.token };
+        response.data = { name: player.name, token: player.token, id: player._id };
       }
     } catch (error) {
         response.error = 'Server error';
