@@ -62,13 +62,12 @@ const getPlayerInfo = (token) => {
   return player ? player.getInfo : null;
 };
 
-//const getPlayerByToken = (token) => players.find((player) => player.getToken === token);
-
 const getRoom = (id, name, player) => {
   let inGame = false;
   const room = rooms.find((room) => room.id === id && room.lid.name === name);
   if (room) {
     if (room.status !== "START" && room.multi) {
+      player.score = 0;
       room.addPlayer(player);
       inGame = true;
     }
@@ -109,14 +108,11 @@ const deletePlayer = async(roomId, playerId) => {
   rooms[room].players = rooms[room].players.map((player) => {
     if (player.id === playerId && !rooms[room].status) {
       player.status = 'exit';
-    }else if(player.id === playerId && rooms[room].status === "START"){
+    }else if(player.id === playerId && rooms[room].status === "START") {
       player.status = 'delete';
     }
     return player;
 });
-  const scorePlayer = await models.Score.findOne({owner: playerId});
-  scorePlayer.score = 0;
-  scorePlayer.save();
   return rooms[room];
 };
 
