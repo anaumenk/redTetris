@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { isRoomLid, setNextPiece, setNextTurn, setRoom } from "../../actions";
+import {
+  isRoomLid, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate, sendField,
+  setGameStatus, setNextPiece, setNextTurn, setRoom,
+  stopGame as stopGameApi
+} from "../../actions";
 import { ButtonRef, Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
 import Aside from "./Aside";
@@ -12,11 +16,7 @@ import {
   ROUTES, TIMEOUT,
   UNSENT_INT
 } from "../../constants";
-import {
-  checkFieldFill, getPieceTurn, mathSum,
-  noMoreSpace, pieceMoving, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate,
-  sendField, setGameStatus, sort, stopGame as stopGameApi
-} from "../../utility";
+import { checkFieldFill, getPieceTurn, mathSum, noMoreSpace, pieceMoving, sort } from "../../utility";
 import Total from "./Total";
 import Sound from 'react-sound';
 import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
@@ -39,12 +39,12 @@ const Game = (props) => {
     props.isRoomLid(roomId, playerName);
     window.addEventListener("keydown", handleUserKeyPress);
     return () => {
-      removePlayerFromRoom(roomId);
+      props.removePlayerFromRoom(roomId);
       window.removeEventListener("keydown", handleUserKeyPress);
     };
   }, []);
 
-  window.onbeforeunload = () => removePlayerFromRoom(roomId);
+  window.onbeforeunload = () => props.removePlayerFromRoom(roomId);
 
   useEffect(() => {
     const stars = starsRow;
@@ -96,7 +96,7 @@ const Game = (props) => {
   }, [ key ]);
 
   const handleUserKeyPress = event => {
-    event.preventDefault()
+    event.preventDefault();
     setKey(event.keyCode);
   };
 
@@ -153,7 +153,7 @@ const Game = (props) => {
   }, [ props.indestruct ]);
 
   useEffect(() => {
-    sendField(roomId, field);
+    props.sendField(roomId, field);
   }, [ field ]);
 
   if (!props.room) {
@@ -168,7 +168,7 @@ const Game = (props) => {
   }
 
   const loseGame = () => {
-    scoreUpdate(-10, roomId);
+    props.scoreUpdate(-10, roomId);
     stopGame();
   };
 
@@ -190,7 +190,7 @@ const Game = (props) => {
     const stars = checkFieldFill(newField);
     if (stars.length > 0) {
       setStarsRow(stars);
-      scoreUpdate(mathSum(stars.length, i), roomId);
+      props.scoreUpdate(mathSum(stars.length, i), roomId);
     } else {
       const piece = {
         id: newField.length,
@@ -205,21 +205,21 @@ const Game = (props) => {
   const startGame = () => {
     if (props.inGame) {
       const status = !props.status || props.status === GAME_STATUS.PAUSE ? GAME_STATUS.START : GAME_STATUS.PAUSE;
-      setGameStatus(roomId, status);
+      props.setGameStatus(roomId, status);
     }
   };
 
   const stopGame = () => {
     if (props.inGame) {
-      stopGameApi(roomId);
-      setGameStatus(roomId, GAME_STATUS.STOP);
+      props.stopGameApi(roomId);
+      props.setGameStatus(roomId, GAME_STATUS.STOP);
     }
   };
 
   const restartGame = () => {
     if (props.inGame) {
-      restartGameApi(roomId);
-      setGameStatus(roomId, null);
+      props.restartGameApi(roomId);
+      props.setGameStatus(roomId, null);
     }
   };
 
@@ -286,7 +286,13 @@ const mapDispatchToProps = {
   setNextPiece,
   setNextTurn,
   setRoom,
-  isRoomLid
+  isRoomLid,
+  stopGameApi,
+  scoreUpdate,
+  restartGameApi,
+  removePlayerFromRoom,
+  sendField,
+  setGameStatus
 };
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Game));

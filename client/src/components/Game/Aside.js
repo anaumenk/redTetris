@@ -3,7 +3,8 @@ import { AsideInfo, Field, PlayerInfo } from "../common";
 import { Button, Col, Row } from "react-bootstrap";
 import { connect } from "react-redux";
 import { GAME_MODES, GAME_STATUS, PIECES, PLAYER_STATUS } from "../../constants";
-import { changeGameMode, sort } from "../../utility";
+import { sort } from "../../utility";
+import {changeGameMode} from "../../actions";
 import { withRouter } from "react-router-dom";
 
 const Aside = (props) => {
@@ -39,11 +40,11 @@ const Aside = (props) => {
     if (props.status !== GAME_STATUS.START) {
       switch (e.currentTarget.value) {
         case GAME_MODES.NO_ROTATION: {
-          changeGameMode(roomId, "rotation", !props.mode.rotation);
+          props.changeGameMode(roomId, "rotation", !props.mode.rotation);
           break;
         }
         case GAME_MODES.INVERTED_FIELD: {
-          changeGameMode(roomId, "inverted", !props.mode.inverted);
+          props.changeGameMode(roomId, "inverted", !props.mode.inverted);
           break;
         }
         default: {
@@ -117,4 +118,8 @@ const mapStateToProps = (state) => ({
   user: state.auth.user
 });
 
-export default withRouter(connect(mapStateToProps)(Aside));
+const mapDispatchToProps = {
+  changeGameMode
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Aside));

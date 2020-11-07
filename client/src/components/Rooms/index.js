@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { ButtonRef, CentralBlock, Title } from "../common";
+import { CentralBlock, Title } from "../common";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import { Button, Form, FormControl, Modal } from "react-bootstrap";
 import { configAxios } from "../../axios";
-import { API, METHODS } from "../../constants";
+import { API, METHODS, NO_USER_ERROR } from "../../constants";
+import { logOut } from "../../actions";
 
-const RoomsList = ({ allRooms, history }) => {
+const RoomsList = ({ allRooms, history, logOutAction }) => {
   const [ show, setShow ] = useState(false);
   const [ name, setName ] = useState("");
   const [ multi, setMulti ] = useState(false);
@@ -28,7 +29,11 @@ const RoomsList = ({ allRooms, history }) => {
         const createdRoom = response.data.data;
         history.push(`/${createdRoom.id}[<${createdRoom.lid.name}>]`);
       } else {
-        setError(response.data.error);
+        if ( response.data.error === NO_USER_ERROR ) {
+          logOutAction();
+        } else {
+          setError(response.data.error);
+        }
       }
     })
     .catch((err) => console.log(err));
@@ -87,4 +92,4 @@ const mapStateToProps = (state) => ({
   allRooms: state.rooms.allRooms,
 });
 
-export default withRouter(connect(mapStateToProps)(RoomsList));
+export default withRouter(connect(mapStateToProps, { logOutAction: logOut })(RoomsList));

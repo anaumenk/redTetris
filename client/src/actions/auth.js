@@ -1,7 +1,7 @@
-import {AUTHENTICATE, UNAUTHENTICATE} from "./index";
-import {localStorageKeys, localStorageService} from "../store";
-import {configAxios} from "../axios";
-import {API, METHODS, ROUTES} from "../constants";
+import { AUTHENTICATE, UNAUTHENTICATE } from "./index";
+import { localStorageKeys, localStorageService } from "../store";
+import { configAxios } from "../axios";
+import { API, METHODS, ROUTES } from "../constants";
 
 export const authenticate = (userId) => dispatch => {
     dispatch({
@@ -24,12 +24,18 @@ export function logIn(token, userId) {
         dispatch(authenticate(userId));
     };
 }
+
 export function logOut() {
-    return async (dispatch) => {
-        await localStorageService.clear();
-        dispatch(unauthenticate());
+    return (dispatch) => {
+        clearStorageAndUnauthenticate(dispatch);
     };
 }
+
+export function clearStorageAndUnauthenticate(dispatch) {
+    localStorageService.clear();
+    dispatch(unauthenticate());
+}
+
 export function checkAuthentication(history) {
     return async (dispatch) => {
         configAxios(METHODS.POST, API.CHECK_TOKEN).then((res) => {

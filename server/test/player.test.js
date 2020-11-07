@@ -1,6 +1,5 @@
 const expect = require('expect');
 const request = require('supertest');
-const {ObjectId} = require('mongodb');
 
 const app = require('../index.js').server;
 const models = require('../models');
@@ -16,8 +15,8 @@ const users = [{
 }];
 
   before(async () => {
-    await models.User.remove({});
-    await models.Score.remove({});
+    await models.User.deleteMany({});
+    await models.Score.deleteMany({});
     users.forEach(async user => {
         const player = await models.User.create(user);
         await models.Score.create({owner: player.id});
@@ -26,7 +25,6 @@ const users = [{
 
   describe('POST /register', async() => { // 1
     it('should register a new user', (done) => {
-
       request(app) // 3
         .post('/api/player/register')
         .send(regPlayer)
@@ -35,7 +33,7 @@ const users = [{
             expect(res.body.data.name).toBe(regPlayer.name);
             regPlayer.token = res.body.data.token;
         })
-        .end((err, res) => { // 4
+        .end((err) => { // 4
           if (err)
             return done(err);
 
@@ -46,7 +44,7 @@ const users = [{
             done();
           }).catch((e) => done(e))
         })
-    })
+    });
 
     it('should not register a new user with buzy body data', (done) => { // 6
 
@@ -54,12 +52,12 @@ const users = [{
         .post('/api/player/register')
         .send({})
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
-    })
+    });
 
     it('Create user already exist', (done) => {
 
@@ -67,12 +65,12 @@ const users = [{
         .post('/api/player/register')
         .send(regPlayer)
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
-    })
+    });
 
     it('Unvalid login', (done) => {
 
@@ -82,13 +80,13 @@ const users = [{
         .post('/api/player/register')
         .send(user)
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
     })
-  })
+  });
 
   describe('POST /login', async() => { // 1
     it('should login a registered user', (done) => {
@@ -101,12 +99,12 @@ const users = [{
         .expect((res) => {
             expect(res.body.data.token).toBe(regPlayer.token);
         })
-        .end((err, res) => { // 4
+        .end((err) => { // 4
           if (err)
             return done(err);
           done();
         })
-        })
+      });
 
         it('Empty login', (done) => {
           let logPlayer = {name: "", password: "test"};
@@ -115,12 +113,12 @@ const users = [{
             .post('/api/player/login')
             .send(logPlayer)
             .expect(400)
-            .end((err, res) => {
+            .end((err) => {
               if (err)
-                return done(err)
+                return done(err);
               done();
             })
-        })
+        });
 
         it('Empty password', (done) => {
           let logPlayer = {name: "test", password: ""};
@@ -129,12 +127,12 @@ const users = [{
             .post('/api/player/login')
             .send(logPlayer)
             .expect(400)
-            .end((err, res) => {
+            .end((err) => {
               if (err)
-                return done(err)
+                return done(err);
               done();
             })
-        })
+        });
 
         it('No such user', (done) => {
           let logPlayer = {name: "rewfdsvs", password: "test"};
@@ -143,12 +141,12 @@ const users = [{
             .post('/api/player/login')
             .send(logPlayer)
             .expect(400)
-            .end((err, res) => {
+            .end((err) => {
               if (err)
-                return done(err)
+                return done(err);
               done();
             })
-        })
+        });
 
         it('No such password', (done) => {
           let logPlayer = {name: "test", password: "ewqdsxdc"};
@@ -157,12 +155,12 @@ const users = [{
             .post('/api/player/login')
             .send(logPlayer)
             .expect(400)
-            .end((err, res) => {
+            .end((err) => {
               if (err)
-                return done(err)
+                return done(err);
               done();
             })
-        })
+        });
 
 
     it('should not login with buzy body data', (done) => { // 6
@@ -171,13 +169,13 @@ const users = [{
         .post('/api/player/login')
         .send({})
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
     })
-  })
+  });
 
   describe('POST /token', async() => { // 1
     it('Check valid token', (done) => {
@@ -186,13 +184,13 @@ const users = [{
         .post('/api/player/token')
         .send(regPlayer)
         .expect(200)
-        .end((err, res) => { // 4
+        .end((err) => { // 4
           if (err)
             return done(err);
           done();
 
         })
-    })
+    });
 
     it('Token undefine', (done) => { // 6
 
@@ -202,12 +200,12 @@ const users = [{
         .post('/api/player/token')
         .send(token)
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
-    })
+    });
 
     it('Token unvalid', (done) => { // 6
 
@@ -217,14 +215,13 @@ const users = [{
         .post('/api/player/token')
         .send(token)
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
     })
-
-  })
+  });
 
   describe('POST /info', async() => { // 1
     it('Return info registered user', (done) => {
@@ -236,13 +233,12 @@ const users = [{
         .expect((res) => {
             expect(res.body.data.player.name).toBe(regPlayer.name);
         })
-        .end((err, res) => { // 4
+        .end((err) => { // 4
           if (err)
             return done(err);
           done();
-
         })
-    })
+    });
 
     it('Token undefine', (done) => { // 6
 
@@ -252,12 +248,12 @@ const users = [{
         .post('/api/player/login')
         .send(token)
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
-    })
+    });
 
     it('Token unvalid', (done) => { // 6
 
@@ -267,13 +263,12 @@ const users = [{
         .post('/api/player/login')
         .send(token)
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err)
-            return done(err)
+            return done(err);
           done();
         })
     })
-
-  })
+  });
 
   module.exports.regPlayer = regPlayer;

@@ -1,11 +1,10 @@
 const config = require('./config');
 const mongoose = require('mongoose');
 
-
 module.exports = () => {
     return new Promise((resolve, reject) => {
         mongoose.Promise = global.Promise;
-       // mongoose.set('debug', true);
+        mongoose.set('useFindAndModify', false);
 
         mongoose.connection
             .on('error', error => reject(error))

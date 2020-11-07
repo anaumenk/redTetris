@@ -80,7 +80,7 @@ const checkLid = (playerId, token) => !!players.find((player) => player.token ==
 const deleteRoom = async (id) => {
   const room = rooms.findIndex((room) => room.id === id);
   if(!rooms[room].lid) {
-    await models.Room.remove({_id: id});
+    await models.Room.deleteOne({_id: id}, { single: true });
     rooms.filter((room) => room.id !== id);
   }
 };
@@ -95,7 +95,7 @@ const changeLid = async (id) => {
   rooms[room].lid = newLid || null;
   const roomBd = await models.Room.findOne({_id: id});
   if(!newLid){
-      await models.Room.remove({_id: id});
+      await models.Room.deleteOne({_id: id}, { single: true });
       rooms = rooms.filter((room) => room.id !== id);
   } else {
       roomBd.lid = String(newLid.id);

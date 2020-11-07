@@ -4,13 +4,12 @@ import React from "react";
 import { GAME_STATUS, PLAYER_STATUS, ROUTES } from "../../constants";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { cleanTheRoom } from "../../actions";
+import { cleanTheRoom, setGameStatus } from "../../actions";
 import Sound from 'react-sound';
 import soundfile from '../../sounds/GameoverOne.wav';
-import { setGameStatus } from "../../utility";
 window.soundManager.setup({ debugMode: false });
 
-const Total = ({ total, restartGame, status, lid, history, match, cleanTheRoom }) => {
+const Total = ({ total, restartGame, status, lid, history, match, cleanTheRoom, setGameStatus }) => {
   const roomId = parseInt(match.params.room);
   const playersInfo = total ? total.filter((player) => player.status !== PLAYER_STATUS.DELETED)
     .map((player, index) => <PlayerInfo player={player} key={index} show={false}/>) : null;
@@ -42,4 +41,9 @@ const mapStateToProps = state => ({
   lid: state.rooms.lid
 });
 
-export default withRouter(connect(mapStateToProps, { cleanTheRoom })(Total));
+const mapDispatchToProps = {
+  cleanTheRoom,
+  setGameStatus
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Total));

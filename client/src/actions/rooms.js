@@ -1,4 +1,10 @@
-import { CLEAN_THE_ROOM, GET_ROOM, GET_ROOM_LID, SET_ROOM } from "./";
+import {
+  CLEAN_THE_ROOM,
+  GET_ROOM,
+  GET_ROOM_LID,
+  SET_ROOM,
+  clearStorageAndUnauthenticate
+} from "./";
 import { configAxios } from "../axios";
 import { API, METHODS, UNSENT_INT } from "../constants";
 import socketIOClient from "socket.io-client";
@@ -56,9 +62,10 @@ export const isRoomLid = (roomId, playerName) => dispatch => {
             inGame
           }
         });
+      } else {
+        clearStorageAndUnauthenticate(dispatch);
       }
-    })
-    .catch((err) => console.log(err));
+    });
 };
 
 export const cleanTheRoom = () => dispatch => {

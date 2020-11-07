@@ -103,13 +103,14 @@ router.post('/info', async (req, res) => {
   } else {
     try {
       const user = await models.User.findOne({token: token});
-      let score = await models.Score.findOne({owner: user.id});
       if(!user) {
-        response.error = "Something went wrong.";
+        response.error = "No such user";
         res.status(400);
-      } else if(!score) {
-        score = await models.Score.create({owner: user.id});
       } else {
+        let score = await models.Score.findOne({owner: user.id});
+        if (!score) {
+          score = await models.Score.create({owner: user.id});
+        }
         const player = {name: user.name, score: score.score};
         response.data = {player};
       }

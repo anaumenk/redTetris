@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { CentralBlock } from "../common";
 import { Col, Row } from "react-bootstrap";
-import { API, METHODS } from "../../constants";
+import { API, METHODS, NO_USER_ERROR } from "../../constants";
 import { configAxios } from "../../axios";
+import { logOut } from "../../actions";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
-const Player = () => {
+const Player = ({ logOutAction }) => {
     const [ player, setPlayer ] = useState("");
     const [ error, setError ] = useState("");
 
@@ -16,7 +19,11 @@ const Player = () => {
             if (!data.error && data.data) {
               setPlayer(data.data.player);
             } else {
-              setError(data.error);
+              if (data.error === NO_USER_ERROR ) {
+                logOutAction();
+              } else {
+                setError(data.error);
+              }
             }
           }
       });
@@ -42,4 +49,4 @@ const Player = () => {
     );
 };
 
-export default Player;
+export default withRouter(connect(null, { logOutAction: logOut })(Player));
