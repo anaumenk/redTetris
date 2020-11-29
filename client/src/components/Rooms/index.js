@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { CentralBlock, Title } from "../common";
-import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
-import { Button, Form, FormControl, Modal } from "react-bootstrap";
-import { configAxios } from "../../axios";
 import { API, METHODS, NO_USER_ERROR } from "../../constants";
+import { Button, Form, FormControl, Modal } from "react-bootstrap";
+import { CentralBlock, Title } from "../common";
+import { Link, withRouter } from "react-router-dom";
+import React, { useState } from "react";
+import { configAxios } from "../../axios";
+import { connect } from "react-redux";
 import { logOut } from "../../actions";
 
 const RoomsList = ({ allRooms, history, logOutAction }) => {
@@ -65,7 +65,7 @@ const RoomsList = ({ allRooms, history, logOutAction }) => {
           <Modal show={show} onHide={onHide}>
             <Modal.Body>
               <Title title="Create new room"/>
-              <Button className="close-button" onClick={() => setShow(false)}/>
+              <Button className="close-button" onClick={onHide}/>
               <Form onSubmit={onSubmit} className="create-room">
                 <Form.Label column={false}>Room name</Form.Label>
                 <FormControl value={name} type="text" onChange={onChange}/>

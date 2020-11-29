@@ -1,10 +1,10 @@
-import React  from "react";
 import { AsideInfo, Field, PlayerInfo } from "../common";
 import { Button, Col, Row } from "react-bootstrap";
-import { connect } from "react-redux";
 import { GAME_MODES, GAME_STATUS, PIECES, PLAYER_STATUS } from "../../constants";
+import React  from "react";
+import { changeGameMode } from "../../actions";
+import { connect } from "react-redux";
 import { sort } from "../../utility";
-import {changeGameMode} from "../../actions";
 import { withRouter } from "react-router-dom";
 
 const Aside = (props) => {
