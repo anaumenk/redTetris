@@ -19,5 +19,5 @@
     "concurrently": "^4.1.2",
     "eslint": "^6.8.0"
   },
-  "comment": "Оставляю ссылку на установку mongoDb https://docs.mongodb.com/manual/installation/, выберешь для своей ос и по установишь. В консоле пишешь команду: mongo. Mongo стартанет и больше ниче не надо, базу и табл создаст mongoose."
+  "comment": "Install mongoDb: https://docs.mongodb.com/manual/installation/. Console command: mongo"
 }

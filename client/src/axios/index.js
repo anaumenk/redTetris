@@ -1,6 +1,6 @@
-import axios from "axios";
-import { METHODS } from "../constants";
 import { localStorageKeys, localStorageService } from "../store";
+import { METHODS } from "../constants";
+import axios from "axios";
 
 export const configAxios = (method, url, data = {}) => {
     let response;
@@ -17,6 +17,13 @@ export const configAxios = (method, url, data = {}) => {
                 if (err.response.status === 400 || err.response.status === 404) {
                     return err.response;
                 }
+                if (err.response.status === 500) {
+                    return {
+                        data: {
+                            error: err
+                        },
+                    };
+                }
                 console.log(err);
             });
             break;
@@ -24,6 +31,13 @@ export const configAxios = (method, url, data = {}) => {
             response = axios.post(url, data, config).catch(err => {
                 if (err.response.status === 400 || err.response.status === 404) {
                     return err.response;
+                }
+                if (err.response.status === 500) {
+                    return {
+                        data: {
+                            error: err
+                        },
+                    };
                 }
                 console.log(err);
             }) || [];
