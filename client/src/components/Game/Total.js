@@ -5,7 +5,7 @@ import React from "react";
 import Sound from 'react-sound';
 import { cleanTheRoom } from "../../actions";
 import { connect } from "react-redux";
-import soundfile from '../../sounds/GameoverOne.wav';
+import soundfile from '../../sounds/gameover.wav';
 import { withRouter } from "react-router-dom";
 
 window.soundManager.setup({ debugMode: false });

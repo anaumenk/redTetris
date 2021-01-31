@@ -74,10 +74,12 @@ button.button {
   border: 0;
   border-radius: 0;
   transition: 0.2s linear;
+  box-shadow: 2px 2px 5px #b0d5e4;
 }
 
 button.button:active, button.button:hover, button.button.disabled, button.button:disabled  {
   background-color: #86ACBB!important;
+  box-shadow: none;
 }
 
 button.button:focus, button.close-button:focus, button.outline-button:focus {
@@ -220,7 +222,7 @@ input.form-control:focus {
   justify-content: center;
   display: flex;
   flex-direction: column;
-  background-color: #f2f2f2;
+  background-color: #f2f2f280;
   box-shadow: 0 0 10px 1px #f2f2f2;
   padding: 30px;
 }

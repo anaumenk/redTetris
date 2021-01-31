@@ -1,14 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import {
-  isRoomLid, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate, sendField,
-  setGameStatus, setNextPiece, setNextTurn, setRoom,
-  stopGame as stopGameApi
-} from "../../actions";
 import { ButtonRef, Field } from "../common";
 import { Col, Row, Spinner } from "react-bootstrap";
-import Aside from "./Aside";
-import { withRouter } from "react-router-dom";
 import {
   FIELD_HEIGHT, FIELD_WIDTH,
   GAME_STATUS, GREY_COLOR,
@@ -16,11 +7,21 @@ import {
   ROUTES, TIMEOUT,
   UNSENT_INT
 } from "../../constants";
+import React, { useEffect, useState } from "react";
 import { checkFieldFill, getPieceTurn, mathSum, noMoreSpace, pieceMoving, sort } from "../../utility";
-import Total from "./Total";
+import {
+  isRoomLid, removePlayerFromRoom, restartGame as restartGameApi, scoreUpdate, sendField,
+  setGameStatus, setNextPiece, setNextTurn, setRoom,
+  stopGame as stopGameApi
+} from "../../actions";
+import Aside from "./Aside";
 import Sound from 'react-sound';
-import gameSound from '../../sounds/Doll House (Piano_Soft).mp3';
-import starsSound from '../../sounds/magic.mp3';
+import Total from "./Total";
+import { connect } from "react-redux";
+import gameSound from '../../sounds/game.mp3';
+import starsSound from '../../sounds/stars.mp3';
+import { withRouter } from "react-router-dom";
+
 window.soundManager.setup({ debugMode: false });
 
 const Game = (props) => {
