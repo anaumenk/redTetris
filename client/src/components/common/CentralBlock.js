@@ -1,7 +1,7 @@
-import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { ButtonRef, Title } from "./";
+import { Col, Row } from "react-bootstrap";
 import { ROUTES } from "../../constants";
+import React from "react";
 
 const CentralBlock = ({ close, title, children }) => (
   <Row className="homepage">
